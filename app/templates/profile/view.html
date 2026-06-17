@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Mon profil - Nexa Social{% endblock %}
+{% block content %}
+<div class="max-w-lg mx-auto bg-white rounded-xl shadow-md p-8">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">Mon profil</h1>
+    <div class="space-y-4">
+        <div>
+            <p class="text-sm text-gray-500">Nom</p>
+            <p class="text-gray-800">{{ current_user.last_name }}</p>
+        </div>
+        <div>
+            <p class="text-sm text-gray-500">Prénom</p>
+            <p class="text-gray-800">{{ current_user.first_name }}</p>
+        </div>
+        <div>
+            <p class="text-sm text-gray-500">Email</p>
+            <p class="text-gray-800">{{ current_user.email }}</p>
+        </div>
+        <div>
+            <p class="text-sm text-gray-500">Membre depuis le</p>
+            <p class="text-gray-800">{{ current_user.created_at.strftime('%d/%m/%Y') }}</p>
+        </div>
+        <div class="pt-4 space-y-2">
+            <a href="{{ url_for('profile.edit') }}" class="block w-full text-center bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition">Modifier le profil</a>
+            <a href="{{ url_for('profile.change_password') }}" class="block w-full text-center bg-gray-600 text-white py-2 rounded-lg hover:bg-gray-700 transition">Changer le mot de passe</a>
+            <a href="{{ url_for('profile.delete') }}" class="block w-full text-center bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition">Supprimer mon compte</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

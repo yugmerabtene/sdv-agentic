@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Accès refusé - Nexa Social{% endblock %}
+{% block content %}
+<div class="text-center py-16">
+    <h1 class="text-6xl font-bold text-red-500 mb-4">403</h1>
+    <p class="text-xl text-gray-600 mb-6">Accès refusé</p>
+    <a href="{{ url_for('posts.wall') }}" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition">Retour au mur</a>
+</div>
+{% endblock %}

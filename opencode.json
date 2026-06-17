@@ -1,0 +1,34 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "opencode/big-pickle",
+  "default_agent": "scrum-master",
+  "instructions": [
+    "AGENTS.md",
+    "gestion_de_projet/cdc.md"
+  ],
+  "skills": {
+    "paths": [".opencode/skills"]
+  },
+  "agent": {
+    "scrum-master": {
+      "mode": "primary",
+      "description": "Agent principal chargé d'analyser les demandes, de découper le cahier des charges en backlog, user stories et sprints, puis de coordonner les sous-agents.",
+      "skills": ["common", "scrum_master"]
+    },
+    "fullstack-developer": {
+      "mode": "subagent",
+      "description": "Sous-agent spécialisé dans le développement frontend, backend, API, base de données et logique métier.",
+      "skills": ["common", "fullstack_developer"]
+    },
+    "devops": {
+      "mode": "subagent",
+      "description": "Sous-agent spécialisé dans Docker, CI/CD, Git, branching, déploiement, infrastructure et automatisation.",
+      "skills": ["common", "devops"]
+    },
+    "tester": {
+      "mode": "subagent",
+      "description": "Sous-agent spécialisé dans les tests unitaires, tests d'intégration, tests fonctionnels, tests de non-régression, tests API et tests E2E.",
+      "skills": ["common", "tester"]
+    }
+  }
+}

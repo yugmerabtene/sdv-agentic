@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Connexion - Nexa Social{% endblock %}
+{% block content %}
+<div class="max-w-md mx-auto bg-white rounded-xl shadow-md p-8">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">Connexion</h1>
+    <form method="POST" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="mb-4">
+            {{ form.email.label(class="block text-gray-700 font-medium mb-2") }}
+            {{ form.email(class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition") }}
+            {% for error in form.email.errors %}
+                <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+            {% endfor %}
+        </div>
+        <div class="mb-4">
+            {{ form.password.label(class="block text-gray-700 font-medium mb-2") }}
+            {{ form.password(class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition") }}
+            {% for error in form.password.errors %}
+                <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+            {% endfor %}
+        </div>
+        <div class="mb-6 flex items-center">
+            {{ form.remember_me(class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded") }}
+            {{ form.remember_me.label(class="ml-2 text-gray-700") }}
+        </div>
+        {{ form.submit(class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition font-medium cursor-pointer") }}
+        <p class="text-center text-gray-600 mt-4">
+            Pas de compte ? <a href="{{ url_for('auth.register') }}" class="text-indigo-600 hover:underline">Inscrivez-vous</a>
+        </p>
+    </form>
+</div>
+{% endblock %}
