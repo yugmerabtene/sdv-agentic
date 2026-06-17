@@ -2,7 +2,7 @@ from datetime import datetime
 from app import db
 
 
-class Post(db.Model):
+class Post(db.Model):  # type: ignore[name-defined]
     __tablename__ = "posts"
 
     id = db.Column(db.Integer, primary_key=True)

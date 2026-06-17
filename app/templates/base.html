@@ -5,35 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Nexa Social{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e40af',
+                        'primary-light': '#3b82f6',
+                        'primary-dark': '#1e3a8a',
+                        accent: '#d97706',
+                        'accent-light': '#f59e0b',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col">
-    <nav class="bg-white shadow-md border-b border-gray-200">
-        <div class="max-w-4xl mx-auto px-4">
+<body class="bg-[#f8fafc] min-h-screen flex flex-col">
+    <nav class="bg-white shadow-md border-b border-[#e2e8f0] fixed top-0 left-0 right-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <a href="{{ url_for('posts.wall') }}" class="text-xl font-bold text-indigo-600">Nexa Social</a>
-                <div class="flex items-center gap-4">
-                    <a href="{{ url_for('posts.wall') }}" class="text-gray-700 hover:text-indigo-600 transition">Mur</a>
+                <a href="{{ url_for('posts.wall') }}" class="text-xl font-bold text-primary hover:text-primary-light transition-all duration-200">Nexa Social</a>
+                <div class="flex items-center gap-2 sm:gap-4">
+                    <a href="{{ url_for('posts.wall') }}" class="text-[#64748b] hover:text-primary transition-all duration-200 px-2 py-1 text-sm sm:text-base">Mur</a>
                     {% if current_user.is_authenticated %}
-                        <a href="{{ url_for('posts.create_post') }}" class="text-gray-700 hover:text-indigo-600 transition">Publier</a>
-                        <a href="{{ url_for('profile.view') }}" class="text-gray-700 hover:text-indigo-600 transition">Profil</a>
+                        <a href="{{ url_for('posts.create_post') }}" class="text-[#64748b] hover:text-primary transition-all duration-200 px-2 py-1 text-sm sm:text-base">Publier</a>
+                        <a href="{{ url_for('profile.view') }}" class="text-[#64748b] hover:text-primary transition-all duration-200 px-2 py-1 text-sm sm:text-base">Profil</a>
                         {% if current_user.is_admin %}
-                            <a href="{{ url_for('admin.users') }}" class="text-gray-700 hover:text-indigo-600 transition">Admin</a>
+                            <a href="{{ url_for('admin.users') }}" class="text-[#64748b] hover:text-primary transition-all duration-200 px-2 py-1 text-sm sm:text-base">Admin</a>
                         {% endif %}
-                        <a href="{{ url_for('auth.logout') }}" class="text-red-500 hover:text-red-700 transition">Déconnexion</a>
+                        <a href="{{ url_for('auth.logout') }}" class="text-[#dc2626] hover:text-red-700 transition-all duration-200 px-2 py-1 text-sm sm:text-base">Déconnexion</a>
                     {% else %}
-                        <a href="{{ url_for('auth.login') }}" class="text-gray-700 hover:text-indigo-600 transition">Connexion</a>
-                        <a href="{{ url_for('auth.register') }}" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">Inscription</a>
+                        <a href="{{ url_for('auth.login') }}" class="text-[#64748b] hover:text-primary transition-all duration-200 px-2 py-1 text-sm sm:text-base">Connexion</a>
+                        <a href="{{ url_for('auth.register') }}" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-light transition-all duration-200 text-sm sm:text-base font-medium">Inscription</a>
                     {% endif %}
                 </div>
             </div>
         </div>
     </nav>
 
-    <main class="flex-1 max-w-4xl mx-auto w-full px-4 py-8">
+    <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-24 pb-8">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="mb-4 p-4 rounded-lg text-white {% if category == 'success' %}bg-green-500{% elif category == 'danger' %}bg-red-500{% elif category == 'info' %}bg-blue-500{% else %}bg-gray-500{% endif %}">
+                    <div class="mb-4 p-4 rounded-lg border transition-all duration-200 {% if category == 'success' %}bg-green-50 border-green-200 text-green-800{% elif category == 'danger' or category == 'error' %}bg-red-50 border-red-200 text-red-800{% elif category == 'info' %}bg-blue-50 border-blue-200 text-blue-800{% elif category == 'warning' %}bg-amber-50 border-amber-200 text-amber-800{% else %}bg-[#f8fafc] border-[#e2e8f0] text-[#1e293b]{% endif %}" role="alert">
                         {{ message }}
                     </div>
                 {% endfor %}
@@ -43,8 +58,8 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="bg-white border-t border-gray-200 py-6 mt-auto">
-        <div class="max-w-4xl mx-auto text-center text-gray-500 text-sm">
+    <footer class="bg-white border-t border-[#e2e8f0] py-6 mt-auto">
+        <div class="max-w-7xl mx-auto text-center text-[#64748b] text-sm">
             &copy; {{ now.year }} Nexa Social
         </div>
     </footer>

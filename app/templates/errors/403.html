@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 {% block title %}Accès refusé - Nexa Social{% endblock %}
 {% block content %}
-<div class="text-center py-16">
-    <h1 class="text-6xl font-bold text-red-500 mb-4">403</h1>
-    <p class="text-xl text-gray-600 mb-6">Accès refusé</p>
-    <a href="{{ url_for('posts.wall') }}" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition">Retour au mur</a>
+<div class="min-h-[60vh] flex items-center justify-center">
+    <div class="text-center">
+        <h1 class="text-8xl font-bold text-[#dc2626] mb-4">403</h1>
+        <p class="text-2xl text-[#64748b] mb-2">Accès refusé</p>
+        <p class="text-[#64748b] mb-8">Vous n'avez pas les droits nécessaires pour accéder à cette page.</p>
+        <a href="{{ url_for('posts.wall') }}" class="inline-block bg-primary text-white px-8 py-3 rounded-lg hover:bg-primary-light transition-all duration-200 font-medium">Retour au mur</a>
+    </div>
 </div>
 {% endblock %}
