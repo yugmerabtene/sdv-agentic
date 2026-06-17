@@ -104,6 +104,8 @@ jobs:
         run: docker build -t nexa-social-test .
       - name: Démarrer l'application
         run: |
+          # Nettoyage préventif
+          docker rm -f nexa-test 2>/dev/null || true
           docker run -d --name nexa-test \
             -e SECRET_KEY=test-secret \
             -p 5000:5000 nexa-social-test
@@ -112,11 +114,14 @@ jobs:
           for i in $(seq 1 10); do
             sleep 2
             curl -sf http://localhost:5000/wall && exit 0
+            docker ps --filter name=nexa-test --format "{{.Status}}"
+            docker logs nexa-test 2>&1 | tail -3
             echo "Tentative $i/10 - serveur pas encore pret"
           done
           exit 1
       - name: Nettoyage
-        run: docker stop nexa-test && docker rm nexa-test
+        if: always()
+        run: docker rm -f nexa-test 2>/dev/null || true
 
   security-scan:
     name: Phase 6 - Vérifications de sécurité
