@@ -141,8 +141,25 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
-      - name: Simulation de déploiement
-        run: echo "Déploiement déclenché pour ${{ github.sha }}"
+      - name: Déploiement vers le VPS
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /opt/nexa-cda-agentic
+            git pull origin main
+            docker build -t nexa-app .
+            docker stop nexa-web 2>/dev/null || true
+            docker rm nexa-web 2>/dev/null || true
+            docker run -d --name nexa-web --restart unless-stopped \
+              -p 5000:5000 \
+              -e SECRET_KEY=${{ secrets.VPS_SECRET_KEY }} \
+              -e ADMIN_EMAIL=${{ secrets.VPS_ADMIN_EMAIL }} \
+              -e ADMIN_PASSWORD=${{ secrets.VPS_ADMIN_PASSWORD }} \
+              -v app_data:/app/data \
+              nexa-app
 
   post-deploy:
     name: Phase 8 - Vérifications post-déploiement
