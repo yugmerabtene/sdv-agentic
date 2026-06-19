@@ -38,12 +38,16 @@ Bonnes pratiques :
 ## Frontend
 
 Bonnes pratiques :
-- Composants clairs.
-- Formulaires validés.
-- Appels API centralisés si possible.
-- Gestion des états de chargement.
-- Gestion des erreurs utilisateur.
-- Interface simple et compréhensible.
+- Design systeme : utiliser les design tokens definis dans `webdesigner.md`.
+- Composants atomiques : chaque composant fait une chose, bien.
+- Mobile-first : la version mobile est la reference, le desktop etend.
+- Etats visibles : loader, empty state, error state, success pour chaque vue.
+- Appels API centralises dans un service/client dedie.
+- Validation cote client avant soumission (email, mot de passe, champs requis).
+- Animations subtiles : transition, hover, focus, entree.
+- Dark mode : toutes les couleurs sont definies avec les variables CSS du theme.
+- Pas de CSS personnalise : tout en classes Tailwind.
+- Accessibilite : labels, aria, keyboard navigation, contrastes AAA.
 
 ## Tests
 
