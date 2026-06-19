@@ -2,74 +2,84 @@
 {% block title %}Administration - Nexa Social{% endblock %}
 {% block content %}
 <div class="space-y-6">
-    <div class="bg-gradient-to-r from-primary to-primary-dark rounded-xl p-6 sm:p-8 text-white">
-        <h1 class="text-2xl sm:text-3xl font-bold">Gestion des utilisateurs</h1>
-        <p class="text-blue-200 mt-2">{{ users|length }} utilisateur(s) inscrit(s)</p>
+    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#4f46e5] via-[#3730a3] to-[#312e81] p-8 sm:p-12">
+        <div class="absolute inset-0 opacity-10" style="background-image: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✦</text></svg>'); background-size: 60px;"></div>
+        <div class="relative">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Gestion des utilisateurs</h1>
+            <p class="text-indigo-200 mt-2 text-lg">{{ users|length }} utilisateur(s) inscrit(s)</p>
+        </div>
     </div>
 
-    <div class="bg-white rounded-xl shadow-sm border border-[#e2e8f0] overflow-hidden">
+    <div class="bg-white rounded-2xl shadow-sm border border-[#e2e8f0] overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead>
-                    <tr class="bg-[#f8fafc] text-left text-xs text-[#64748b] uppercase tracking-wider">
-                        <th class="px-6 py-4 font-semibold">Nom</th>
-                        <th class="px-6 py-4 font-semibold">Prénom</th>
-                        <th class="px-6 py-4 font-semibold">Email</th>
-                        <th class="px-6 py-4 font-semibold">Rôle</th>
-                        <th class="px-6 py-4 font-semibold">Statut</th>
-                        <th class="px-6 py-4 font-semibold">Inscrit le</th>
-                        <th class="px-6 py-4 font-semibold">Actions</th>
+                    <tr class="bg-gray-50/50 border-b border-[#e2e8f0]">
+                        <th class="text-left px-6 py-4 text-xs font-semibold text-[#94a3b8] uppercase tracking-wider">Nom</th>
+                        <th class="text-left px-6 py-4 text-xs font-semibold text-[#94a3b8] uppercase tracking-wider">Prénom</th>
+                        <th class="text-left px-6 py-4 text-xs font-semibold text-[#94a3b8] uppercase tracking-wider">Email</th>
+                        <th class="text-left px-6 py-4 text-xs font-semibold text-[#94a3b8] uppercase tracking-wider">Rôle</th>
+                        <th class="text-left px-6 py-4 text-xs font-semibold text-[#94a3b8] uppercase tracking-wider">Statut</th>
+                        <th class="text-left px-6 py-4 text-xs font-semibold text-[#94a3b8] uppercase tracking-wider">Inscrit le</th>
+                        <th class="text-left px-6 py-4 text-xs font-semibold text-[#94a3b8] uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-[#e2e8f0]">
                     {% for user in users %}
-                    <tr class="{% if loop.index is odd %}bg-white{% else %}bg-[#f8fafc]{% endif %} hover:bg-blue-50 transition-all duration-200">
-                        <td class="px-6 py-4 text-[#1e293b] font-medium">{{ user.last_name }}</td>
-                        <td class="px-6 py-4 text-[#1e293b]">{{ user.first_name }}</td>
-                        <td class="px-6 py-4 text-[#64748b]">{{ user.email }}</td>
+                    <tr class="hover:bg-[#eef2ff]/50 transition-all duration-150">
+                        <td class="px-6 py-4 font-medium text-[#0f172a]">{{ user.last_name }}</td>
+                        <td class="px-6 py-4 text-[#475569]">{{ user.first_name }}</td>
+                        <td class="px-6 py-4 text-[#94a3b8] text-sm">{{ user.email }}</td>
                         <td class="px-6 py-4">
                             {% if user.is_admin %}
-                                <span class="inline-flex items-center gap-1 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-medium">
-                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a6 6 0 00-6 6c0 1.887-.454 3.665-1.257 5.235a.75.75 0 00.515 1.076 32.91 32.91 0 003.256.508 3.5 3.5 0 004.972 0 32.91 32.91 0 003.256-.508.75.75 0 00.515-1.076C16.454 11.665 16 9.887 16 8a6 6 0 00-6-6zM8.5 7.5a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z"/></svg>
+                                <span class="inline-flex items-center gap-1.5 bg-[#eef2ff] text-[#4f46e5] px-3 py-1 rounded-full text-xs font-medium border border-[#4f46e5]/10">
+                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 2a6 6 0 00-6 6c0 1.887-.454 3.665-1.257 5.235a.75.75 0 00.515 1.076 32.91 32.91 0 003.256.508 3.5 3.5 0 004.972 0 32.91 32.91 0 003.256-.508.75.75 0 00.515-1.076C16.454 11.665 16 9.887 16 8a6 6 0 00-6-6zM8.5 7.5a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z"/>
+                                    </svg>
                                     Admin
                                 </span>
                             {% else %}
-                                <span class="inline-flex items-center gap-1 bg-[#f8fafc] text-[#64748b] px-3 py-1 rounded-full text-xs font-medium border border-[#e2e8f0]">
-                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/></svg>
+                                <span class="inline-flex items-center gap-1.5 bg-gray-50 text-[#475569] px-3 py-1 rounded-full text-xs font-medium border border-[#e2e8f0]">
+                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
+                                    </svg>
                                     Utilisateur
                                 </span>
                             {% endif %}
                         </td>
                         <td class="px-6 py-4">
-                            {% if user.is_active_account %}
-                                <span class="inline-flex items-center gap-1 bg-green-50 text-[#16a34a] px-3 py-1 rounded-full text-xs font-medium border border-green-200">
-                                    <span class="w-1.5 h-1.5 bg-[#16a34a] rounded-full"></span>
-                                    Actif
-                                </span>
-                            {% else %}
-                                <span class="inline-flex items-center gap-1 bg-red-50 text-[#dc2626] px-3 py-1 rounded-full text-xs font-medium border border-red-200">
-                                    <span class="w-1.5 h-1.5 bg-[#dc2626] rounded-full"></span>
-                                    Désactivé
-                                </span>
-                            {% endif %}
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium
+                                {% if user.is_active_account %}
+                                    bg-emerald-50 text-emerald-700 border border-emerald-200
+                                {% else %}
+                                    bg-red-50 text-red-700 border border-red-200
+                                {% endif %}">
+                                <span class="w-1.5 h-1.5 rounded-full {% if user.is_active_account %}bg-emerald-500{% else %}bg-red-500{% endif %}"></span>
+                                {{ 'Actif' if user.is_active_account else 'Désactivé' }}
+                            </span>
                         </td>
-                        <td class="px-6 py-4 text-sm text-[#64748b]">{{ user.created_at.strftime('%d/%m/%Y') }}</td>
+                        <td class="px-6 py-4 text-sm text-[#94a3b8]">{{ user.created_at.strftime('%d/%m/%Y') }}</td>
                         <td class="px-6 py-4">
                             {% if not user.is_admin %}
                                 <div class="flex items-center gap-2">
                                     <form method="POST" action="{{ url_for('admin.toggle_active', user_id=user.id) }}">
                                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                                        <button type="submit" class="text-sm px-3 py-1.5 rounded-lg border transition-all duration-200 font-medium {% if user.is_active_account %}text-[#d97706] border-[#d97706]/30 hover:bg-amber-50{% else %}text-[#16a34a] border-[#16a34a]/30 hover:bg-green-50{% endif %}">
-                                            {% if user.is_active_account %}Désactiver{% else %}Activer{% endif %}
+                                        <button type="submit" class="px-3 py-1.5 rounded-full text-xs font-medium border transition-all duration-200
+                                            {% if user.is_active_account %}
+                                                border-amber-200 text-amber-700 hover:bg-amber-50
+                                            {% else %}
+                                                border-emerald-200 text-emerald-700 hover:bg-emerald-50
+                                            {% endif %}">
+                                            {{ 'Désactiver' if user.is_active_account else 'Activer' }}
                                         </button>
                                     </form>
                                     <form method="POST" action="{{ url_for('admin.delete_user', user_id=user.id) }}" onsubmit="return confirm('Supprimer cet utilisateur ?')">
                                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                                        <button type="submit" class="text-sm px-3 py-1.5 rounded-lg border border-[#dc2626]/30 text-[#dc2626] hover:bg-red-50 transition-all duration-200 font-medium">Supprimer</button>
+                                        <button type="submit" class="px-3 py-1.5 rounded-full text-xs font-medium border border-red-200 text-red-600 hover:bg-red-50 transition-all duration-200">Supprimer</button>
                                     </form>
                                 </div>
                             {% else %}
-                                <span class="text-[#64748b] text-sm">—</span>
+                                <span class="text-[#94a3b8] text-sm">—</span>
                             {% endif %}
                         </td>
                     </tr>

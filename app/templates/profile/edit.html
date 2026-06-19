@@ -1,34 +1,47 @@
 {% extends "base.html" %}
 {% block title %}Modifier mon profil - Nexa Social{% endblock %}
 {% block content %}
-<div class="min-h-[60vh] flex items-center justify-center">
-    <div class="w-full max-w-md bg-white rounded-xl shadow-md p-8 border border-[#e2e8f0]">
-        <h1 class="text-2xl font-bold text-[#1e293b] mb-6 text-center">Modifier mon profil</h1>
-        <form method="POST" novalidate>
-            {{ form.hidden_tag() }}
-            <div class="mb-4">
-                {{ form.last_name.label(class="block text-[#1e293b] font-medium mb-2") }}
-                {{ form.last_name(class="w-full px-4 py-2.5 border border-[#e2e8f0] rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all duration-200 text-[#1e293b] placeholder:text-[#64748b]") }}
-                {% for error in form.last_name.errors %}
-                    <p class="text-[#dc2626] text-sm mt-1">{{ error }}</p>
-                {% endfor %}
+<div class="min-h-[70vh] flex items-center justify-center py-12">
+    <div class="w-full max-w-md">
+        <div class="text-center mb-8">
+            <div class="w-12 h-12 mx-auto rounded-2xl bg-gradient-to-br from-[#4f46e5] to-[#3730a3] flex items-center justify-center mb-4 shadow-lg">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
             </div>
-            <div class="mb-4">
-                {{ form.first_name.label(class="block text-[#1e293b] font-medium mb-2") }}
-                {{ form.first_name(class="w-full px-4 py-2.5 border border-[#e2e8f0] rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all duration-200 text-[#1e293b] placeholder:text-[#64748b]") }}
-                {% for error in form.first_name.errors %}
-                    <p class="text-[#dc2626] text-sm mt-1">{{ error }}</p>
-                {% endfor %}
-            </div>
-            <div class="mb-6">
-                {{ form.email.label(class="block text-[#1e293b] font-medium mb-2") }}
-                {{ form.email(class="w-full px-4 py-2.5 border border-[#e2e8f0] rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all duration-200 text-[#1e293b] placeholder:text-[#64748b]") }}
-                {% for error in form.email.errors %}
-                    <p class="text-[#dc2626] text-sm mt-1">{{ error }}</p>
-                {% endfor %}
-            </div>
-            {{ form.submit(class="w-full bg-primary text-white py-2.5 rounded-lg hover:bg-primary-light transition-all duration-200 font-medium cursor-pointer") }}
-        </form>
+            <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-[#0f172a]">Modifier mon profil</h1>
+            <p class="text-[#475569] mt-2">Mettez à jour vos informations personnelles</p>
+        </div>
+        <div class="bg-white rounded-2xl shadow-sm border border-[#e2e8f0] p-6 sm:p-8">
+            <form method="POST" novalidate class="space-y-5">
+                {{ form.hidden_tag() }}
+                <div>
+                    <label class="block text-sm font-medium text-[#475569] mb-1.5">{{ form.last_name.label.text }}</label>
+                    {{ form.last_name(class="w-full px-4 py-2.5 rounded-xl border border-[#e2e8f0] focus:ring-2 focus:ring-[#4f46e5]/20 focus:border-[#4f46e5] outline-none transition-all duration-200 text-[#0f172a] placeholder:text-[#94a3b8] bg-transparent") }}
+                    {% for error in form.last_name.errors %}
+                        <p class="text-[#ef4444] text-sm mt-1.5">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-[#475569] mb-1.5">{{ form.first_name.label.text }}</label>
+                    {{ form.first_name(class="w-full px-4 py-2.5 rounded-xl border border-[#e2e8f0] focus:ring-2 focus:ring-[#4f46e5]/20 focus:border-[#4f46e5] outline-none transition-all duration-200 text-[#0f172a] placeholder:text-[#94a3b8] bg-transparent") }}
+                    {% for error in form.first_name.errors %}
+                        <p class="text-[#ef4444] text-sm mt-1.5">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-[#475569] mb-1.5">{{ form.email.label.text }}</label>
+                    {{ form.email(class="w-full px-4 py-2.5 rounded-xl border border-[#e2e8f0] focus:ring-2 focus:ring-[#4f46e5]/20 focus:border-[#4f46e5] outline-none transition-all duration-200 text-[#0f172a] placeholder:text-[#94a3b8] bg-transparent") }}
+                    {% for error in form.email.errors %}
+                        <p class="text-[#ef4444] text-sm mt-1.5">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                <div class="flex items-center gap-3 pt-2">
+                    <a href="{{ url_for('profile.view') }}" class="flex-1 text-center px-6 py-2.5 rounded-full border border-[#e2e8f0] text-[#475569] hover:border-[#4f46e5] hover:text-[#4f46e5] hover:bg-[#eef2ff] transition-all duration-200 font-medium text-sm">Annuler</a>
+                    {{ form.submit(class="flex-1 bg-[#4f46e5] text-white py-2.5 rounded-full hover:bg-[#818cf8] hover:shadow-lg transition-all duration-200 font-medium cursor-pointer text-sm") }}
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}

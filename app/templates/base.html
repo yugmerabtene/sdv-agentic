@@ -10,11 +10,22 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#1e40af',
-                        'primary-light': '#3b82f6',
-                        'primary-dark': '#1e3a8a',
-                        accent: '#d97706',
-                        'accent-light': '#f59e0b',
+                        primary: '#4f46e5',
+                        'primary-light': '#818cf8',
+                        'primary-dark': '#3730a3',
+                        'primary-bg': '#eef2ff',
+                        accent: '#f59e0b',
+                        'accent-light': '#fbbf24',
+                        success: '#10b981',
+                        error: '#ef4444',
+                        'error-bg': '#fef2f2',
+                        info: '#3b82f6',
+                        info_bg: '#eff6ff',
+                        surface: '#ffffff',
+                        border: '#e2e8f0',
+                        'text': '#0f172a',
+                        'text-secondary': '#475569',
+                        'text-muted': '#94a3b8',
                     }
                 }
             }
@@ -22,46 +33,89 @@
     </script>
 </head>
 <body class="bg-[#f8fafc] min-h-screen flex flex-col">
-    <nav class="bg-white shadow-md border-b border-[#e2e8f0] fixed top-0 left-0 right-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <a href="{{ url_for('posts.wall') }}" class="text-xl font-bold text-primary hover:text-primary-light transition-all duration-200">Nexa Social</a>
-                <div class="flex items-center gap-2 sm:gap-4">
-                    <a href="{{ url_for('posts.wall') }}" class="text-[#64748b] hover:text-primary transition-all duration-200 px-2 py-1 text-sm sm:text-base">Mur</a>
+    <nav class="fixed top-0 z-50 w-full bg-white/80 backdrop-blur-lg border-b border-[#e2e8f0]">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="{{ url_for('posts.wall') }}" class="text-xl font-bold text-[#4f46e5] hover:text-[#818cf8] transition-all duration-200">
+                    Nexa Social
+                </a>
+                <div class="hidden md:flex items-center gap-1">
+                    <a href="{{ url_for('posts.wall') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-[#475569] hover:text-[#4f46e5] hover:bg-[#eef2ff] transition-all duration-200">Mur</a>
                     {% if current_user.is_authenticated %}
-                        <a href="{{ url_for('posts.create_post') }}" class="text-[#64748b] hover:text-primary transition-all duration-200 px-2 py-1 text-sm sm:text-base">Publier</a>
-                        <a href="{{ url_for('profile.view') }}" class="text-[#64748b] hover:text-primary transition-all duration-200 px-2 py-1 text-sm sm:text-base">Profil</a>
+                        <a href="{{ url_for('posts.create_post') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-[#475569] hover:text-[#4f46e5] hover:bg-[#eef2ff] transition-all duration-200">Publier</a>
+                        <a href="{{ url_for('profile.view') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-[#475569] hover:text-[#4f46e5] hover:bg-[#eef2ff] transition-all duration-200">Profil</a>
                         {% if current_user.is_admin %}
-                            <a href="{{ url_for('admin.users') }}" class="text-[#64748b] hover:text-primary transition-all duration-200 px-2 py-1 text-sm sm:text-base">Admin</a>
+                            <a href="{{ url_for('admin.users') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-[#475569] hover:text-[#4f46e5] hover:bg-[#eef2ff] transition-all duration-200">Admin</a>
                         {% endif %}
-                        <a href="{{ url_for('auth.logout') }}" class="text-[#dc2626] hover:text-red-700 transition-all duration-200 px-2 py-1 text-sm sm:text-base">Déconnexion</a>
+                        <a href="{{ url_for('auth.logout') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-[#ef4444] hover:bg-[#fef2f2] transition-all duration-200">Déconnexion</a>
                     {% else %}
-                        <a href="{{ url_for('auth.login') }}" class="text-[#64748b] hover:text-primary transition-all duration-200 px-2 py-1 text-sm sm:text-base">Connexion</a>
-                        <a href="{{ url_for('auth.register') }}" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-light transition-all duration-200 text-sm sm:text-base font-medium">Inscription</a>
+                        <a href="{{ url_for('auth.login') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-[#475569] hover:text-[#4f46e5] hover:bg-[#eef2ff] transition-all duration-200">Connexion</a>
+                        <a href="{{ url_for('auth.register') }}" class="bg-[#4f46e5] text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-[#818cf8] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200">Inscription</a>
                     {% endif %}
                 </div>
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg text-[#475569] hover:bg-[#eef2ff] transition-all duration-200" aria-label="Menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden border-t border-[#e2e8f0] bg-white">
+            <div class="px-4 py-3 space-y-1">
+                <a href="{{ url_for('posts.wall') }}" class="block px-3 py-2 rounded-lg text-sm font-medium text-[#475569] hover:text-[#4f46e5] hover:bg-[#eef2ff] transition-all duration-200">Mur</a>
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('posts.create_post') }}" class="block px-3 py-2 rounded-lg text-sm font-medium text-[#475569] hover:text-[#4f46e5] hover:bg-[#eef2ff] transition-all duration-200">Publier</a>
+                    <a href="{{ url_for('profile.view') }}" class="block px-3 py-2 rounded-lg text-sm font-medium text-[#475569] hover:text-[#4f46e5] hover:bg-[#eef2ff] transition-all duration-200">Profil</a>
+                    {% if current_user.is_admin %}
+                        <a href="{{ url_for('admin.users') }}" class="block px-3 py-2 rounded-lg text-sm font-medium text-[#475569] hover:text-[#4f46e5] hover:bg-[#eef2ff] transition-all duration-200">Admin</a>
+                    {% endif %}
+                    <a href="{{ url_for('auth.logout') }}" class="block px-3 py-2 rounded-lg text-sm font-medium text-[#ef4444] hover:bg-[#fef2f2] transition-all duration-200">Déconnexion</a>
+                {% else %}
+                    <a href="{{ url_for('auth.login') }}" class="block px-3 py-2 rounded-lg text-sm font-medium text-[#475569] hover:text-[#4f46e5] hover:bg-[#eef2ff] transition-all duration-200">Connexion</a>
+                    <a href="{{ url_for('auth.register') }}" class="block text-center bg-[#4f46e5] text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-[#818cf8] transition-all duration-200">Inscription</a>
+                {% endif %}
             </div>
         </div>
     </nav>
 
-    <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-24 pb-8">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="fixed top-20 right-4 sm:right-6 z-50 space-y-3 w-full max-w-sm">
                 {% for category, message in messages %}
-                    <div class="mb-4 p-4 rounded-lg border transition-all duration-200 {% if category == 'success' %}bg-green-50 border-green-200 text-green-800{% elif category == 'danger' or category == 'error' %}bg-red-50 border-red-200 text-red-800{% elif category == 'info' %}bg-blue-50 border-blue-200 text-blue-800{% elif category == 'warning' %}bg-amber-50 border-amber-200 text-amber-800{% else %}bg-[#f8fafc] border-[#e2e8f0] text-[#1e293b]{% endif %}" role="alert">
-                        {{ message }}
+                    <div class="flex items-center gap-3 p-4 rounded-xl shadow-lg border backdrop-blur-sm
+                        {% if category == 'success' %} bg-emerald-50 border-emerald-200 text-emerald-800
+                        {% elif category in ('danger', 'error') %} bg-red-50 border-red-200 text-red-800
+                        {% elif category == 'info' %} bg-blue-50 border-blue-200 text-blue-800
+                        {% elif category == 'warning' %} bg-amber-50 border-amber-200 text-amber-800
+                        {% else %} bg-white border-[#e2e8f0] text-[#475569]
+                        {% endif %}" role="alert">
+                        <p class="text-sm font-medium flex-1">{{ message }}</p>
+                        <button onclick="this.parentElement.remove()" class="text-current/50 hover:text-current transition-all duration-200" aria-label="Fermer">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
                     </div>
                 {% endfor %}
-            {% endif %}
-        {% endwith %}
+            </div>
+        {% endif %}
+    {% endwith %}
 
+    <main class="flex-1 max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-24 pb-16">
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="bg-white border-t border-[#e2e8f0] py-6 mt-auto">
-        <div class="max-w-7xl mx-auto text-center text-[#64748b] text-sm">
+    <footer class="bg-white border-t border-[#e2e8f0] py-8 mt-auto">
+        <div class="max-w-5xl mx-auto text-center text-sm text-[#94a3b8]">
             &copy; {{ now.year }} Nexa Social
         </div>
     </footer>
+
+    <script>
+        document.getElementById('mobile-menu-btn')?.addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+    </script>
 </body>
 </html>

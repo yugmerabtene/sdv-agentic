@@ -1,34 +1,44 @@
 {% extends "base.html" %}
 {% block title %}Connexion - Nexa Social{% endblock %}
 {% block content %}
-<div class="min-h-[60vh] flex items-center justify-center">
-    <div class="w-full max-w-md bg-white rounded-xl shadow-md p-8 border border-[#e2e8f0]">
-        <h1 class="text-2xl font-bold text-[#1e293b] mb-6 text-center">Connexion</h1>
-        <form method="POST" novalidate>
-            {{ form.hidden_tag() }}
-            <div class="mb-4">
-                {{ form.email.label(class="block text-[#1e293b] font-medium mb-2") }}
-                {{ form.email(class="w-full px-4 py-2.5 border border-[#e2e8f0] rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all duration-200 text-[#1e293b] placeholder:text-[#64748b]", placeholder="vous@exemple.fr") }}
-                {% for error in form.email.errors %}
-                    <p class="text-[#dc2626] text-sm mt-1">{{ error }}</p>
-                {% endfor %}
+<div class="min-h-[70vh] flex items-center justify-center py-12">
+    <div class="w-full max-w-md">
+        <div class="text-center mb-8">
+            <div class="w-12 h-12 mx-auto rounded-2xl bg-gradient-to-br from-[#4f46e5] to-[#3730a3] flex items-center justify-center mb-4 shadow-lg">
+                <span class="text-white font-bold text-lg">N</span>
             </div>
-            <div class="mb-4">
-                {{ form.password.label(class="block text-[#1e293b] font-medium mb-2") }}
-                {{ form.password(class="w-full px-4 py-2.5 border border-[#e2e8f0] rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all duration-200 text-[#1e293b] placeholder:text-[#64748b]", placeholder="Votre mot de passe") }}
-                {% for error in form.password.errors %}
-                    <p class="text-[#dc2626] text-sm mt-1">{{ error }}</p>
-                {% endfor %}
-            </div>
-            <div class="mb-6 flex items-center">
-                {{ form.remember_me(class="h-4 w-4 text-primary focus:ring-primary border-[#e2e8f0] rounded") }}
-                {{ form.remember_me.label(class="ml-2 text-[#64748b] text-sm") }}
-            </div>
-            {{ form.submit(class="w-full bg-primary text-white py-2.5 rounded-lg hover:bg-primary-light transition-all duration-200 font-medium cursor-pointer") }}
-            <p class="text-center text-[#64748b] mt-4 text-sm">
-                Pas de compte ? <a href="{{ url_for('auth.register') }}" class="text-primary hover:text-primary-light hover:underline transition-all duration-200">Inscrivez-vous</a>
-            </p>
-        </form>
+            <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-[#0f172a]">Connexion</h1>
+            <p class="text-[#475569] mt-2">Bienvenue sur Nexa Social</p>
+        </div>
+        <div class="bg-white rounded-2xl shadow-sm border border-[#e2e8f0] p-6 sm:p-8">
+            <form method="POST" novalidate class="space-y-5">
+                {{ form.hidden_tag() }}
+                <div>
+                    <label class="block text-sm font-medium text-[#475569] mb-1.5">{{ form.email.label.text }}</label>
+                    {{ form.email(class="w-full px-4 py-2.5 rounded-xl border border-[#e2e8f0] focus:ring-2 focus:ring-[#4f46e5]/20 focus:border-[#4f46e5] outline-none transition-all duration-200 text-[#0f172a] placeholder:text-[#94a3b8] bg-transparent", placeholder="vous@exemple.fr") }}
+                    {% for error in form.email.errors %}
+                        <p class="flex items-center gap-1 text-[#ef4444] text-sm mt-1.5">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-[#475569] mb-1.5">{{ form.password.label.text }}</label>
+                    {{ form.password(class="w-full px-4 py-2.5 rounded-xl border border-[#e2e8f0] focus:ring-2 focus:ring-[#4f46e5]/20 focus:border-[#4f46e5] outline-none transition-all duration-200 text-[#0f172a] placeholder:text-[#94a3b8] bg-transparent", placeholder="Votre mot de passe") }}
+                    {% for error in form.password.errors %}
+                        <p class="flex items-center gap-1 text-[#ef4444] text-sm mt-1.5">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% if form.remember_me is defined %}
+                <label class="flex items-center gap-2 cursor-pointer">
+                    {{ form.remember_me(class="w-4 h-4 rounded border-[#e2e8f0] text-[#4f46e5] focus:ring-[#4f46e5]") }}
+                    <span class="text-sm text-[#475569]">{{ form.remember_me.label.text }}</span>
+                </label>
+                {% endif %}
+                {{ form.submit(class="w-full bg-[#4f46e5] text-white py-2.5 rounded-full hover:bg-[#818cf8] hover:shadow-lg transition-all duration-200 font-medium cursor-pointer") }}
+            </form>
+        </div>
+        <p class="text-center text-sm text-[#94a3b8] mt-6">
+            Pas de compte ? <a href="{{ url_for('auth.register') }}" class="text-[#4f46e5] hover:text-[#818cf8] font-medium hover:underline transition-all duration-200">Inscrivez-vous</a>
+        </p>
     </div>
 </div>
 {% endblock %}

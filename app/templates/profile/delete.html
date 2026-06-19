@@ -1,21 +1,29 @@
 {% extends "base.html" %}
 {% block title %}Supprimer mon compte - Nexa Social{% endblock %}
 {% block content %}
-<div class="min-h-[60vh] flex items-center justify-center">
-    <div class="w-full max-w-md bg-white rounded-xl shadow-md p-8 border border-[#e2e8f0]">
-        <h1 class="text-2xl font-bold text-[#dc2626] mb-2">Supprimer mon compte</h1>
-        <p class="text-[#64748b] mb-6">Cette action est irréversible. Confirmez en saisissant votre mot de passe.</p>
-        <form method="POST" novalidate>
-            {{ form.hidden_tag() }}
-            <div class="mb-6">
-                {{ form.password.label(class="block text-[#1e293b] font-medium mb-2") }}
-                {{ form.password(class="w-full px-4 py-2.5 border border-[#e2e8f0] rounded-lg focus:ring-2 focus:ring-[#dc2626] focus:border-[#dc2626] outline-none transition-all duration-200 text-[#1e293b] placeholder:text-[#64748b]", placeholder="Votre mot de passe") }}
-                {% for error in form.password.errors %}
-                    <p class="text-[#dc2626] text-sm mt-1">{{ error }}</p>
-                {% endfor %}
-            </div>
-            {{ form.submit(class="w-full bg-[#dc2626] text-white py-2.5 rounded-lg hover:bg-red-700 transition-all duration-200 font-medium cursor-pointer") }}
-        </form>
+<div class="min-h-[70vh] flex items-center justify-center py-12">
+    <div class="w-full max-w-md text-center">
+        <div class="w-16 h-16 mx-auto rounded-2xl bg-[#fef2f2] flex items-center justify-center mb-6">
+            <svg class="w-8 h-8 text-[#ef4444]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
+            </svg>
+        </div>
+        <h1 class="text-2xl font-bold text-[#0f172a] mb-2">Supprimer mon compte</h1>
+        <p class="text-[#475569] mb-8">Cette action est irréversible. Toutes vos données seront définitivement effacées.</p>
+        <div class="bg-white rounded-2xl shadow-sm border border-[#e2e8f0] p-6 sm:p-8 text-left">
+            <form method="POST" novalidate class="space-y-5">
+                {{ form.hidden_tag() }}
+                <div>
+                    <label class="block text-sm font-medium text-[#475569] mb-1.5">{{ form.password.label.text }}</label>
+                    {{ form.password(class="w-full px-4 py-2.5 rounded-xl border border-[#ef4444]/30 focus:ring-2 focus:ring-[#ef4444]/20 focus:border-[#ef4444] outline-none transition-all duration-200 text-[#0f172a] placeholder:text-[#94a3b8] bg-transparent", placeholder="Confirmez avec votre mot de passe") }}
+                    {% for error in form.password.errors %}
+                        <p class="text-[#ef4444] text-sm mt-1.5">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {{ form.submit(class="w-full bg-[#ef4444] text-white py-2.5 rounded-full hover:bg-red-600 hover:shadow-lg transition-all duration-200 font-medium cursor-pointer") }}
+            </form>
+        </div>
+        <a href="{{ url_for('profile.view') }}" class="inline-block mt-6 text-sm text-[#94a3b8] hover:text-[#475569] transition-all duration-200">← Retour au profil</a>
     </div>
 </div>
 {% endblock %}
