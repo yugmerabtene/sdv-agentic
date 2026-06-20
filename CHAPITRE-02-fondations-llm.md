@@ -1,8 +1,8 @@
-# Chapitre 2 — Architecture des LLMs
+# Chapitre 2 — Architecture des Large Language Models
 
 ## Objectifs pédagogiques
 
-- Comprendre le fonctionnement interne d'un LLM (Large Language Model) (tokenisation → prédiction)
+- Comprendre le fonctionnement interne d'un Large Language Model (tokenisation → prédiction)
 - Maîtriser la notion de fenêtre de contexte et ses implications
 - Connaître les différents types de modèles et leurs usages
 - Comprendre les scaling laws et l'émergence
@@ -11,7 +11,7 @@
 
 ## Prérequis
 
-Avant de commencer cette chapitre, assurez-vous d'avoir :
+Avant de commencer ce chapitre, assurez-vous d'avoir :
 
 - Terminé le **[Chapitre 1](CHAPITRE-01-histoire-ia.md)** et son TP (environnement opencode fonctionnel)
 - Python 3.10+ installé
@@ -19,18 +19,36 @@ Avant de commencer cette chapitre, assurez-vous d'avoir :
 
 ### Installation des dépendances
 
+#### Linux et macOS
+
 ```bash
-# Dépendances : tiktoken pour tokeniser, pytest pour valider le TP
-pip install tiktoken pytest
+python3 -m pip install tiktoken pytest
 
 # Vérification
-pip show tiktoken pytest
+python3 -m pip show tiktoken pytest
+```
+
+#### Windows PowerShell
+
+```powershell
+py -m pip install tiktoken pytest
+
+# Vérification
+py -m pip show tiktoken pytest
 ```
 
 ### Vérification
 
+#### Linux et macOS
+
 ```bash
 python3 -c "import tiktoken; print(tiktoken.__version__)"
+```
+
+#### Windows PowerShell
+
+```powershell
+py -c "import tiktoken; print(tiktoken.__version__)"
 ```
 
 > **Résultat attendu :** un numéro de version s'affiche (ex: `0.7.0`).
@@ -41,10 +59,10 @@ python3 -c "import tiktoken; print(tiktoken.__version__)"
 
 ### 1.1 Principe
 
-Un LLM ne lit pas du texte, il lit des **tokens** (unités de texte, mots ou sous-mots) — des morceaux de mots ou caractères.
+Un Large Language Model ne lit pas du texte, il lit des **tokens** (unités de texte, mots ou sous-mots) — des morceaux de mots ou caractères.
 
 ```
-"Les agents IA sont fascinants"
+"Les agents Intelligence Artificielle sont fascinants"
 → ["Les", " agents", " IA", " sont", " fascin", "ants"]
 ```
 
@@ -58,7 +76,7 @@ Un LLM ne lit pas du texte, il lit des **tokens** (unités de texte, mots ou sou
 
 | Capacité | Tokens | Mots (français) |
 |---|---|---|
-| Contexte court (GPT (Generative Pre-trained Transformer)-3) | 4 096 | ~3 000 |
+| Contexte court (Generative Pre-trained Transformer-3) | 4 096 | ~3 000 |
 | Contexte long (GPT-4) | 128 000 | ~96 000 |
 | Contexte géant (Claude 4) | 200 000 | ~150 000 |
 | Contexte infini (Gemini) | 1 000 000 | ~750 000 |
@@ -169,7 +187,7 @@ Ces blocs sont empilés **N fois** (ex: GPT-3 = 96 couches).
 
 ### 4.1 La découverte (Kaplan et al., 2020)
 
-Les performances d'un LLM suivent une **loi de puissance** prévisible :
+Les performances d'un Large Language Model suivent une **loi de puissance** prévisible :
 
 ```
 Performance ∝ (Paramètres) × (Données) × (Calcul)
@@ -206,10 +224,10 @@ Au-delà d'un certain seuil (~100 milliards de paramètres), des capacités **é
 
 ### 5.1 Autoregression
 
-Un LLM génère du texte **token par token**, en prédisant le token suivant à chaque étape :
+Un Large Language Model génère du texte **token par token**, en prédisant le token suivant à chaque étape :
 
 ```
-"Les agents" → ["IA"] (probabilité 0.45)
+"Les agents" → ["Intelligence Artificielle"] (probabilité 0.45)
             → ["intelligents"] (probabilité 0.30)
             → ["autonomes"] (probabilité 0.15)
             → ...
@@ -239,7 +257,7 @@ Contrôle l'**aléas** dans la sélection du prochain token :
 
 | Modèle | Forces | Faiblesses |
 |---|---|---|
-| GPT-5 | Généraliste, API (Application Programming Interface) stable | Coûteux, pas modifiable |
+| GPT-5 | Généraliste, Application Programming Interface stable | Coûteux, pas modifiable |
 | Claude 4 | Long contexte, safety | Moins performant en code |
 | Gemini 2 | Multimodal natif | Moins flexible |
 
@@ -287,13 +305,13 @@ graph TD
 
 ---
 
-> **Projet reseau social** : le projet social defini dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md) utilisera les LLMs via opencode pour automatiser le developpement de ses fonctionnalites (authentification, mur public, gestion utilisateurs).
+> **Projet reseau social** : le projet social defini dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md) utilisera les Large Language Models via opencode pour automatiser le developpement de ses fonctionnalites (authentification, mur public, gestion utilisateurs).
 
 ---
 
 ## 7. Travaux Pratiques — Visualiser la tokenisation
 
-> **Projet reseau social** : dans ce TP, vous allez tokeniser des phrases de l'application reseau social (messages, noms d'utilisateur) pour comprendre comment un LLM les "voit" et estimer le cout en tokens des futures fonctionnalites.
+> **Projet reseau social** : dans ce TP, vous allez tokeniser des phrases de l'application reseau social (messages, noms d'utilisateur) pour comprendre comment un Large Language Model les "voit" et estimer le cout en tokens des futures fonctionnalites.
 
 **Objectif :** Installer tiktoken, tokeniser du texte, comprendre la difference entre mots et tokens, estimer le cout d'un message.
 
@@ -321,14 +339,19 @@ Vous devez :
 
 #### Étape 1 — Creer le dossier
 
+**Point de départ :** ouvrez un terminal dans votre dossier d'exercices. Ce TP crée un **nouveau dossier indépendant** nommé `tokenisation`.
+
 ```bash
 mkdir -p tokenisation
 cd tokenisation
+pwd
 ```
+
+**Résultat attendu :** `pwd` doit se terminer par `tokenisation`. Les fichiers `demo_tokenisation.py` et `test_tokenisation.py` seront créés dans ce dossier.
 
 #### Étape 2 — Script de tokenisation
 
-Creez `demo_tokenisation.py` :
+Vous êtes toujours dans `tokenisation/`. Creez `demo_tokenisation.py` à la racine de ce dossier :
 
 ```python
 import tiktoken
@@ -426,7 +449,7 @@ Les IDs de tokens seront differents selon l'encodeur, mais vous verrez chaque to
 
 #### Étape 4 — Tests unitaires
 
-Creez `test_tokenisation.py` :
+Vous êtes toujours dans `tokenisation/`. Creez `test_tokenisation.py` à côté de `demo_tokenisation.py` :
 
 ```python
 import tiktoken
@@ -497,8 +520,12 @@ python3 -m pytest test_tokenisation.py -v
 
 #### Étape 6 — Explorer avec opencode
 
+**Point de départ :** vous êtes normalement dans le dossier `tokenisation/` après les tests.
+
+Pour lancer opencode sur le TP, vous pouvez rester dans `tokenisation/`. Si vous préférez revenir au dossier parent où se trouvent tous vos TPs, utilisez `cd ..`.
+
 ```bash
-# Revenir a la racine du cours
+# Optionnel : revenir au dossier parent de tokenisation
 cd ..
 
 # Lancer opencode et demander :
@@ -512,7 +539,7 @@ Explique moi comment fonctionne la tokenisation avec tiktoken
 ```
 
 ```
-Quel est l'impact du nombre de tokens sur le cout d'un appel LLM ?
+Quel est l'impact du nombre de tokens sur le cout d'un appel Large Language Model ?
 ```
 
 ---
@@ -554,7 +581,7 @@ tokenisation/
 
 ## Points clés à retenir
 
-1. Un LLM est un **prédicteur de tokens** entraîné sur des masses de texte
+1. Un Large Language Model est un **prédicteur de tokens** entraîné sur des masses de texte
 2. Le **Transformer** est l'architecture universelle depuis 2017
 3. L'**attention** permet au modèle de se concentrer sur les relations pertinentes
 4. Le **scaling** (plus de paramètres + données + calcul) améliore les performances de façon prévisible
@@ -565,7 +592,7 @@ tokenisation/
 
 ## Liens
 
-- [Chapitre 1 — Histoire de l'IA (Intelligence Artificielle)](./CHAPITRE-01-histoire-ia.md)
+- [Chapitre 1 — Histoire de l'Intelligence Artificielle](./CHAPITRE-01-histoire-ia.md)
 - [Chapitre 3 — Prompt & Tool Use](./CHAPITRE-03-prompt-tool-use.md)
 - [Documentation technique — Architecture Transformer (Vaswani et al., 2017)](https://arxiv.org/abs/1706.03762)
 

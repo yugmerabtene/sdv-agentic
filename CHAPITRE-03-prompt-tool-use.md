@@ -11,7 +11,7 @@
 
 ## Prérequis
 
-Avant de commencer cette chapitre, assurez-vous d'avoir :
+Avant de commencer ce chapitre, assurez-vous d'avoir :
 
 - Terminé les **[Chapitres 1](CHAPITRE-01-histoire-ia.md)** et **[Chapitre 2](CHAPITRE-02-fondations-llm.md)** avec leurs TP
 - Python 3.10+ et opencode installés
@@ -19,12 +19,21 @@ Avant de commencer cette chapitre, assurez-vous d'avoir :
 
 ### Vérification
 
+#### Linux et macOS
+
 ```bash
 # Tester que tout est fonctionnel
 python3 --version && opencode --version
 ```
 
-> **Aucune dépendance supplémentaire** pour cette chapitre — Python standard suffit.
+#### Windows PowerShell
+
+```powershell
+py --version
+opencode --version
+```
+
+> **Aucune dépendance supplémentaire** pour ce chapitre — Python standard suffit.
 
 ---
 
@@ -47,7 +56,7 @@ graph LR
         EX["Exemples (Few-shot)<br/>"]
     end
     
-    SP --> LLM["LLM (Large Language Model)"]
+    SP --> LLM["Large Language Model"]
     UP --> LLM
     EX --> LLM
     LLM --> R[Réponse]
@@ -93,7 +102,7 @@ si un email est valide ?
 Donner une instruction sans exemple. Fonctionne bien pour les tâches simples.
 
 ```
-Traduis en anglais : "Les agents IA sont fascinants"
+Traduis en anglais : "Les agents Intelligence Artificielle sont fascinants"
 → "AI agents are fascinating"
 ```
 
@@ -155,7 +164,32 @@ Analyse ce Dockerfile et identifie les problèmes de sécurité.
 
 ### 3.1 Principe
 
-Le LLM (Large Language Model) peut déclarer qu'il souhaite utiliser un outil externe, sans l'exécuter lui-même.
+Le Large Language Model peut déclarer qu'il souhaite utiliser un outil externe, sans l'exécuter lui-même.
+
+#### Principe expliqué simplement
+
+Un Large Language Model seul ne fait que produire du texte. Il ne sait pas réellement consulter une météo, lire une base de données ou exécuter un calcul fiable. Le **tool use** ajoute une couche d'orchestration autour du Large Language Model.
+
+Le Large Language Model dit : "je veux appeler tel outil avec tels paramètres". Ensuite, votre programme exécute réellement l'outil, récupère le résultat, puis le renvoie au Large Language Model.
+
+```text
+Utilisateur → pose une question
+Large Language Model → demande un outil : get_weather(city="Paris")
+Programme → exécute get_weather("Paris")
+Outil → retourne "15°C"
+Large Language Model → rédige la réponse finale
+```
+
+#### Pourquoi c'est utile ?
+
+- Le Large Language Model peut utiliser des données fraîches ou externes
+- Les réponses sont moins inventées, car elles s'appuient sur un résultat d'outil
+- Les actions restent contrôlées par le code applicatif
+- Les permissions permettent d'autoriser certains outils et d'en bloquer d'autres
+
+#### Limite importante
+
+Un outil trop puissant ou mal décrit peut être dangereux. Il faut toujours valider les paramètres côté serveur, limiter les permissions et gérer les erreurs.
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {
@@ -164,9 +198,9 @@ Le LLM (Large Language Model) peut déclarer qu'il souhaite utiliser un outil ex
   'lineColor': '#22d3ee'
 }}}%%
 graph TD
-    U[Utilisateur] -->|"Question"| LLM[LLM]
+    U[Utilisateur] -->|"Question"| LLM[Large Language Model]
     LLM -->|"tool_call: get_weather('Paris')"| Orchestrator[Orchestrateur]
-    Orchestrator -->|"Appel API (Application Programming Interface)"| Weather[API Météo]
+    Orchestrator -->|"Appel Application Programming Interface"| Weather[Application Programming Interface Météo]
     Weather -->|"15°C, pluie"| Orchestrator
     Orchestrator -->|"Observation"| LLM
     LLM -->|"Réponse"| U
@@ -179,17 +213,31 @@ graph TD
 
 ### 3.2 Définir un outil
 
-Créez un fichier `tools.py` :
+#### Où créer le fichier ?
+
+**Point de départ :** ouvrez un terminal dans votre dossier d'exercices `~/agentic-labs` (Linux/macOS) ou `$HOME\agentic-labs` (Windows PowerShell).
+
+```bash
+mkdir -p chapitre-03-tool-use
+cd chapitre-03-tool-use
+pwd
+```
+
+**Résultat attendu :** `pwd` doit se terminer par `chapitre-03-tool-use`. Les fichiers `tools.py` et plus tard `agent_loop.py` seront créés dans ce dossier.
+
+Créez `tools.py` dans ce dossier :
 
 ```python
-# Liste des outils disponibles pour le LLM
+import json
+
+# Liste des outils disponibles pour le Large Language Model
 # Chaque outil est défini comme un dictionnaire conforme au schema OpenAI
 tools = [
     {
         "type": "function",  # Type d'outil : appel de fonction
         "function": {
             "name": "get_weather",  # Nom unique de l'outil
-            # Description qui aide le LLM à décider quand utiliser cet outil
+            # Description qui aide le Large Language Model à décider quand utiliser cet outil
             "description": "Obtenir la météo d'une ville",
             "parameters": {
                 "type": "object",  # Le paramètre est un objet JSON
@@ -204,28 +252,53 @@ tools = [
         }
     }
 ]
+
+
+if __name__ == "__main__":
+    print(json.dumps(tools, indent=2, ensure_ascii=False))
+```
+
+#### Exécuter le fichier
+
+```bash
+python3 tools.py
+```
+
+#### Résultat attendu
+
+```text
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "get_weather",
+      "description": "Obtenir la météo d'une ville",
+      ...
+    }
+  }
+]
 ```
 
 ### 3.3 Appel et exécution
 
 ```
-Réponse LLM : tool_call(id="call_123", name="get_weather", args={"city": "Paris"})
+Réponse Large Language Model : tool_call(id="call_123", name="get_weather", args={"city": "Paris"})
 
 → Orchestrateur exécute : get_weather("Paris") → "15°C, nuageux"
 
-→ Envoie l'observation au LLM :
+→ Envoie l'observation au Large Language Model :
   tool_result(id="call_123", content="15°C, nuageux")
 
-→ LLM répond : "Il fait 15°C et nuageux à Paris."
+→ Large Language Model répond : "Il fait 15°C et nuageux à Paris."
 ```
 
 ### 3.4 Bonnes pratiques
 
 | Pratique | Pourquoi |
 |---|---|
-| Description claire de l'outil | Le LLM comprend quand l'utiliser |
+| Description claire de l'outil | Le Large Language Model comprend quand l'utiliser |
 | Paramètres bien typés | Moins d'erreurs d'appel |
-| Gestion des erreurs | L'outil peut échouer → le LLM doit le savoir |
+| Gestion des erreurs | L'outil peut échouer → le Large Language Model doit le savoir |
 | Timeout | Un outil lent bloque l'agent |
 | Sécurité | Vérifier les arguments avant exécution |
 
@@ -236,6 +309,33 @@ Réponse LLM : tool_call(id="call_123", name="get_weather", args={"city": "Paris
 ### 4.1 Principe
 
 **ReAct** (Reasoning + Acting) alterne trois étapes :
+
+#### Principe expliqué simplement
+
+ReAct signifie **Reasoning + Acting** : l'agent alterne raisonnement et action.
+
+Au lieu de répondre immédiatement, il avance étape par étape :
+
+```text
+Thought      → je réfléchis
+Action       → j'appelle un outil ou je fais une action
+Observation  → je lis le résultat
+Thought      → je décide quoi faire ensuite
+Réponse      → je réponds quand j'ai assez d'informations
+```
+
+Ce pattern est la base des agents modernes : l'agent ne se contente pas de deviner. Il agit, observe, puis ajuste sa réponse.
+
+#### Pourquoi c'est utile ?
+
+- Découpe un problème complexe en petites étapes
+- Permet de combiner plusieurs outils
+- Réduit les hallucinations grâce aux observations
+- Rend le raisonnement plus contrôlable
+
+#### Limite importante
+
+Une boucle ReAct doit avoir une limite (`max_steps`). Sans limite, un agent peut tourner indéfiniment : réfléchir, appeler un outil, observer, recommencer.
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {
@@ -253,9 +353,9 @@ graph LR
     style O fill:#059669,color:#fff,stroke:#047857
 ```
 
-1. **Thought** : Le LLM réfléchit à ce qu'il doit faire
+1. **Thought** : Le Large Language Model réfléchit à ce qu'il doit faire
 2. **Action** : Il appelle un outil ou produit une réponse
-3. **Observation** : Le résultat de l'outil est renvoyé au LLM
+3. **Observation** : Le résultat de l'outil est renvoyé au Large Language Model
 
 ### 4.2 Exemple complet
 
@@ -276,25 +376,53 @@ Réponse: L'écart de température entre Paris (15°C) et Tokyo (22°C) est de 7
 
 ### 4.3 Implémentation simple
 
-Créez un fichier `agent_loop.py` :
+#### Où créer le fichier ?
+
+**Point de départ :** vous devriez être dans `~/agentic-labs`. Si c'est le cas, restez ici ou recréez le dossier.
+
+```bash
+mkdir -p chapitre-03-tool-use
+cd chapitre-03-tool-use
+pwd
+```
+
+**Résultat attendu :** `pwd` doit se terminer par `chapitre-03-tool-use`, au même endroit que `tools.py`.
+
+Créez `agent_loop.py` :
 
 ```python
-# Boucle principale du pattern ReAct
-# question : entrée utilisateur, max_steps : limite d'itérations
+class FakeResponse:
+    def __init__(self, content=None, tool_calls=None):
+        self.content = content
+        self.tool_calls = tool_calls or []
+
+
+class FakeLLM:
+    """Large Language Model factice pour rendre la boucle exécutable sans Application Programming Interface."""
+
+    def chat(self, messages, tools=None):
+        return FakeResponse(content="Réponse finale après raisonnement ReAct simulé.")
+
+
+llm = FakeLLM()
+tools = []
+
+
 def agent_loop(question: str, max_steps: int = 5):
+    """Boucle principale du pattern ReAct."""
     # Initialise l'historique avec la question de l'utilisateur
     messages = [{"role": "user", "content": question}]
     
     # Boucle ReAct : Thought -> Action -> Observation
     for step in range(max_steps):
-        # Envoie les messages au LLM avec les outils disponibles
+        # Envoie les messages au Large Language Model avec les outils disponibles
         response = llm.chat(messages, tools=tools)
         
-        # Si le LLM répond directement, c'est la réponse finale
+        # Si le Large Language Model répond directement, c'est la réponse finale
         if response.content:  # Réponse finale
             return response.content
         
-        # Si le LLM demande un appel d'outil
+        # Si le Large Language Model demande un appel d'outil
         if response.tool_calls:
             # Parcourt tous les appels d'outils demandés
             for tool_call in response.tool_calls:
@@ -310,6 +438,22 @@ def agent_loop(question: str, max_steps: int = 5):
     
     # Si on dépasse le nombre max d'étapes sans réponse finale
     return "Max steps atteint"
+
+
+if __name__ == "__main__":
+    print(agent_loop("Quel temps fait-il à Paris ?"))
+```
+
+#### Exécuter le fichier
+
+```bash
+python3 agent_loop.py
+```
+
+#### Résultat attendu
+
+```text
+Réponse finale après raisonnement ReAct simulé.
 ```
 
 ---
@@ -368,11 +512,16 @@ Vous devez creer un assistant interactif en ligne de commande avec :
 
 ### 6.2 Corrigé — Étape 1 : Structure du projet
 
+**Point de départ :** ouvrez un terminal dans votre dossier d'exercices. Ce TP crée un **nouveau dossier indépendant** nommé `assistant-cli`.
+
 ```bash
 mkdir assistant-cli && cd assistant-cli
+pwd
 ```
 
-Créez `assistant.py` :
+**Résultat attendu :** `pwd` doit se terminer par `assistant-cli`. Tous les fichiers de ce TP seront créés dans ce dossier.
+
+Vous êtes toujours dans `assistant-cli/`. Créez `assistant.py` à la racine de ce dossier :
 
 ```python
 import json  # Pour la manipulation de données JSON
@@ -440,13 +589,21 @@ python3 assistant.py
 
 ### 6.4 Corrigé — Étape 3 : Configurer opencode pour l'assistant
 
-Créez les dossiers nécessaires :
+Vous êtes toujours dans `assistant-cli/`. Créez les dossiers nécessaires :
 
 ```bash
 mkdir -p .opencode/skills
 ```
 
-Créez un fichier `opencode.json` à la racine du projet :
+Créez un fichier `opencode.json` à la racine du projet `assistant-cli/`, au même niveau que `assistant.py` :
+
+```text
+assistant-cli/
+├── assistant.py
+├── opencode.json          ← à créer maintenant
+└── .opencode/
+    └── skills/
+```
 
 ```json
 {
@@ -465,6 +622,25 @@ Créez un fichier `opencode.json` à la racine du projet :
 }
 ```
 
+#### À quoi sert `AGENTS.md` ici ?
+
+Dans ce TP, `AGENTS.md` explique à opencode que le projet concerne un assistant CLI avec outils. Le fichier donne le contexte métier : quels outils existent, quel est l'objectif du projet, et comment l'agent doit l'améliorer.
+
+Sans ce fichier, l'agent voit seulement une configuration technique dans `opencode.json`. Avec `AGENTS.md`, il comprend ce qu'il doit préserver : l'assistant doit rester simple, testable, et orienté tool use.
+
+#### Où créer le fichier ?
+
+Créez `AGENTS.md` à la racine de `assistant-cli/`, au même niveau que `assistant.py` et `opencode.json` :
+
+```text
+assistant-cli/
+├── assistant.py
+├── opencode.json
+├── AGENTS.md
+└── .opencode/
+    └── skills/
+```
+
 Créez `AGENTS.md` :
 
 ```markdown
@@ -479,6 +655,16 @@ Ce projet contient un assistant en ligne de commande qui utilise deux outils :
 
 Améliorer progressivement l'assistant avec opencode : meilleure détection d'intention, nouveaux outils, tests.
 ```
+
+#### Résultat attendu
+
+Quand opencode démarre, il charge `AGENTS.md` grâce à la ligne suivante dans `opencode.json` :
+
+```jsonc
+"instructions": ["AGENTS.md"]
+```
+
+L'agent sait alors que son travail doit rester centré sur l'assistant CLI et ses outils.
 
 Créez `.opencode/skills/common.md` :
 
@@ -561,7 +747,7 @@ Lancez opencode et demandez-lui d'améliorer l'assistant :
 
 ### 6.8 Pour aller plus loin
 
-- Implémentez le vrai pattern ReAct avec une boucle LLM
+- Implémentez le vrai pattern ReAct avec une boucle Large Language Model
 - Ajoutez un outil de recherche web (fichier local)
 - Utilisez opencode pour ajouter une interface web Flask/FastAPI
 
@@ -569,9 +755,9 @@ Lancez opencode et demandez-lui d'améliorer l'assistant :
 
 ## Points clés à retenir
 
-1. Le **prompt engineering** est la première compétence à maîtriser pour interagir avec les LLMs
+1. Le **prompt engineering** est la première compétence à maîtriser pour interagir avec les Large Language Models
 2. Le **few-shot** et le **chain-of-thought** améliorent significativement la qualité des réponses
-3. Le **function calling** transforme un LLM passif en orchestrateur d'actions
+3. Le **function calling** transforme un Large Language Model passif en orchestrateur d'actions
 4. Le **pattern ReAct** (Thought → Action → Observation) est la boucle fondamentale de tout système agentique
 5. Un **system prompt bien conçu** est crucial pour le comportement d'un agent
 
@@ -579,7 +765,7 @@ Lancez opencode et demandez-lui d'améliorer l'assistant :
 
 ## Liens
 
-- [Chapitre 2 — Architecture des LLMs](./CHAPITRE-02-fondations-llm.md)
+- [Chapitre 2 — Architecture des Large Language Models](./CHAPITRE-02-fondations-llm.md)
 - [Chapitre 4 — Architecture Agentique](./CHAPITRE-04-architecture-agent.md)
 - [Référence OpenAI Function Calling](https://platform.openai.com/docs/guides/function-calling)
 - [ReAct Paper (Yao et al., 2023)](https://arxiv.org/abs/2210.03629)

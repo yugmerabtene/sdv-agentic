@@ -11,7 +11,7 @@
 
 ## Prérequis
 
-Avant de commencer cette chapitre, assurez-vous d'avoir :
+Avant de commencer ce chapitre, assurez-vous d'avoir :
 
 - Terminé le **[Chapitre 5](CHAPITRE-05-memoire-rag.md)** et son TP mémoire persistante
 - opencode installé et fonctionnel
@@ -19,6 +19,8 @@ Avant de commencer cette chapitre, assurez-vous d'avoir :
 - Compris les fichiers `opencode.json`, `AGENTS.md` et `.opencode/skills/`
 
 ### Vérification
+
+#### Linux, macOS et Windows PowerShell
 
 ```bash
 opencode --version
@@ -36,7 +38,7 @@ git --version
 | Problème | Exemple | Solution multi-agent |
 |---|---|---|
 | **Spécialisation** | Un agent ne peut pas être bon en tout | Agents spécialisés par domaine |
-| **Contexte** | Un seul LLM (Large Language Model) a une fenêtre limitée | Chaque agent a son propre contexte |
+| **Contexte** | Un seul Large Language Model a une fenêtre limitée | Chaque agent a son propre contexte |
 | **Parallélisme** | Tâches séquentielles lentes | Agents qui travaillent en parallèle |
 | **Résilience** | Un agent qui échoue bloque tout | Agents redondants, fallback |
 | **Modularité** | Tout le code dans une boucle | Agents indépendants et remplaçables |
@@ -48,7 +50,7 @@ Chaque agent a un **rôle précis** et un **système prompt dédié** :
 ```
 Agent Modérateur → Analyse de toxicité, spam
 Agent Résumé     → Synthèse de contenu
-Agent Recherche  → RAG (Retrieval-Augmented Generation), recherche documentaire
+Agent Recherche  → Retrieval-Augmented Generation, recherche documentaire
 Agent Code      → Génération et révision de code
 ```
 
@@ -164,9 +166,35 @@ graph TD
 
 ## 3. Architecture Supervisor
 
+### Principe expliqué simplement
+
+Un **Supervisor** est un agent coordinateur. Il ne fait pas forcément tout lui-même. Son rôle est de comprendre la demande, découper le travail, déléguer aux bons sous-agents, puis consolider les résultats.
+
+Dans une équipe humaine, c'est proche du rôle d'un chef de projet technique :
+
+```text
+Utilisateur → demande globale
+Supervisor → découpe la demande
+Backend agent → traite l'Application Programming Interface
+Frontend agent → traite l'interface
+Tester agent → vérifie le résultat
+Supervisor → synthétise et répond
+```
+
+#### Pourquoi c'est utile ?
+
+- Chaque agent peut être spécialisé
+- Le contexte est mieux organisé
+- Les tâches peuvent être parallélisées
+- Les erreurs sont plus faciles à isoler
+
+#### Limite importante
+
+Un mauvais Supervisor peut mal déléguer, oublier une étape ou fusionner des résultats incompatibles. Il faut donc définir clairement les rôles des sous-agents et les critères de validation.
+
 ### 3.1 Principe
 
-Le **Supervisor Agent** est un LLM qui :
+Le **Supervisor Agent** est un Large Language Model qui :
 1. Reçoit la demande de l'utilisateur
 2. Décide quel(s) sous-agent(s) invoquer
 3. Consolide les résultats
@@ -192,45 +220,77 @@ Règles :
 
 ### 3.3 Implémentation
 
-Créez un fichier `supervisor_agent.py` :
+#### Où créer le fichier ?
+
+**Point de départ :** ouvrez un terminal dans votre dossier d'exercices `~/agentic-labs` (Linux/macOS) ou `$HOME\agentic-labs` (Windows PowerShell).
+
+```bash
+mkdir -p chapitre-06-multi-agent
+cd chapitre-06-multi-agent
+pwd
+```
+
+**Résultat attendu :** `pwd` doit se terminer par `chapitre-06-multi-agent`. Les fichiers `supervisor_agent.py` et `async_orchestrator.py` seront créés dans ce dossier.
+
+Créez `supervisor_agent.py` :
 
 ```python
+class ModeratorAgent:
+    def run(self, content: str) -> str:
+        return "contenu acceptable" if "spam" not in content.lower() else "spam detecté"
+
+
+class SummarizerAgent:
+    def run(self, text: str) -> str:
+        return text[:60] + "..." if len(text) > 60 else text
+
+
+class SearcherAgent:
+    def run(self, query: str) -> str:
+        return f"Résultat simulé pour : {query}"
+
+
 class SupervisorAgent:
-    # Constructeur : initialise le LLM, les sous-agents et l'historique
-    def __init__(self, llm):
-        self.llm = llm                              # Modèle de langage principal
+    def __init__(self):
         self.agents = {
-            "moderator": ModeratorAgent(llm),       # Agent de modération
-            "summarizer": SummarizerAgent(llm),     # Agent de résumé
-            "searcher": SearcherAgent(llm),         # Agent de recherche
+            "moderator": ModeratorAgent(),
+            "summarizer": SummarizerAgent(),
+            "searcher": SearcherAgent(),
         }
-        self.history = []                           # Historique des échanges
+        self.history = []
     
-    # Point d'entrée : exécute la boucle superviseur
     def run(self, user_input: str) -> str:
-        self.history.append({"role": "user", "content": user_input})  # Enregistre la requête
-        
-        while True:
-            # Interroge le LLM avec le prompt superviseur et les outils
-            response = self.llm.chat(
-                self.history,
-                system=self._supervisor_prompt(),
-                tools=self._agent_tools()
-            )
-            
-            if response.content:  # Réponse finale : fin de la boucle
-                return response.content
-            
-            # Traite chaque appel d'outil délégué par le LLM
-            for tc in response.tool_calls:
-                agent_name = tc.function.name       # Nom du sous-agent cible
-                args = json.loads(tc.function.arguments)  # Arguments de l'appel
-                result = self.agents[agent_name].run(**args)  # Exécute le sous-agent
-                self.history.append({                # Stocke le résultat dans l'historique
-                    "role": "tool",
-                    "content": str(result),
-                    "tool_call_id": tc.id
-                })
+        """Délègue selon des règles simples pour rendre l'exemple testable."""
+        self.history.append({"role": "user", "content": user_input})
+
+        moderation = self.agents["moderator"].run(user_input)
+        summary = self.agents["summarizer"].run(user_input)
+        search = self.agents["searcher"].run("réseau social")
+
+        return (
+            f"Modération: {moderation}\n"
+            f"Résumé: {summary}\n"
+            f"Recherche: {search}"
+        )
+
+
+if __name__ == "__main__":
+    supervisor = SupervisorAgent()
+    print(supervisor.run("Créer le mur public du réseau social"))
+```
+
+#### Exécuter le fichier
+
+```bash
+python3 supervisor_agent.py
+```
+
+#### Résultat attendu
+
+```text
+Modération: contenu acceptable
+Résumé: Créer le mur public du réseau social
+Recherche: Résultat simulé pour : réseau social
 ```
 
 ---
@@ -240,6 +300,31 @@ class SupervisorAgent:
 ### 4.1 Problème
 
 Un appel agent peut prendre plusieurs secondes, voire minutes. En séquentiel, l'utilisateur attend.
+
+#### Principe expliqué simplement
+
+Une **file d'attente asynchrone** permet de lancer une tâche longue sans bloquer l'utilisateur.
+
+Au lieu d'attendre le résultat immédiatement, le système retourne un identifiant de tâche. L'application peut ensuite demander l'état de cette tâche avec cet identifiant.
+
+```text
+Utilisateur → demande longue
+Système → retourne task_id
+Worker → travaille en arrière-plan
+Utilisateur → demande le résultat avec task_id
+Système → retourne le résultat final
+```
+
+#### Pourquoi c'est utile ?
+
+- L'interface reste réactive
+- Plusieurs tâches peuvent tourner en parallèle
+- Les erreurs peuvent être stockées et consultées
+- On peut ajouter timeout, retry et monitoring
+
+#### Limite importante
+
+L'asynchrone ajoute de la complexité : suivi d'état, erreurs, nettoyage, persistance et concurrence. Pour un petit script CLI, une boucle simple suffit souvent.
 
 ### 4.2 Solution : File d'attente
 
@@ -269,16 +354,36 @@ graph LR
 
 ### 4.3 Approche asynchrone simple
 
-Créez un fichier `async_orchestrator.py` :
+#### Où créer le fichier ?
+
+**Point de départ :** vous devriez être dans `~/agentic-labs`. Si c'est le cas, restez ici ou recréez le dossier.
+
+```bash
+mkdir -p chapitre-06-multi-agent
+cd chapitre-06-multi-agent
+pwd
+```
+
+**Résultat attendu :** `pwd` doit se terminer par `chapitre-06-multi-agent`, au même endroit que `supervisor_agent.py`.
+```
+
+Créez `async_orchestrator.py` :
 
 ```python
 import asyncio   # Bibliothèque pour la programmation asynchrone
 import uuid      # Génération d'identifiants uniques
 
+
+class FakeAsyncAgent:
+    async def arun(self, input_data: str) -> str:
+        await asyncio.sleep(0.2)
+        return f"Traitement terminé pour : {input_data}"
+
 class AsyncAgentOrchestrator:
     # Initialise le dictionnaire des tâches
     def __init__(self):
         self.tasks = {}  # stocke l'état de chaque tâche par son ID
+        self.agents = {"worker": FakeAsyncAgent()}
     
     # Soumet une tâche et retourne immédiatement un ID
     async def submit(self, agent_name: str, input_data: str) -> str:
@@ -305,6 +410,29 @@ class AsyncAgentOrchestrator:
         except Exception as e:
             self.tasks[task_id]["result"] = f"Error: {e}"  # Enregistre l'erreur
             self.tasks[task_id]["status"] = "failed"       # Marque comme échoué
+
+
+async def main():
+    orchestrator = AsyncAgentOrchestrator()
+    task_id = await orchestrator.submit("worker", "générer les tests")
+    result = await orchestrator.get_result(task_id)
+    print(result)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+#### Exécuter le fichier
+
+```bash
+python3 async_orchestrator.py
+```
+
+#### Résultat attendu
+
+```text
+Traitement terminé pour : générer les tests
 ```
 
 ---
@@ -317,7 +445,7 @@ class AsyncAgentOrchestrator:
 | **Fallback** | Agent de remplacement si le principal échoue | `agent_b if agent_a fails` |
 | **Circuit Breaker** | Arrêter les appels après N échecs consécutifs | Arrêt temporaire puis reprise |
 | **Timeout** | Limiter le temps d'exécution d'un agent | `asyncio.wait_for(task, timeout=30)` |
-| **Graceful degradation** | Réponse chapitrelle si un agent est indisponible | "Module X indisponible, voici le reste" |
+| **Graceful degradation** | Réponse partielle si un agent est indisponible | "Module X indisponible, voici le reste" |
 
 ---
 
@@ -336,9 +464,9 @@ class AsyncAgentOrchestrator:
 Vous devez configurer une équipe opencode avec :
 
 1. Un **scrum-master** qui joue le rôle de supervisor
-2. Un agent **backend-dev** pour APIs, logique métier et authentification
+2. Un agent **backend-dev** pour Application Programming Interfaces, logique métier et authentification
 3. Un agent **frontend-dev** pour interfaces et templates
-4. Un agent **data-dev** pour SQLite, migrations et mémoire/RAG
+4. Un agent **data-dev** pour SQLite, migrations et mémoire/Retrieval-Augmented Generation
 5. Des skills dédiées pour cadrer chaque rôle
 6. Une validation manuelle de la délégation
 
@@ -354,12 +482,26 @@ Vous devez configurer une équipe opencode avec :
 
 ### 6.2 Corrigé — Étape 1 : Créer le projet
 
+**Point de départ :** ouvrez un terminal dans votre dossier d'exercices. Ce TP crée un **nouveau dossier indépendant** nommé `supervisor-agent`.
+
 ```bash
 mkdir supervisor-agent && cd supervisor-agent
 mkdir -p .opencode/skills
+pwd
 ```
 
+**Résultat attendu :** `pwd` doit se terminer par `supervisor-agent`. Tous les fichiers de ce TP seront créés dans ce dossier.
+
 ### 6.3 Corrigé — Étape 2 : Configurer l'équipe
+
+Vous êtes toujours dans `supervisor-agent/`. Créez `opencode.json` à la racine de ce dossier :
+
+```text
+supervisor-agent/
+├── opencode.json          ← à créer maintenant
+└── .opencode/
+    └── skills/
+```
 
 `opencode.json` :
 
@@ -378,7 +520,7 @@ mkdir -p .opencode/skills
     },
     "backend-dev": {
       "mode": "subagent",
-      "description": "Développe la logique métier et les APIs",
+      "description": "Développe la logique métier et les Application Programming Interfaces",
       "skills": ["common", "backend"]
     },
     "frontend-dev": {
@@ -388,7 +530,7 @@ mkdir -p .opencode/skills
     },
     "data-dev": {
       "mode": "subagent",
-      "description": "Gère la base de données et le RAG (Retrieval-Augmented Generation)",
+      "description": "Gère la base de données et le Retrieval-Augmented Generation",
       "skills": ["common", "data"]
     }
   }
@@ -396,6 +538,8 @@ mkdir -p .opencode/skills
 ```
 
 ### 6.4 Corrigé — Étape 3 : Créer les skills spécialisées
+
+Vous êtes toujours dans `supervisor-agent/`. Les skills doivent être créées dans `.opencode/skills/`, pas à la racine du projet.
 
 **`.opencode/skills/scrum_master.md`**
 
@@ -412,9 +556,9 @@ Tu es le Scrum Master. Tu coordonnes une équipe de 3 développeurs.
 5. Présente une synthèse
 
 ## Sous-agents disponibles
-- @backend-dev : APIs, logique métier, auth
-- @frontend-dev : HTML (HyperText Markup Language), CSS, templates
-- @data-dev : Base de données, RAG, embeddings
+- @backend-dev : Application Programming Interfaces, logique métier, auth
+- @frontend-dev : HyperText Markup Language, CSS, templates
+- @data-dev : Base de données, Retrieval-Augmented Generation, embeddings
 ```
 
 **`.opencode/skills/backend.md`**
@@ -424,7 +568,7 @@ Tu es le Scrum Master. Tu coordonnes une équipe de 3 développeurs.
 
 Stack : FastAPI, SQLAlchemy, Pydantic, Alembic
 
-Tu développes les APIs REST, la logique métier,
+Tu développes les Application Programming Interfaces REST, la logique métier,
 l'authentification et la validation des données.
 ```
 
@@ -447,10 +591,28 @@ les formulaires et les pages.
 Stack : SQLite, Chroma, embeddings
 
 Tu gères le schéma de base de données, les migrations,
-les index vectoriels pour le RAG.
+les index vectoriels pour le Retrieval-Augmented Generation.
 ```
 
 ### 6.5 Corrigé — Étape 4 : AGENTS.md
+
+#### À quoi sert `AGENTS.md` dans un projet multi-agent ?
+
+Dans ce TP, `AGENTS.md` sert de **carte d'équipe**. Il explique quel agent existe, quel rôle il joue, et comment l'utilisateur doit interagir avec le système.
+
+Ce fichier est particulièrement important en multi-agent, car il évite que les rôles se mélangent. Le `scrum-master` coordonne, le `backend-dev` traite les Application Programming Interfaces, le `frontend-dev` traite l'interface, et le `data-dev` traite la base de données.
+
+#### Où créer le fichier ?
+
+Créez `AGENTS.md` à la racine de `supervisor-agent/` :
+
+```text
+supervisor-agent/
+├── opencode.json
+├── AGENTS.md
+└── .opencode/
+    └── skills/
+```
 
 Créez un fichier `AGENTS.md` :
 
@@ -460,15 +622,19 @@ Créez un fichier `AGENTS.md` :
 | Agent                  | Rôle                               |
 |------------------------|------------------------------------|
 | scrum-master           | Supervisor — coordonne l'équipe     |
-| backend-dev            | APIs et logique métier             |
+| backend-dev            | Application Programming Interfaces et logique métier             |
 | frontend-dev           | Interfaces utilisateur             |
-| data-dev               | Base de données et RAG             |
+| data-dev               | Base de données et Retrieval-Augmented Generation             |
 
 ## Utilisation
 
 Donnez une tâche au scrum-master. Il la décomposera
 et déléguera aux sous-agents appropriés.
 ```
+
+#### Résultat attendu
+
+Le fichier rend le fonctionnement de l'équipe lisible. Un utilisateur sait qu'il doit parler au `scrum-master`, et le `scrum-master` sait à quels profils déléguer.
 
 ### 6.6 Corrigé — Étape 5 : Tester la délégation
 
@@ -499,7 +665,7 @@ Demandez au scrum-master :
 - [ ] Le scrum-master analyse et décompose la demande
 - [ ] Chaque sous-agent reçoit des tâches adaptées à son rôle
 - [ ] Les sous-agents produisent du code cohérent entre eux
-- [ ] L'application finale fonctionne (backend + frontend + DB (Base de données))
+- [ ] L'application finale fonctionne (backend + frontend + Base de données)
 
 ### Pour aller plus loin
 
@@ -513,7 +679,7 @@ Demandez au scrum-master :
 
 1. Le **multi-agent** permet spécialisation, parallélisme et résilience
 2. Les **patterns** fondamentaux : séquentiel, fan-out, débat, hiérarchique
-3. Le **Supervisor Agent** est un LLM qui orchestre d'autres LLMs
+3. Le **Supervisor Agent** est un Large Language Model qui orchestre d'autres Large Language Models
 4. Les **files d'attente** évitent de bloquer l'utilisateur pendant les traitements longs
 5. La **résilience** (retry, fallback, timeout) est indispensable en production
 
@@ -521,6 +687,6 @@ Demandez au scrum-master :
 
 ## Liens
 
-- [Chapitre 5 — Mémoire & RAG](./CHAPITRE-05-memoire-rag.md)
-- [Chapitre 7 — MCP (Model Context Protocol) & Standards](./CHAPITRE-07-mcp-standards.md)
+- [Chapitre 5 — Mémoire & Retrieval-Augmented Generation](./CHAPITRE-05-memoire-rag.md)
+- [Chapitre 7 — Model Context Protocol & Standards](./CHAPITRE-07-mcp-standards.md)
 - [Chapitre 10 — Opencode & Labs](./CHAPITRE-10-opencode-labs.md)

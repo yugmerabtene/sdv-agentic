@@ -12,30 +12,43 @@
 
 ## Prérequis
 
-Avant de commencer cette chapitre, assurez-vous d'avoir :
+Avant de commencer ce chapitre, assurez-vous d'avoir :
 
 - Terminé les **Chapitres 1 à 9** et leurs TPs
 - opencode installé et fonctionnel
 - Git installé
 - GitHub CLI (`gh`) installé si vous voulez automatiser issues/projects
-- Les bases de Python, SQLite, tests, CI/CD et permissions opencode
+- Les bases de Python, SQLite, tests, Continuous Integration / Continuous Deployment et permissions opencode
 
 ### Vérification finale
+
+#### Linux et macOS
 
 ```bash
 python3 --version
 opencode --version
 git --version
+docker --version
 gh --version
 ```
 
-> Si `gh --version` échoue, vous pouvez tout de même faire les labs locaux. Seules les chapitres GitHub Project/Issues nécessitent `gh`.
+#### Windows PowerShell
+
+```powershell
+py --version
+opencode --version
+git --version
+docker --version
+gh --version
+```
+
+> Si `gh --version` échoue, vous pouvez tout de même faire les labs locaux. Seuls les chapitres GitHub Project/Issues nécessitent `gh`.
 
 ---
 
 ## 1. Qu'est-ce qu'opencode ?
 
-[**opencode**](https://opencode.ai) est une plateforme agentic open-source qui transforme un LLM (Large Language Model) en équipe de développement collaborative.
+[**opencode**](https://opencode.ai) est une plateforme agentic open-source qui transforme un Large Language Model en équipe de développement collaborative.
 
 ### 1.1 Principe
 
@@ -78,7 +91,7 @@ graph TD
 | **Open-source** | Code visible, modifiable, auto-hébergeable |
 | **Équipe intégrée** | Scrum Master, Dev, DevOps, Tester prêts à l'emploi |
 | **Skills modulaires** | Prompts spécialisés chargés selon le contexte |
-| **MCP (Model Context Protocol) natif** | Support du Model Context Protocol |
+| **Model Context Protocol natif** | Support du Model Context Protocol |
 | **Fichier de config unique** | Tout est dans `opencode.json` |
 
 ---
@@ -98,6 +111,16 @@ mon-projet-agentic/
 ```
 
 ### 2.2 `opencode.json`
+
+Dans cette section de référence, on suppose que vous êtes à la racine d'un projet opencode appelé `mon-projet-agentic/` :
+
+```text
+mon-projet-agentic/
+├── opencode.json          ← à créer ici
+├── AGENTS.md
+└── .opencode/
+    └── skills/
+```
 
 Créez un fichier `opencode.json` :
 
@@ -123,7 +146,7 @@ Créez un fichier `opencode.json` :
     },
     "devops": {
       "mode": "subagent",
-      "description": "Docker, CI/CD (Continuous Integration / Continuous Deployment), déploiement",
+      "description": "Docker, Continuous Integration / Continuous Deployment, déploiement",
       "skills": ["common", "devops"]
     },
     "tester": {
@@ -137,7 +160,44 @@ Créez un fichier `opencode.json` :
 
 ### 2.3 `AGENTS.md`
 
-Créez un fichier `AGENTS.md` :
+#### À quoi sert ce fichier ?
+
+`AGENTS.md` est le **document de référence humain et agentique** du projet. Il explique à opencode, aux sous-agents et aux développeurs humains comment l'équipe doit travailler.
+
+Il ne remplace pas `opencode.json` : les deux fichiers n'ont pas le même rôle.
+
+| Fichier | Rôle | Exemple de contenu |
+|---|---|---|
+| `opencode.json` | Configuration technique lisible par opencode | modèle, agents, permissions, skills |
+| `AGENTS.md` | Documentation de travail lisible par les agents et humains | rôles, workflow, conventions, règles projet |
+
+Concrètement, `AGENTS.md` sert à répondre à ces questions :
+
+- Qui fait quoi dans l'équipe ?
+- Quel agent est responsable de la coordination ?
+- Comment les tâches sont-elles découpées ?
+- Quelles conventions faut-il respecter ?
+- Quel workflow suivre avant de modifier le projet ?
+
+#### Pourquoi c'est important ?
+
+Sans `AGENTS.md`, les agents peuvent comprendre la configuration technique, mais ils manquent de contexte métier et d'organisation. Le risque est qu'un agent code directement sans plan, oublie les tests, ignore le rôle des autres agents ou mélange les responsabilités.
+
+Avec `AGENTS.md`, l'équipe agentique suit une méthode claire : le `scrum-master` analyse, délègue, les sous-agents produisent, puis le `scrum-master` consolide.
+
+#### Où créer le fichier ?
+
+Le fichier doit être créé **à la racine du projet opencode**, au même niveau que `opencode.json` :
+
+```text
+mon-projet-agentic/
+├── opencode.json
+├── AGENTS.md
+└── .opencode/
+    └── skills/
+```
+
+Créez `AGENTS.md` au même niveau que `opencode.json` :
 
 ```markdown
 # Équipe de développement
@@ -146,7 +206,7 @@ Créez un fichier `AGENTS.md` :
 |------------------------|------------------------------------|-----------|
 | scrum-master           | Chef de projet — planifie, coordonne| primary   |
 | developer              | Développe le code                  | subagent  |
-| devops                 | Infrastructure, CI/CD              | subagent  |
+| devops                 | Infrastructure, Continuous Integration / Continuous Deployment              | subagent  |
 | tester                 | Tests et qualité                   | subagent  |
 
 ## Workflow
@@ -156,6 +216,36 @@ Créez un fichier `AGENTS.md` :
 4. Chaque sous-agent produit le résultat
 5. Le scrum-master consolide et présente
 ```
+
+#### Résultat attendu
+
+Après création, la racine du projet contient :
+
+```text
+mon-projet-agentic/
+├── opencode.json
+├── AGENTS.md
+└── .opencode/
+    └── skills/
+```
+
+Quand opencode démarre, il lit `opencode.json`, puis charge `AGENTS.md` grâce à cette ligne :
+
+```jsonc
+"instructions": ["AGENTS.md"]
+```
+
+Les agents disposent alors d'une consigne commune sur l'organisation de l'équipe.
+
+#### Comment savoir si le fichier est bon ?
+
+Un bon `AGENTS.md` doit être :
+
+- **Court** : il donne les règles utiles, pas un roman
+- **Opérationnel** : il explique comment travailler concrètement
+- **Aligné avec `opencode.json`** : les agents listés doivent exister dans la configuration
+- **Maintenu** : si l'équipe change, `AGENTS.md` doit être mis à jour
+- **Spécifique au projet** : il doit parler du projet courant, pas rester générique
 
 ### 2.4 Skills
 
@@ -279,12 +369,28 @@ Vous devez créer un premier projet opencode minimal avec :
 
 #### Corrigé — Étape 1 : Initialisation
 
+**Point de départ :** ouvrez un terminal dans votre dossier d'exercices, par exemple `~/agentic-labs` sur Linux/macOS ou `$HOME\agentic-labs` sur Windows PowerShell.
+
+Ce lab crée un **nouveau dossier indépendant** nommé `mon-premier-agent`. Il ne doit pas être créé à l'intérieur d'un autre TP précédent.
+
 ```bash
 mkdir mon-premier-agent && cd mon-premier-agent
 git init
+mkdir -p .opencode/skills
+pwd
 ```
 
+**Résultat attendu :** `pwd` doit se terminer par `mon-premier-agent`. Le dossier `.opencode/skills/` existe déjà et tous les fichiers du Lab 1 (`opencode.json`, `AGENTS.md`, `.opencode/skills/common.md`) seront créés dans ce dossier.
+
 #### Corrigé — Étape 2 : Configurer opencode
+
+Vous êtes toujours dans `mon-premier-agent/`. Créez `opencode.json` à la racine de ce dossier :
+
+```text
+mon-premier-agent/
+├── opencode.json          ← à créer maintenant
+└── .git/
+```
 
 Créez `opencode.json` :
 
@@ -293,7 +399,7 @@ Créez `opencode.json` :
   "$schema": "https://opencode.ai/config.json",  // Schéma de validation
   "model": "opencode/big-pickle",  // Modèle gratuit
   "default_agent": "scrum-master",  // Agent principal par défaut
-  "instructions": [],  // Instructions complémentaires (optionnel)
+  "instructions": ["AGENTS.md"],  // Charge la documentation d'équipe
   "skills": {
     "paths": [".opencode/skills"]  // Dossier des compétences
   },
@@ -314,7 +420,17 @@ Créez `opencode.json` :
 
 #### Corrigé — Étape 3 : Créer les skills
 
-Créez `.opencode/skills/common.md` :
+Vous êtes toujours dans `mon-premier-agent/`. Créez le fichier de skill dans `.opencode/skills/` :
+
+```text
+mon-premier-agent/
+├── opencode.json
+└── .opencode/
+    └── skills/
+        └── common.md      ← à créer maintenant
+```
+
+Créez `.opencode/skills/common.md` dans le dossier de skills indiqué :
 
 ```markdown
 # Projet de démonstration
@@ -330,6 +446,29 @@ Conventions :
 
 #### Corrigé — Étape 4 : Créer AGENTS.md
 
+##### À quoi sert ce fichier dans ce lab ?
+
+`AGENTS.md` explique à l'équipe opencode comment utiliser ce mini-projet. Même si le lab est simple, il introduit la bonne habitude : toujours documenter les rôles et la façon d'interagir avec les agents.
+
+Dans ce lab, il répond à deux questions :
+
+- Qui est le chef de projet ?
+- Qui écrit le code Python ?
+
+##### Où créer le fichier ?
+
+Créez `AGENTS.md` à la racine de `mon-premier-agent/`, au même niveau que `opencode.json` :
+
+```text
+mon-premier-agent/
+├── opencode.json
+├── AGENTS.md
+└── .opencode/
+    └── skills/
+```
+
+Créez `AGENTS.md` :
+
 ```markdown
 # Équipe
 
@@ -342,6 +481,16 @@ Conventions :
 
 Demandez au scrum-master de réaliser des tâches simples.
 ```
+
+##### Résultat attendu
+
+Comme `opencode.json` contient maintenant :
+
+```jsonc
+"instructions": ["AGENTS.md"]
+```
+
+opencode charge ce fichier au démarrage. Le `scrum-master` sait qu'il coordonne, et le `developer` sait qu'il produit le code Python.
 
 #### Corrigé — Étape 5 : Interagir
 
@@ -374,11 +523,11 @@ Essayez ces instructions :
 
 ---
 
-### 4.2 Lab 2 — Equipe d'Agents avec CI/CD et Project Board
+### 4.2 Lab 2 — Equipe d'Agents avec Continuous Integration / Continuous Deployment et Project Board
 
-> **Projet reseau social** : ce lab integre la chaine CI/CD (Chapitre 8) a l'equipe d'agents opencode. Les agents produisent du code, le pipeline le valide, et le Project board suit la progression automatiquement.
+> **Projet reseau social** : ce lab integre la chaine Continuous Integration / Continuous Deployment (Chapitre 8) a l'equipe d'agents opencode. Les agents produisent du code, le pipeline le valide, et le Project board suit la progression automatiquement.
 
-**Objectif :** Configurer une equipe d'agents opencode avec pipeline CI/CD et tableau de bord GitHub Projects.
+**Objectif :** Configurer une equipe d'agents opencode avec pipeline Continuous Integration / Continuous Deployment et tableau de bord GitHub Projects.
 
 **Durée :** 2h
 
@@ -392,7 +541,7 @@ L'équipe doit contenir :
 
 1. Un agent `scrum-master` coordinateur
 2. Un agent `developer` pour code et tests
-3. Un agent `devops` pour CI/CD et Docker
+3. Un agent `devops` pour Continuous Integration / Continuous Deployment et Docker
 4. Des permissions explicites pour chaque agent
 5. Un workflow GitHub Actions
 6. Une base pour connecter un Scrum Board GitHub
@@ -407,13 +556,39 @@ L'équipe doit contenir :
 
 #### Corrigé — Étape 1 : Structurer le projet
 
+**Point de départ :** ouvrez un terminal dans votre dossier d'exercices, par exemple `~/agentic-labs` sur Linux/macOS ou `$HOME\agentic-labs` sur Windows PowerShell.
+
+Ce lab crée un **nouveau dossier indépendant** nommé `equipe-agentic`. Ne lancez pas ces commandes depuis `mon-premier-agent` ni depuis un autre TP, sinon vous imbriquerez les projets.
+
 ```bash
 mkdir equipe-agentic && cd equipe-agentic
 git init
 mkdir -p .opencode/skills .github/workflows
+pwd
+```
+
+**Résultat attendu :** `pwd` doit se terminer par `equipe-agentic`. La structure créée est :
+
+```text
+equipe-agentic/
+├── .opencode/
+│   └── skills/
+└── .github/
+    └── workflows/
 ```
 
 #### Corrigé — Étape 2 : Configurer l'équipe d'agents
+
+Vous êtes toujours dans le dossier `equipe-agentic/`. Créez `opencode.json` **à la racine de ce dossier**, pas dans `.opencode/` ni dans `.github/` :
+
+```text
+equipe-agentic/
+├── opencode.json          ← à créer maintenant
+├── .opencode/
+│   └── skills/
+└── .github/
+    └── workflows/
+```
 
 Créez `opencode.json` avec les permissions commentees :
 
@@ -457,7 +632,7 @@ Créez `opencode.json` avec les permissions commentees :
     },
     "devops": {
       "mode": "subagent",
-      "description": "CI/CD, Docker, deploiement",
+      "description": "Continuous Integration / Continuous Deployment, Docker, deploiement",
       "skills": ["common", "devops"],
       "permission": {
         "read": "allow",
@@ -477,12 +652,150 @@ Chaque permission est explicitement definie :
 - **read/edit :** `allow` — les agents ont acces au code
 - **bash.commandes :** certaines sont autorisees directement (`allow`), d'autres demandent confirmation (`ask`)
 
-#### Corrigé — Étape 3 : Ajouter le pipeline CI/CD
+#### Corrigé — Étape 3 : Créer `AGENTS.md` et les skills
+
+##### Pourquoi cette étape est nécessaire ?
+
+`opencode.json` déclare les agents et leurs permissions, mais il ne suffit pas pour expliquer comment l'équipe doit travailler. Dans ce lab, `AGENTS.md` documente le workflow global, tandis que les fichiers `.opencode/skills/*.md` donnent des consignes spécialisées à chaque rôle.
+
+La séparation est volontaire :
+
+| Élément | Utilité |
+|---|---|
+| `AGENTS.md` | Règles d'équipe et workflow global |
+| `common.md` | Conventions communes à tous les agents |
+| `scrum_master.md` | Méthode de découpage et délégation |
+| `developer.md` | Règles pour écrire code et tests |
+| `devops.md` | Règles Continuous Integration / Continuous Deployment, Docker et déploiement |
+
+##### Créer `AGENTS.md`
+
+Créez `AGENTS.md` à la racine de `equipe-agentic/`, au même niveau que `opencode.json` :
+
+```markdown
+# Équipe agentique avec Continuous Integration / Continuous Deployment
+
+| Agent | Rôle | Responsabilité principale |
+|---|---|---|
+| scrum-master | Coordinateur | Analyse, découpe, délègue, consolide |
+| developer | Développeur | Code applicatif, tests, documentation |
+| devops | DevOps | Docker, GitHub Actions, déploiement |
+
+## Workflow
+
+1. L'utilisateur donne une demande au `scrum-master`
+2. Le `scrum-master` lit le contexte et découpe en tâches
+3. Le `developer` implémente code et tests
+4. Le `devops` prépare Continuous Integration / Continuous Deployment, Docker et automatisation
+5. Le `scrum-master` vérifie la cohérence globale
+
+## Règles
+
+- Toujours créer ou mettre à jour les tests avec le code
+- Ne jamais ignorer une erreur Continuous Integration / Continuous Deployment sans explication
+- Garder les permissions minimales dans les workflows
+- Documenter les commandes de lancement
+```
+
+##### Créer les skills
+
+Vous êtes toujours dans `equipe-agentic/`. Créez `.opencode/skills/common.md` :
+
+```markdown
+# Conventions communes
+
+Langage : Python 3.12
+Tests : pytest
+Qualité : ruff, mypy
+Conteneurisation : Docker
+
+Règles :
+- Code en anglais
+- Explications en français
+- Pas de secret dans le dépôt
+- Tests obligatoires pour toute fonctionnalité
+```
+
+Vous êtes toujours dans `equipe-agentic/`. Créez `.opencode/skills/scrum_master.md` :
+
+```markdown
+# Rôle : Scrum Master
+
+Tu coordonnes l'équipe.
+
+Responsabilités :
+- Clarifier la demande
+- Découper en tâches simples
+- Déléguer au bon agent
+- Vérifier la cohérence finale
+- Résumer ce qui a été fait
+```
+
+Vous êtes toujours dans `equipe-agentic/`. Créez `.opencode/skills/developer.md` :
+
+```markdown
+# Rôle : Developer
+
+Tu écris le code applicatif et les tests.
+
+Responsabilités :
+- Implémenter proprement
+- Ajouter des tests pytest
+- Garder le code lisible
+- Expliquer les commandes de vérification
+```
+
+Vous êtes toujours dans `equipe-agentic/`. Créez `.opencode/skills/devops.md` :
+
+```markdown
+# Rôle : DevOps
+
+Tu gères Continuous Integration / Continuous Deployment, Docker et automatisation.
+
+Responsabilités :
+- Créer les workflows GitHub Actions
+- Configurer Docker
+- Limiter les permissions Continuous Integration / Continuous Deployment
+- Documenter les commandes de build et test
+```
+
+##### Résultat attendu
+
+Le dossier contient maintenant :
+
+```text
+equipe-agentic/
+├── opencode.json
+├── AGENTS.md
+├── .opencode/
+│   └── skills/
+│       ├── common.md
+│       ├── scrum_master.md
+│       ├── developer.md
+│       └── devops.md
+└── .github/
+    └── workflows/
+```
+
+opencode peut charger `AGENTS.md` et les skills déclarées dans `opencode.json`.
+
+#### Corrigé — Étape 4 : Ajouter le pipeline Continuous Integration / Continuous Deployment
+
+Vous êtes toujours dans `equipe-agentic/`. Créez le workflow dans `.github/workflows/`, pas à la racine du projet :
+
+```text
+equipe-agentic/
+├── .github/
+│   └── workflows/
+│       └── cicd-equipe.yml     ← à créer maintenant
+├── opencode.json
+└── AGENTS.md
+```
 
 Créez `.github/workflows/cicd-equipe.yml` :
 
 ```yaml
-name: CI/CD Equipe Agentic
+name: Continuous Integration / Continuous Deployment Equipe Agentic
 
 # Declenche sur push/PR du projet applicatif
 on:
@@ -504,16 +817,16 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
-      - run: pip install ruff mypy
+      - run: python -m pip install ruff mypy
       - run: ruff check app/
       - run: mypy app/ --ignore-missing-imports
       - run: pytest tests/ -v --tb=short
 ```
 
-#### Corrigé — Étape 4 : Créer le Scrum Board
+#### Corrigé — Étape 5 : Créer le Scrum Board
 
 ```bash
-# Creer un Project V2 (via l'interface GitHub ou l'API)
+# Creer un Project V2 (via l'interface GitHub ou l'Application Programming Interface)
 gh project create --owner <compte> --title "Mon Projet Agentic"
 
 # Creer une issue pour le sprint en cours
@@ -524,12 +837,12 @@ gh issue create --title "Sprint 1 — Initialisation" \
 # (via l'interface GitHub > champ "Sprint Status")
 ```
 
-#### Corrigé — Étape 5 : Orchestrer via agents opencode
+#### Corrigé — Étape 6 : Orchestrer via agents opencode
 
 Lancez opencode et demandez au scrum-master :
 
 ```
-"Configure le pipeline CI/CD dans .github/workflows/ avec :
+"Configure le pipeline Continuous Integration / Continuous Deployment dans .github/workflows/ avec :
  - Un job de qualite (ruff, mypy)
  - Un job de tests (pytest)
  - Un job de build Docker
@@ -548,7 +861,7 @@ Les agents opencode :
 
 > **Projet reseau social** : ce lab lance la réalisation complète du MVP décrit dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md).
 
-**Objectif :** Utiliser l'équipe d'agents pour générer progressivement l'application réseau social : authentification, publications, administration, tests, Docker et CI/CD.
+**Objectif :** Utiliser l'équipe d'agents pour générer progressivement l'application réseau social : authentification, publications, administration, tests, Docker et Continuous Integration / Continuous Deployment.
 
 **Durée :** 4h+
 
@@ -567,7 +880,7 @@ Le projet final doit contenir :
 5. Des droits utilisateur/admin
 6. Des tests automatisés
 7. Un Dockerfile
-8. Une CI/CD GitHub Actions
+8. Une Continuous Integration / Continuous Deployment GitHub Actions
 9. Une documentation de lancement
 
 **Fichiers attendus :**
@@ -583,23 +896,89 @@ Le projet final doit contenir :
 
 #### Corrigé — Étape 1 : Initialiser le projet final
 
+**Point de départ :** ouvrez un terminal dans votre dossier d'exercices, pas dans `mon-premier-agent` ni `equipe-agentic`.
+
+Ce lab crée un **nouveau projet complet** nommé `reseau-social-agentic`.
+
 ```bash
 mkdir reseau-social-agentic
 cd reseau-social-agentic
 git init
 mkdir -p app tests/unit tests/integration tests/security .github/workflows .opencode/skills
+pwd
 ```
+
+**Résultat attendu :** `pwd` doit se terminer par `reseau-social-agentic`. Tous les fichiers du projet final seront créés dans ce dossier.
 
 #### Corrigé — Étape 2 : Copier le cahier des charges
 
-Depuis la racine du cours, copiez le CDC dans le projet final :
+**Point de départ :** vous devez être dans le dossier `reseau-social-agentic/` créé à l'étape précédente.
+
+Vérifiez :
+
+```bash
+pwd
+```
+
+Le chemin affiché doit se terminer par `reseau-social-agentic`.
+
+Le fichier source à copier est dans le dépôt du cours :
+
+```text
+Agentic-Developer-Craftsmanship/
+└── projet/
+    └── gestion_de_projet/
+        └── cdc.md
+```
+
+Vous avez deux options selon l'endroit où vous avez créé `reseau-social-agentic/`.
+
+**Option A — Vous avez créé `reseau-social-agentic/` dans le même dossier parent que le dépôt du cours**
+
+Exemple :
+
+```text
+agentic-labs/
+├── Agentic-Developer-Craftsmanship/
+└── reseau-social-agentic/
+```
+
+Depuis `reseau-social-agentic/`, exécutez :
 
 ```bash
 mkdir -p docs
-cp ../projet/gestion_de_projet/cdc.md docs/cdc.md
+cp ../Agentic-Developer-Craftsmanship/projet/gestion_de_projet/cdc.md docs/cdc.md
 ```
 
-Si vous travaillez depuis un autre dossier, adaptez le chemin du fichier `cdc.md`.
+**Option B — Vous avez créé `reseau-social-agentic/` ailleurs**
+
+Utilisez le chemin absolu vers le dépôt du cours. Exemple Linux/macOS :
+
+```bash
+mkdir -p docs
+cp /chemin/vers/Agentic-Developer-Craftsmanship/projet/gestion_de_projet/cdc.md docs/cdc.md
+```
+
+Exemple Windows PowerShell :
+
+```powershell
+mkdir docs
+Copy-Item "C:\chemin\vers\Agentic-Developer-Craftsmanship\projet\gestion_de_projet\cdc.md" "docs\cdc.md"
+```
+
+Vérifiez que la copie a réussi :
+
+```bash
+ls docs
+```
+
+Sous Windows PowerShell :
+
+```powershell
+dir docs
+```
+
+**Résultat attendu :** le dossier `docs/` contient `cdc.md`.
 
 #### Corrigé — Étape 3 : Demander l'architecture à l'équipe
 
@@ -648,7 +1027,7 @@ Implémente le Sprint 4 : profil utilisateur, administration, rôles.
 ```
 
 ```text
-Implémente le Sprint 5 : tests complets, CI/CD, documentation, stabilisation.
+Implémente le Sprint 5 : tests complets, Continuous Integration / Continuous Deployment, documentation, stabilisation.
 ```
 
 Après chaque sprint :
@@ -680,7 +1059,7 @@ Ouvrez ensuite l'application dans le navigateur selon le port documenté par l'a
 - [ ] `python3 -m pytest tests/ -v` passe
 - [ ] `ruff check .` passe
 - [ ] L'image Docker se construit
-- [ ] Le pipeline CI/CD existe
+- [ ] Le pipeline Continuous Integration / Continuous Deployment existe
 
 ---
 
@@ -709,19 +1088,19 @@ opencode -t "Vérifie que le Dockerfile est valide"
 
 ## Points clés à retenir
 
-1. **opencode** transforme un LLM en équipe de développement collaborative
+1. **opencode** transforme un Large Language Model en équipe de développement collaborative
 2. La configuration se fait via `opencode.json`, `AGENTS.md` et des **skills**
 3. Les agents communiquent par **délégation** (`@agent`, `task()`)
 4. Les **labs** sont des exercices progressifs pour maîtriser l'agentic
 5. Tout est **gratuit et open-source** avec opencode + big-pickle
-6. Le **pipeline CI/CD** valide le code des agents automatiquement (zero token)
-7. Le **GitHub Project** suit la progression en temps reel sans cout LLM
+6. Le **pipeline Continuous Integration / Continuous Deployment** valide le code des agents automatiquement (zero token)
+7. Le **GitHub Project** suit la progression en temps reel sans cout Large Language Model
 
 ---
 
 ## Liens
 
-- [Chapitre 1 — Histoire de l'IA (Intelligence Artificielle)](./CHAPITRE-01-histoire-ia.md)
+- [Chapitre 1 — Histoire de l'Intelligence Artificielle](./CHAPITRE-01-histoire-ia.md)
 - [Chapitre 4 — Architecture Agentique](./CHAPITRE-04-architecture-agent.md)
-- [Chapitre 7 — MCP & Standards](./CHAPITRE-07-mcp-standards.md)
+- [Chapitre 7 — Model Context Protocol & Standards](./CHAPITRE-07-mcp-standards.md)
 - [Documentation opencode](https://opencode.ai)

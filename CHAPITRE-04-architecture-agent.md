@@ -2,7 +2,7 @@
 
 ## Objectifs pédagogiques
 
-- Comprendre ce qu'est un agent et en quoi il diffère d'un LLM (Large Language Model) seul
+- Comprendre ce qu'est un agent et en quoi il diffère d'un Large Language Model seul
 - Maîtriser la boucle agent (perception → raisonnement → action)
 - Savoir implémenter un agent simple avec état
 - Comprendre la gestion de contexte et de mémoire court-terme
@@ -11,17 +11,26 @@
 
 ## Prérequis
 
-Avant de commencer cette chapitre, assurez-vous d'avoir :
+Avant de commencer ce chapitre, assurez-vous d'avoir :
 
 - Terminé le **[Chapitre 3](CHAPITRE-03-prompt-tool-use.md)** et son TP assistant CLI
 - Python 3.10+ installé
 - opencode fonctionnel
-- Compris les notions de prompt, outil et pattern ReAct
+- Compris les notions de prompt, outil et pattern Reasoning + Acting
 
 ### Vérification
 
+#### Linux et macOS
+
 ```bash
 python3 --version
+opencode --version
+```
+
+#### Windows PowerShell
+
+```powershell
+py --version
 opencode --version
 ```
 
@@ -35,10 +44,10 @@ opencode --version
 
 Un **agent** est un système qui :
 1. **Perçoit** son environnement (entrée utilisateur, données, événements)
-2. **Raisonne** à partir de ces perceptions (via un LLM)
+2. **Raisonne** à partir de ces perceptions (via un Large Language Model)
 3. **Agit** sur son environnement (réponse, appel d'outil, modification)
 
-### 1.2 LLM seul vs Agent
+### 1.2 Large Language Model seul vs Agent
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {
@@ -47,13 +56,13 @@ Un **agent** est un système qui :
   'lineColor': '#818cf8'
 }}}%%
 graph LR
-    subgraph "LLM seul (passif)"
-        P1[Prompt] --> L1[LLM]
+    subgraph "Large Language Model seul (passif)"
+        P1[Prompt] --> L1[Large Language Model]
         L1 --> R1[Réponse unique]
     end
     
     subgraph "Agent (actif)"
-        P2[Perception] --> L2[LLM]
+        P2[Perception] --> L2[Large Language Model]
         L2 --> D[Décision]
         D -->|"Réponse"| A2[Action]
         D -->|"Tool call"| T2[Outil]
@@ -72,12 +81,12 @@ graph LR
     style O2 fill:#dc2626,color:#fff,stroke:#b91c1c
 ```
 
-| Caractéristique | LLM seul | Agent |
+| Caractéristique | Large Language Model seul | Agent |
 |---|---|---|
-| Appels API (Application Programming Interface) | 1 | Multiples (boucle) |
+| Appels Application Programming Interface | 1 | Multiples (boucle) |
 | Mémoire | Fenêtre de contexte | Contexte + mémoire persistante |
 | Outils | Aucun | Function calling |
-| Planification | Aucune | ReAct (Reasoning + Acting), plan multi-étapes |
+| Planification | Aucune | Reasoning + Acting, plan multi-étapes |
 | Autonomie | Réponse unique | Boucle jusqu'à résolution |
 
 ---
@@ -95,7 +104,7 @@ graph LR
 graph TD
     subgraph "Boucle Agent"
         direction TB
-        I[Input] --> LLM[LLM]
+        I[Input] --> LLM[Large Language Model]
         LLM --> D{Décision}
         D -->|"Répondre"| O[Output]
         D -->|"Tool call"| T[Exécuter Outil]
@@ -130,7 +139,7 @@ Un agent peut être dans plusieurs états :
 | État | Description | Action |
 |---|---|---|
 | **Idle** | En attente d'entrée | Écouter |
-| **Thinking** | Le LLM raisonne | Appel LLM |
+| **Thinking** | Le Large Language Model raisonne | Appel Large Language Model |
 | **Acting** | Exécution d'un outil | Appel externe |
 | **Observing** | Traitement du résultat | Mise à jour mémoire |
 | **Error** | Échec d'un outil | Log + re-planification |
@@ -140,9 +149,40 @@ Un agent peut être dans plusieurs états :
 
 > **Projet reseau social** : l'architecture agentique developpee ici sera utilisee pour coordonner le developpement du reseau social defini dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md).
 
-Créez `agent_simple.py` :
+#### Où créer le fichier ?
+
+**Point de départ :** ouvrez un terminal dans votre dossier d'exercices `~/agentic-labs` (Linux/macOS) ou `$HOME\agentic-labs` (Windows PowerShell).
+
+```bash
+mkdir -p chapitre-04-agent-simple
+cd chapitre-04-agent-simple
+pwd
+```
+
+**Résultat attendu :** `pwd` doit se terminer par `chapitre-04-agent-simple`. Les fichiers `agent_simple.py` et `gestion_contexte.py` seront créés dans ce dossier.
+
+Créez le fichier `agent_simple.py` dans ce dossier :
 
 ```python
+class FakeResponse:
+    """Réponse simulée d'un Large Language Model pour rendre l'exemple exécutable."""
+
+    def __init__(self, content=None, tool_calls=None):
+        self.content = content
+        self.tool_calls = tool_calls or []
+
+
+class FakeLLM:
+    """Large Language Model factice : il répond sans appeler de vraie Application Programming Interface."""
+
+    def chat(self, messages, tools=None):
+        # Récupère le dernier message utilisateur
+        last_user_message = messages[-1]["content"]
+        return FakeResponse(
+            content=f"Réponse agentique à : {last_user_message}"
+        )
+
+
 class Agent:
     def __init__(self, llm, tools, system_prompt):
         # Initialise l'agent avec le modèle de langage, les outils et le prompt système
@@ -155,20 +195,48 @@ class Agent:
         self.memory.append({"role": "user", "content": user_input})  # Ajoute l'entrée utilisateur à la mémoire
         
         for step in range(max_steps):  # Limite le nombre d'itérations pour éviter les boucles infinies
-            response = self.llm.chat(self.memory, tools=self.tools)  # Appelle le LLM avec la mémoire et les outils
+            response = self.llm.chat(self.memory, tools=self.tools)  # Appelle le Large Language Model avec la mémoire et les outils
             
-            if response.content:  # Si le LLM produit une réponse textuelle (pas d'appel d'outil)
+            if response.content:  # Si le Large Language Model produit une réponse textuelle (pas d'appel d'outil)
                 self.memory.append({"role": "assistant", "content": response.content})  # Stocke la réponse
                 return response.content  # Retourne la réponse finale à l'utilisateur
             
-            if response.tool_calls:  # Si le LLM demande l'exécution d'un ou plusieurs outils
+            if response.tool_calls:  # Si le Large Language Model demande l'exécution d'un ou plusieurs outils
                 for tc in response.tool_calls:  # Parcourt chaque appel d'outil
                     result = self.execute_tool(tc)  # Exécute l'outil et récupère le résultat
                     self.memory.append(tc.to_message())  # Ajoute l'appel d'outil à l'historique
                     self.memory.append({"role": "tool", "content": result})  # Ajoute le résultat de l'outil
-        
+
         return "Max steps atteint"  # Sécurité : évite les boucles infinies
+
+
+if __name__ == "__main__":
+    agent = Agent(
+        llm=FakeLLM(),
+        tools=[],
+        system_prompt="Tu es un agent pédagogique pour le cours.",
+    )
+    print(agent.run("Explique la boucle agent en une phrase."))
 ```
+
+#### Exécuter le fichier
+
+```bash
+python3 agent_simple.py
+```
+
+#### Résultat attendu
+
+```text
+Réponse agentique à : Explique la boucle agent en une phrase.
+```
+
+Ce résultat prouve que :
+
+- Le fichier est au bon endroit
+- La boucle `run()` ajoute l'entrée utilisateur en mémoire
+- Le faux Large Language Model produit une réponse
+- L'agent retourne la réponse finale
 
 ---
 
@@ -176,7 +244,7 @@ class Agent:
 
 ### 3.1 Le problème de la mémoire
 
-La fenêtre de contexte d'un LLM est limitée. Plus la conversation est longue, plus on risque d'atteindre cette limite.
+La fenêtre de contexte d'un Large Language Model est limitée. Plus la conversation est longue, plus on risque d'atteindre cette limite.
 
 ### 3.2 Stratégies de gestion
 
@@ -189,19 +257,103 @@ La fenêtre de contexte d'un LLM est limitée. Plus la conversation est longue, 
 
 ### 3.3 Sliding Window
 
+#### Principe expliqué simplement
+
+La **Sliding Window** signifie littéralement "fenêtre glissante".
+
+Un Large Language Model ne peut pas lire une conversation infinie. Il reçoit seulement une fenêtre de contexte limitée : les messages que l'on met dans le prompt au moment de l'appel. Quand la conversation devient trop longue, on garde les messages les plus importants et on retire les plus anciens.
+
+Imaginez une fenêtre qui se déplace sur une longue conversation :
+
+```text
+Conversation complète :
+[system] [message 1] [message 2] [message 3] [message 4] [message 5]
+
+Fenêtre envoyée au Large Language Model :
+[system] [message 3] [message 4] [message 5]
+```
+
+Le message `system` reste toujours conservé, car il contient les règles de comportement de l'agent. Les messages récents sont conservés, car ils sont les plus utiles pour répondre correctement à l'utilisateur.
+
+#### Pourquoi c'est utile ?
+
+- Éviter de dépasser la limite de tokens du modèle
+- Réduire le coût si le modèle est payant
+- Garder les échanges récents, donc le contexte immédiat
+- Simplifier la mémoire court-terme d'un agent
+
+#### Limite importante
+
+La Sliding Window peut faire oublier des informations anciennes mais importantes. Si une information doit survivre longtemps, il faut la stocker dans une mémoire persistante : base SQLite, vector store ou résumé long-terme.
+
+#### Où créer le fichier ?
+
+**Point de départ :** vous devriez être dans `~/agentic-labs`. Si c'est le cas, restez ici ou recréez le dossier.
+
+```bash
+mkdir -p chapitre-04-agent-simple
+cd chapitre-04-agent-simple
+pwd
+```
+
+**Résultat attendu :** `pwd` doit se terminer par `chapitre-04-agent-simple`, au même endroit que `agent_simple.py`.
+
 Créez `gestion_contexte.py` :
 
 ```python
-def manage_context(self, max_tokens: int = 4000):
-    # Gère la fenêtre de contexte pour ne pas dépasser la limite de tokens
-    system = [m for m in self.memory if m["role"] == "system"]  # Conserve les messages système (toujours prioritaires)
-    others = [m for m in self.memory if m["role"] != "system"]  # Isole les messages non-système
-    
-    # Supprime les plus vieux messages quand la limite de tokens est dépassée
-    while count_tokens(self.memory) > max_tokens and len(others) > 2:
-        others.pop(1)  # Supprime le plus vieux message (après le premier)
-    
-    self.memory = system + others  # Reconstruit la mémoire complète
+def count_tokens(messages: list[dict]) -> int:
+    """Estimation simple : 1 token ≈ 4 caractères."""
+    total_chars = sum(len(message["content"]) for message in messages)
+    return total_chars // 4
+
+
+class AgentMemory:
+    def __init__(self):
+        self.memory = [
+            {"role": "system", "content": "Tu es un assistant utile."},
+            {"role": "user", "content": "Message ancien 1"},
+            {"role": "assistant", "content": "Réponse ancienne 1"},
+            {"role": "user", "content": "Message récent important"},
+            {"role": "assistant", "content": "Réponse récente importante"},
+        ]
+
+    def manage_context(self, max_tokens: int = 20):
+        """Garde le système prompt et retire les messages anciens si besoin."""
+        system = [m for m in self.memory if m["role"] == "system"]
+        others = [m for m in self.memory if m["role"] != "system"]
+
+        # Supprime les plus vieux messages tant que le budget est dépassé.
+        while count_tokens(system + others) > max_tokens and len(others) > 2:
+            others.pop(0)
+
+        self.memory = system + others
+
+
+if __name__ == "__main__":
+    memory = AgentMemory()
+    print("Avant:", len(memory.memory), "messages")
+    memory.manage_context(max_tokens=20)
+    print("Après:", len(memory.memory), "messages")
+    print("Messages conservés:")
+    for message in memory.memory:
+        print(f"- {message['role']}: {message['content']}")
+```
+
+#### Exécuter le fichier
+
+```bash
+python3 gestion_contexte.py
+```
+
+#### Résultat attendu
+
+```text
+Avant: 5 messages
+Après: 3 messages
+Messages conservés:
+- system: Tu es un assistant utile.
+- user: Message récent important
+- assistant: Réponse récente importante
 ```
 
 ---
@@ -213,11 +365,11 @@ def manage_context(self, max_tokens: int = 4000):
 | Type | Description | Exemple |
 |---|---|---|
 | **Statique** | Séquence d'étapes prédéfinie | "1. Chercher → 2. Analyser → 3. Répondre" |
-| **Dynamique** | Le LLM génère son propre plan | "Je dois d'abord X, puis Y, ensuite Z" |
+| **Dynamique** | Le Large Language Model génère son propre plan | "Je dois d'abord X, puis Y, ensuite Z" |
 
 ### 4.2 Planification dynamique (Plan-and-Solve)
 
-Le LLM génère d'abord un plan, puis l'exécute étape par étape :
+Le Large Language Model génère d'abord un plan, puis l'exécute étape par étape :
 
 ```
 Question : "Compare les prix des billets Paris-Londres
@@ -236,7 +388,7 @@ Plan :
 Si une étape échoue, l'agent doit pouvoir **re-planifier** :
 
 ```
-Observation (étape 1): API météo indisponible
+Observation (étape 1): Application Programming Interface météo indisponible
 → Nouveau plan : Utiliser les données historiques
 ou une autre source météo
 ```
@@ -253,14 +405,14 @@ ou une autre source météo
 }}}%%
 graph TD
     subgraph "Interface"
-        API[API REST] --> Auth[Authentification]
+        API[Application Programming Interface REST] --> Auth[Authentification]
         WS[WebSocket]
     end
     
     subgraph "Agent Core"
         Auth --> SM[Session Manager]
         SM --> ORC[Orchestrateur]
-        ORC --> LLM[LLM Service]
+        ORC --> LLM[Large Language Model Service]
         ORC --> TOOL[Tool Registry]
         ORC --> MEM[Memory Manager]
     end
@@ -321,14 +473,19 @@ Vous devez créer un agent CLI capable de :
 
 ### 6.2 Corrigé — Étape 1 : Créer le projet
 
+**Point de départ :** ouvrez un terminal dans votre dossier d'exercices. Ce TP crée un **nouveau dossier indépendant** nommé `agent-loop`.
+
 ```bash
 mkdir -p agent-loop
 cd agent-loop
+pwd
 ```
+
+**Résultat attendu :** `pwd` doit se terminer par `agent-loop`. Les fichiers `agent.py` et `test_agent.py` seront créés dans ce dossier.
 
 ### 6.3 Corrigé — Étape 2 : Créer l'agent
 
-Créez `agent.py` :
+Vous êtes toujours dans `agent-loop/`. Créez `agent.py` à la racine de ce dossier :
 
 ```python
 from datetime import datetime
@@ -482,7 +639,7 @@ agent-loop/
 
 ## Points clés à retenir
 
-1. Un **agent** est un LLM enveloppé dans une boucle perception → raisonnement → action
+1. Un **agent** est un Large Language Model enveloppé dans une boucle perception → raisonnement → action
 2. La **boucle agent** est le pattern fondamental : chaque itération peut appeler un outil
 3. La **gestion du contexte** est cruciale : sliding window, summarization ou token budget
 4. La **planification dynamique** (Plan-and-Solve) donne de l'autonomie à l'agent
@@ -493,5 +650,5 @@ agent-loop/
 ## Liens
 
 - [Chapitre 3 — Prompt & Tool Use](./CHAPITRE-03-prompt-tool-use.md)
-- [Chapitre 5 — Mémoire & RAG (Retrieval-Augmented Generation)](./CHAPITRE-05-memoire-rag.md)
+- [Chapitre 5 — Mémoire & Retrieval-Augmented Generation](./CHAPITRE-05-memoire-rag.md)
 - [Chapitre 6 — Multi-Agent Orchestration](./CHAPITRE-06-multi-agent.md)

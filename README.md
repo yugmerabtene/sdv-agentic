@@ -1,6 +1,6 @@
 # Agentic Developer Craftsmanship
 
-**Construisez des systèmes agentiques professionnels — de l'histoire de l'IA au déploiement en production.**
+**Construisez des systèmes agentiques professionnels — de l'histoire de l'Intelligence Artificielle au déploiement en production.**
 
 Ce cours 100% open-source vous guide pas à pas à travers les concepts et techniques du développement d'agents autonomes. Chaque chapitre contient :
 
@@ -32,21 +32,134 @@ Fondamentaux    Interaction    Mémoire &      Production     Mise en
 
 Avant de commencer le **Chapitre 1**, installez ces outils :
 
+### Linux (Ubuntu/Debian)
+
 ```bash
-# 1. Vérifier Python (>= 3.10)
+# 1. Mettre à jour les paquets
+sudo apt update
+
+# 2. Installer Python, pip, Git et Docker
+sudo apt install python3 python3-pip python3-venv git docker.io -y
+
+# 3. Autoriser l'utilisateur courant à lancer Docker sans sudo
+sudo usermod -aG docker "$USER"
+
+# 4. Redémarrer la session, puis vérifier Docker
+docker --version
+docker run hello-world
+
+# 5. Installer opencode
+python3 -m pip install --user opencode
+
+# 6. Vérifier les outils
 python3 --version
-
-# 2. Installer opencode
-pip install opencode
-
-# 3. Vérifier l'installation
+python3 -m pip --version
+git --version
+docker --version
 opencode --version
 
-# 4. Tester le modèle gratuit big-pickle
+# 7. Tester le modèle gratuit big-pickle
 opencode -m opencode/big-pickle -t "Bonjour, quel est ton rôle ?"
 ```
 
-> **Résultat attendu :** l'agent opencode répond avec une présentation.
+### macOS
+
+```bash
+# 1. Installer Homebrew si nécessaire : https://brew.sh
+
+# 2. Installer Python, Git et Docker Desktop
+brew install python git
+brew install --cask docker
+
+# 3. Ouvrir Docker Desktop une première fois, puis vérifier Docker
+open -a Docker
+docker --version
+docker run hello-world
+
+# 4. Installer opencode
+python3 -m pip install --user opencode
+
+# 5. Vérifier les outils
+python3 --version
+python3 -m pip --version
+git --version
+docker --version
+opencode --version
+
+# 6. Tester le modèle gratuit big-pickle
+opencode -m opencode/big-pickle -t "Bonjour, quel est ton rôle ?"
+```
+
+### Windows 10/11 (PowerShell)
+
+```powershell
+# 1. Installer Python, Git et Docker Desktop avec winget
+winget install Python.Python.3.12
+winget install Git.Git
+winget install Docker.DockerDesktop
+
+# 2. Redémarrer Windows, lancer Docker Desktop, puis vérifier Docker
+docker --version
+docker run hello-world
+
+# 3. Installer opencode
+py -m pip install --user opencode
+
+# 4. Vérifier les outils
+py --version
+py -m pip --version
+git --version
+docker --version
+opencode --version
+
+# 5. Tester le modèle gratuit big-pickle
+opencode -m opencode/big-pickle -t "Bonjour, quel est ton rôle ?"
+```
+
+> **Résultat attendu :** Python, Git, Docker et opencode affichent une version. `docker run hello-world` affiche un message de succès. L'agent opencode répond avec une présentation.
+
+### Convention de commandes pour tout le cours
+
+| Usage | Linux/macOS | Windows PowerShell |
+|---|---|---|
+| Lancer Python | `python3 script.py` | `py script.py` |
+| Installer un paquet | `python3 -m pip install paquet` | `py -m pip install paquet` |
+| Lancer pytest | `python3 -m pytest tests/ -v` | `py -m pytest tests/ -v` |
+| Commandes Git | `git ...` | `git ...` |
+| Commandes Docker | `docker ...` | `docker ...` |
+| Commandes opencode | `opencode ...` | `opencode ...` |
+
+Dans les chapitres, si une commande est écrite avec `python3`, utilisez `py` sous Windows PowerShell. Exemple : `python3 agent.py` devient `py agent.py`.
+
+### Convention de dossiers pour tous les TPs
+
+Quand un TP commence par une commande comme `mkdir mon-projet && cd mon-projet`, cela signifie :
+
+1. Ouvrez un terminal dans le dossier où vous rangez vos exercices, par exemple `~/agentic-labs` sur Linux/macOS ou `C:\Users\VotreNom\agentic-labs` sur Windows.
+2. Créez un **nouveau dossier de TP** avec `mkdir`.
+3. Entrez dans ce dossier avec `cd`.
+4. Tous les fichiers indiqués ensuite doivent être créés dans ce dossier, sauf mention contraire.
+
+Exemple Linux/macOS :
+
+```bash
+mkdir -p ~/agentic-labs
+cd ~/agentic-labs
+mkdir mon-tp && cd mon-tp
+pwd
+```
+
+Exemple Windows PowerShell :
+
+```powershell
+mkdir $HOME\agentic-labs
+cd $HOME\agentic-labs
+mkdir mon-tp
+cd mon-tp
+pwd
+```
+
+Le résultat de `pwd` doit afficher le dossier du TP courant. C'est dans ce dossier que vous créez `opencode.json`, `AGENTS.md`, les fichiers Python et les tests.
 
 ---
 
@@ -61,9 +174,9 @@ opencode -m opencode/big-pickle -t "Bonjour, quel est ton rôle ?"
 | | |
 |---|---|
 | **Théorie** | 1950 à 2026 : Turing, Transformers, ère générative, ère agentique |
-| **TP** | Installer Python, opencode, big-pickle — premier agent opérationnel |
+| **TP** | Installer Python, Git, Docker, opencode, big-pickle — premier agent opérationnel |
 | **⏱ Durée** | 1h30 |
-| **Prérequis** | Python 3.10+, pip |
+| **Prérequis** | Linux, macOS ou Windows avec accès terminal |
 
 ```bash
 # Vérifications avant de commencer
@@ -82,8 +195,11 @@ python3 --version && pip --version
 | **Prérequis** | Python 3.10+, pip |
 
 ```bash
-# Nouvelles dépendances pour cette chapitre
-pip install tiktoken pytest
+# Linux/macOS
+python3 -m pip install tiktoken pytest
+
+# Windows PowerShell
+py -m pip install tiktoken pytest
 ```
 
 ---
@@ -132,8 +248,11 @@ pip install tiktoken pytest
 | **Prérequis** | Chapitre 4 terminée, Python, pip, opencode |
 
 ```bash
-# Nouvelles dépendances pour cette chapitre
-pip install chromadb sentence-transformers
+# Linux/macOS
+python3 -m pip install chromadb sentence-transformers
+
+# Windows PowerShell
+py -m pip install chromadb sentence-transformers
 ```
 
 ---
@@ -166,8 +285,11 @@ git --version
 | **Prérequis** | Chapitre 6 terminée, Python, pip, opencode |
 
 ```bash
-# Nouvelles dépendances pour cette chapitre
-pip install mcp
+# Linux/macOS
+python3 -m pip install mcp
+
+# Windows PowerShell
+py -m pip install mcp
 ```
 
 ---
@@ -182,8 +304,11 @@ pip install mcp
 | **Prérequis** | Chapitre 7 terminée, Python, pip, opencode, git, compte GitHub |
 
 ```bash
-# Nouvelles dépendances pour cette chapitre
-pip install pytest ruff bandit
+# Linux/macOS
+python3 -m pip install pytest ruff bandit
+
+# Windows PowerShell
+py -m pip install pytest ruff bandit
 
 # Vérifier GitHub CLI
 gh --version

@@ -11,7 +11,7 @@
 
 ## Prérequis
 
-Avant de commencer cette chapitre, assurez-vous d'avoir :
+Avant de commencer ce chapitre, assurez-vous d'avoir :
 
 - Terminé le **[Chapitre 7](CHAPITRE-07-mcp-standards.md)** et son TP serveur MCP
 - Python 3.10+ installé
@@ -21,14 +21,35 @@ Avant de commencer cette chapitre, assurez-vous d'avoir :
 
 ### Installation des dépendances Python
 
+#### Linux et macOS
+
 ```bash
-pip install pytest ruff bandit
+python3 -m pip install pytest ruff bandit
+```
+
+#### Windows PowerShell
+
+```powershell
+py -m pip install pytest ruff bandit
 ```
 
 ### Vérification
 
+#### Linux et macOS
+
 ```bash
 python3 --version
+git --version
+pytest --version
+ruff --version
+bandit --version
+gh --version  # optionnel, utile pour GitHub Projects
+```
+
+#### Windows PowerShell
+
+```powershell
+py --version
 git --version
 pytest --version
 ruff --version
@@ -54,11 +75,82 @@ Les agents sont **non-déterministes** : deux exécutions du même prompt peuven
 
 ## 2. Tester des Agents
 
+### Principe expliqué simplement
+
+Tester un agent ne consiste pas seulement à vérifier une fonction Python. Il faut aussi vérifier son **comportement** : quel outil il utilise, combien d'étapes il prend, comment il réagit aux erreurs, et s'il respecte les règles de sécurité.
+
+On distingue trois niveaux :
+
+```text
+Test unitaire       → une fonction ou un outil isolé
+Test intégration    → l'agent complet avec ses outils
+Test comportemental → le résultat attendu sur un scénario utilisateur
+```
+
+#### Pourquoi c'est utile ?
+
+- Détecter vite une régression
+- Vérifier qu'un agent utilise le bon outil
+- Encadrer les comportements non déterministes
+- Éviter qu'une correction casse un parcours utilisateur
+
+#### Limite importante
+
+Un test d'agent doit être tolérant quand le texte exact peut varier. On teste souvent des propriétés : présence d'un mot clé, outil utilisé, statut de réussite, nombre maximal d'étapes.
+
 ### 2.1 Tests unitaires
+
+#### Où créer les fichiers ?
+
+**Point de départ :** ouvrez un terminal dans votre dossier d'exercices `~/agentic-labs` (Linux/macOS) ou `$HOME\agentic-labs` (Windows PowerShell).
+
+```bash
+mkdir -p chapitre-08-tests/tests
+cd chapitre-08-tests
+pwd
+```
+
+**Résultat attendu :** `pwd` doit se terminer par `chapitre-08-tests`. Les fichiers de tests de cette section seront créés dans ce dossier.
+
+Créez d'abord `weather_agent.py` :
+
+```python
+class WeatherAgent:
+    def run(self, question: str):
+        if "Paris" in question:
+            return AgentResult(
+                text="À Paris, il fait 15°C.",
+                used_tools=["get_weather"],
+                total_steps=2,
+            )
+        return AgentResult(
+            text="Bonjour !",
+            used_tools=[],
+            total_steps=1,
+        )
+
+
+class AgentResult:
+    def __init__(self, text: str, used_tools: list[str], total_steps: int):
+        self.text = text
+        self.used_tools = used_tools
+        self.total_steps = total_steps
+
+
+def weather_tool(city: str) -> str:
+    return f"Température à {city}: 15°C"
+
+
+def create_agent() -> WeatherAgent:
+    return WeatherAgent()
+```
 
 Créez `tests/test_tools.py` :
 
 ```python
+from weather_agent import weather_tool
+
+
 # Test unitaire : vérifie que l'outil météo retourne une température
 def test_get_weather_tool():
     result = weather_tool("Paris")
@@ -71,12 +163,15 @@ def test_get_weather_tool():
 Créez `tests/test_integration.py` :
 
 ```python
+from weather_agent import WeatherAgent
+
+
 # Test d'intégration : parcours complet d'un agent météo
 def test_agent_meteo_complet():
     agent = WeatherAgent()
     result = agent.run("Quel temps fait-il à Paris ?")
-    assert "Paris" in result
-    assert "°C" in result or "degrés" in result
+    assert "Paris" in result.text
+    assert "°C" in result.text or "degrés" in result.text
 ```
 
 ### 2.3 Tests comportementaux (Évaluation)
@@ -84,6 +179,9 @@ def test_agent_meteo_complet():
 Créez `tests/test_benchmarks.py` :
 
 ```python
+from weather_agent import create_agent
+
+
 # Benchmark : liste des scénarios de test comportementaux
 BENCHMARKS = [
     {
@@ -111,6 +209,26 @@ def test_agent_behavior():
         assert result.total_steps <= bench["max_steps"]
 ```
 
+#### Exécuter les tests
+
+```bash
+python3 -m pip install pytest
+python3 -m pytest tests/ -v
+```
+
+Windows PowerShell :
+
+```powershell
+py -m pip install pytest
+py -m pytest tests/ -v
+```
+
+#### Résultat attendu
+
+```text
+3 passed
+```
+
 ---
 
 ## 3. Pipeline CI/CD Professionnel (Fichier Unique)
@@ -118,6 +236,31 @@ def test_agent_behavior():
 ### 3.1 Architecture
 
 Le pipeline est concu en **9 phases** organisees en dependances paralleles. Chaque phase a un objectif precis et des permissions minimales.
+
+#### Principe expliqué simplement
+
+La CI/CD est une chaîne automatique qui vérifie le projet à chaque modification.
+
+Pour un projet agentique, elle doit répondre à trois questions :
+
+```text
+Qualité  → le code est-il propre ?
+Tests    → le comportement fonctionne-t-il encore ?
+Sécurité → l'agent ou le pipeline exposent-ils un risque ?
+```
+
+Ensuite seulement, elle peut construire une image Docker et préparer le déploiement.
+
+#### Pourquoi c'est utile ?
+
+- Empêcher la fusion d'un code cassé
+- Vérifier automatiquement les tests des agents
+- Détecter secrets, erreurs de permissions et dépendances vulnérables
+- Rendre le déploiement reproductible
+
+#### Limite importante
+
+Un pipeline trop strict bloque l'équipe pour des détails mineurs. Un pipeline trop permissif laisse passer des régressions. Il faut choisir les erreurs bloquantes : sécurité critique, tests essentiels, build Docker.
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {
@@ -362,6 +505,31 @@ Ce pattern est reutilisable pour n'importe quel projet : il suffit de creer un P
 
 ## 4. Monitoring & Observabilité
 
+### Principe expliqué simplement
+
+Le **monitoring** consiste à observer ce que fait l'agent pendant son exécution : temps de réponse, nombre d'étapes, erreurs, tokens consommés, outils appelés.
+
+Sans monitoring, un agent peut échouer silencieusement : boucle trop longue, outil qui plante, coût qui explose, réponse lente.
+
+```text
+Agent démarre
+→ log agent.start
+→ agent travaille
+→ log agent.success ou agent.error
+→ métriques exploitables dans CI/CD ou production
+```
+
+#### Pourquoi c'est utile ?
+
+- Diagnostiquer les erreurs rapidement
+- Détecter les boucles anormales
+- Mesurer la qualité réelle en production
+- Suivre les coûts si le modèle devient payant
+
+#### Limite importante
+
+Les logs ne doivent jamais contenir de secrets, mots de passe, tokens API ou données personnelles sensibles.
+
 ### 4.1 Que monitorer pour un agent ?
 
 | Métrique | Pourquoi | Seuil d'alerte |
@@ -375,32 +543,76 @@ Ce pattern est reutilisable pour n'importe quel projet : il suffit de creer un P
 
 ### 4.2 Logging structuré
 
+#### Où créer le fichier ?
+
+**Point de départ :** vous devriez être dans `~/agentic-labs`. Si ce n'est pas le cas, ouvrez un terminal dans votre dossier d'exercices.
+
+```bash
+mkdir -p chapitre-08-monitoring
+cd chapitre-08-monitoring
+pwd
+```
+
+**Résultat attendu :** `pwd` doit se terminer par `chapitre-08-monitoring`. Les fichiers `monitoring.py` et `token_counter.py` seront créés dans ce dossier.
+
 Créez `monitoring.py` :
 
 ```python
-import structlog
-logger = structlog.get_logger()
+import logging
+import time
+
+logging.basicConfig(level=logging.INFO, format="%(levelname)s:%(message)s")
+logger = logging.getLogger("agent")
+
 
 class MonitoredAgent:
     """Agent avec logging structuré pour le monitoring."""
+
+    def __init__(self):
+        self.total_tokens = 0
+        self.steps = 0
+
+    def _run_loop(self, user_input: str) -> str:
+        self.steps = 2
+        self.total_tokens = len(user_input.split()) + 10
+        return f"Réponse à : {user_input}"
+
     def run(self, user_input: str) -> str:
         start = time.time()
-        logger.info("agent.start", input=user_input)  # Début de l'exécution
+        logger.info("agent.start input=%s", user_input)
         
         try:
             result = self._run_loop(user_input)
             duration = time.time() - start
-            logger.info("agent.success",  # Succès de l'exécution
-                       input=user_input,
-                       duration=duration,
-                       tokens=self.total_tokens,
-                       steps=self.steps)
+            logger.info(
+                "agent.success duration=%.3f tokens=%s steps=%s",
+                duration,
+                self.total_tokens,
+                self.steps,
+            )
             return result
         except Exception as e:
-            logger.error("agent.error",  # Erreur lors de l'exécution
-                        input=user_input,
-                        error=str(e))
+            logger.error("agent.error input=%s error=%s", user_input, str(e))
             raise
+
+
+if __name__ == "__main__":
+    agent = MonitoredAgent()
+    print(agent.run("Bonjour agent"))
+```
+
+#### Exécuter le fichier
+
+```bash
+python3 monitoring.py
+```
+
+#### Résultat attendu
+
+```text
+INFO:agent.start input=Bonjour agent
+INFO:agent.success duration=... tokens=12 steps=2
+Réponse à : Bonjour agent
 ```
 
 ---
@@ -409,9 +621,46 @@ class MonitoredAgent:
 
 ### 5.1 Calcul des coûts
 
+#### Principe expliqué simplement
+
+Un LLM payant facture souvent au **nombre de tokens** : tokens envoyés dans le prompt + tokens générés dans la réponse.
+
+Même si `big-pickle` est gratuit dans ce cours, il est important d'apprendre à suivre un budget. Un agent en boucle peut consommer beaucoup plus qu'un simple appel LLM.
+
+```text
+prompt_tokens + completion_tokens = tokens facturés
+```
+
+#### Pourquoi c'est utile ?
+
+- Éviter les surprises de coût
+- Détecter les prompts trop longs
+- Bloquer une boucle agent trop coûteuse
+- Comparer plusieurs stratégies de contexte
+
+#### Limite importante
+
+Le comptage exact dépend du tokenizer du modèle. L'exemple ci-dessous montre la logique de budget, pas un calcul officiel de facturation.
+
+#### Où créer le fichier ?
+
+**Point de départ :** vous devriez être dans `~/agentic-labs`. Si c'est le cas, restez ici ou recréez le dossier.
+
+```bash
+mkdir -p chapitre-08-monitoring
+cd chapitre-08-monitoring
+pwd
+```
+
+**Résultat attendu :** `pwd` doit se terminer par `chapitre-08-monitoring`, au même endroit que `monitoring.py`.
+
 Créez `token_counter.py` :
 
 ```python
+class BudgetExceeded(Exception):
+    """Erreur levée quand le budget token est dépassé."""
+
+
 class TokenCounter:
     """Compteur de tokens avec budget maximum."""
     def __init__(self, max_total: int = 10000):
@@ -423,6 +672,30 @@ class TokenCounter:
         self.total += prompt_tokens + completion_tokens
         if self.total > self.max_total:
             raise BudgetExceeded(f"Budget token dépassé: {self.total}")
+
+
+if __name__ == "__main__":
+    counter = TokenCounter(max_total=100)
+    counter.track(prompt_tokens=30, completion_tokens=20)
+    print(f"Total tokens: {counter.total}")
+
+    try:
+        counter.track(prompt_tokens=60, completion_tokens=10)
+    except BudgetExceeded as exc:
+        print(exc)
+```
+
+#### Exécuter le fichier
+
+```bash
+python3 token_counter.py
+```
+
+#### Résultat attendu
+
+```text
+Total tokens: 50
+Budget token dépassé: 120
 ```
 
 Avec opencode + big-pickle (modèle gratuit), le coût est **zéro**. Cette section est utile si on migre vers un modèle payant.
@@ -472,12 +745,17 @@ Vous devez créer un mini-projet agentique avec :
 
 Commencez par créer la structure du projet et un assistant CLI (Command Line Interface) minimal :
 
+**Point de départ :** ouvrez un terminal dans votre dossier d'exercices. Ce TP crée un **nouveau dossier indépendant** nommé `cicd-agents`.
+
 ```bash
 mkdir cicd-agents && cd cicd-agents
 mkdir -p tests/unit tests/integration tests/regression tests/e2e .github/workflows
+pwd
 ```
 
-Créez `assistant.py` :
+**Résultat attendu :** `pwd` doit se terminer par `cicd-agents`. Tous les fichiers CI/CD de ce TP seront créés dans ce dossier.
+
+Vous êtes toujours dans `cicd-agents/`. Créez `assistant.py` à la racine de ce dossier :
 
 ```python
 import re
@@ -511,7 +789,7 @@ class Assistant:
 
 ### 6.3 Corrigé — Étape 2 : Tests comportementaux
 
-Créez `tests/unit/test_agent_behavior.py` :
+Vous êtes toujours dans `cicd-agents/`. Créez `tests/unit/test_agent_behavior.py` :
 
 ```python
 import sys
@@ -557,7 +835,7 @@ def test_ville_inconnue():
 
 ### 6.4 Corrigé — Étape 3 : Tests de qualité
 
-Créez `tests/unit/test_quality.py` :
+Vous êtes toujours dans `cicd-agents/`. Créez `tests/unit/test_quality.py` :
 
 ```python
 import subprocess
@@ -617,9 +895,17 @@ mv test_quality.py tests/unit/         # seulement si le fichier est à la racin
 ### 6.7 Corrigé — Étape 6 : Tester en local
 
 ```bash
-pip install pytest ruff bandit
+python3 -m pip install pytest ruff bandit
 ruff check .
 pytest tests/unit/ -v
+```
+
+Windows PowerShell :
+
+```powershell
+py -m pip install pytest ruff bandit
+ruff check .
+py -m pytest tests/unit/ -v
 ```
 
 ### 6.8 Corrigé — Étape 7 : Créer le Scrum Board

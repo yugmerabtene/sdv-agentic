@@ -1,17 +1,17 @@
-# Chapitre 5 — Mémoire & RAG (Retrieval-Augmented Generation)
+# Chapitre 5 — Mémoire & Retrieval-Augmented Generation
 
 ## Objectifs pédagogiques
 
 - Comprendre les différents types de mémoire pour un agent
 - Maîtriser les embeddings et vector stores
-- Savoir implémenter un RAG (Retrieval-Augmented Generation)
+- Savoir implémenter un Retrieval-Augmented Generation
 - Connaître les stratégies de mémoire long-terme
 
 ---
 
 ## Prérequis
 
-Avant de commencer cette chapitre, assurez-vous d'avoir :
+Avant de commencer ce chapitre, assurez-vous d'avoir :
 
 - Terminé le **[Chapitre 4](CHAPITRE-04-architecture-agent.md)** et son TP boucle agent
 - Python 3.10+ installé
@@ -19,9 +19,18 @@ Avant de commencer cette chapitre, assurez-vous d'avoir :
 
 ### Vérification
 
+#### Linux et macOS
+
 ```bash
 python3 --version
 python3 -c "import sqlite3; print(sqlite3.sqlite_version)"
+```
+
+#### Windows PowerShell
+
+```powershell
+py --version
+py -c "import sqlite3; print(sqlite3.sqlite_version)"
 ```
 
 > **Aucune dépendance externe obligatoire** pour le TP principal : SQLite est inclus avec Python.
@@ -29,7 +38,13 @@ python3 -c "import sqlite3; print(sqlite3.sqlite_version)"
 Pour l'option vectorielle en fin de TP :
 
 ```bash
-pip install chromadb sentence-transformers
+python3 -m pip install chromadb sentence-transformers
+```
+
+Windows PowerShell :
+
+```powershell
+py -m pip install chromadb sentence-transformers
 ```
 
 ---
@@ -64,8 +79,8 @@ graph TD
 
 | Type | Description | Stockage | Persistance |
 |---|---|---|---|
-| **Court-terme** | Messages récents de la conversation | Fenêtre de contexte LLM (Large Language Model) | Volatile |
-| **Sémantique** | Faits, connaissances générales | Vector store / Base SQL (Structured Query Language) | Persistante |
+| **Court-terme** | Messages récents de la conversation | Fenêtre de contexte Large Language Model | Volatile |
+| **Sémantique** | Faits, connaissances générales | Vector store / Base Structured Query Language | Persistante |
 | **Épisodique** | Historique des actions et décisions | Logs structurés | Persistante |
 | **Procédurale** | Règles, routines, compétences | Code + Prompts | Permanente |
 
@@ -161,7 +176,7 @@ graph TD
 
 ---
 
-## 4. RAG — Retrieval-Augmented Generation
+## 4. Retrieval-Augmented Generation
 
 ### 4.1 Architecture
 
@@ -177,7 +192,7 @@ graph TD
     R --> D[Documents pertinents]
     D --> C[Contexte enrichi]
     Q --> C
-    C --> LLM[LLM]
+    C --> LLM[Large Language Model]
     LLM --> A[Réponse]
     
     style Q fill:#7c3aed,color:#fff,stroke:#5b21b6
@@ -189,7 +204,35 @@ graph TD
     style A fill:#2563eb,color:#fff,stroke:#1d4ed8
 ```
 
-### 4.2 Pipeline RAG
+### 4.2 Pipeline Retrieval-Augmented Generation
+
+#### Principe expliqué simplement
+
+Le **Retrieval-Augmented Generation** signifie **Retrieval-Augmented Generation** : génération augmentée par recherche.
+
+Un Large Language Model seul répond avec ce qu'il a appris pendant son entraînement. Il ne connaît pas forcément vos fichiers, votre base de données ou le cahier des charges du projet. Le Retrieval-Augmented Generation ajoute une étape de recherche avant la génération.
+
+Le principe est :
+
+```text
+Question utilisateur
+→ recherche des documents pertinents
+→ ajout de ces documents dans le prompt
+→ génération de la réponse par le Large Language Model
+```
+
+Exemple avec le réseau social : si l'utilisateur demande "quelles fonctionnalités sont exclues du MVP ?", l'agent doit chercher dans `cdc.md`, récupérer la section correspondante, puis répondre à partir de ce contexte.
+
+#### Pourquoi c'est utile ?
+
+- Répondre à partir de documents privés ou récents
+- Réduire les hallucinations
+- Garder le modèle générique, sans fine-tuning
+- Mettre à jour les connaissances en changeant les documents, pas le modèle
+
+#### Limite importante
+
+Le Retrieval-Augmented Generation dépend de la qualité de la recherche. Si les mauvais passages sont retrouvés, le Large Language Model répondra avec un mauvais contexte. C'est pourquoi le découpage en chunks, les embeddings et le top-K sont critiques.
 
 ```
 1. INDEXATION (une fois)
@@ -199,17 +242,58 @@ graph TD
    Question → embedding → top-K chunks pertinents
 
 3. GÉNÉRATION (à chaque question)
-   Contexte (chunks) + Question → LLM → Réponse
+   Contexte (chunks) + Question → Large Language Model → Réponse
 ```
 
 ### 4.3 Implémentation
 
+#### Où créer le fichier ?
+
+**Point de départ :** ouvrez un terminal dans votre dossier d'exercices `~/agentic-labs` (Linux/macOS) ou `$HOME\agentic-labs` (Windows PowerShell).
+
+```bash
+mkdir -p chapitre-05-rag
+cd chapitre-05-rag
+pwd
+```
+
+**Résultat attendu :** `pwd` doit se terminer par `chapitre-05-rag`. Les fichiers `rag_agent.py` et `agent_memoire_vectorielle.py` seront créés dans ce dossier.
+
 Créez `rag_agent.py` :
 
 ```python
+class FakeLLM:
+    """Large Language Model factice pour rendre l'exemple exécutable sans Application Programming Interface."""
+
+    def embed(self, texts: list[str]) -> list[set[str]]:
+        # Embedding simplifié : ensemble de mots minuscules
+        return [set(text.lower().split()) for text in texts]
+
+    def chat(self, prompt: str) -> str:
+        return "Réponse générée à partir du contexte fourni."
+
+
+class SimpleVectorStore:
+    def __init__(self):
+        self.items = []
+
+    def add(self, embeddings, chunks):
+        for embedding, chunk in zip(embeddings, chunks):
+            self.items.append((embedding, chunk))
+
+    def search(self, query_embedding, k=5):
+        # Score très simple : nombre de mots en commun
+        scored = []
+        for embedding, chunk in self.items:
+            score = len(query_embedding & embedding)
+            scored.append((score, chunk))
+        scored.sort(reverse=True)
+        return [chunk for score, chunk in scored[:k] if score > 0]
+
+
 class RAGAgent:
     def __init__(self, llm, vector_store):
-        # Initialise l'agent RAG avec un modèle de langage et un stockage vectoriel
+        # Initialise l'agent Retrieval-Augmented Generation avec un modèle de langage et un stockage vectoriel
         self.llm = llm  # Modèle de langage pour la génération de réponses
         self.vs = vector_store  # Base vectorielle pour la recherche sémantique
     
@@ -234,13 +318,65 @@ Question : {question}
 
 Réponds en utilisant uniquement le contexte ci-dessus.
 Si le contexte ne contient pas l'information, dis-le."""
-        
-        return self.llm.chat(prompt)  # Envoie le prompt au LLM et retourne la réponse générée
+         
+        return self.llm.chat(prompt)  # Envoie le prompt au Large Language Model et retourne la réponse générée
+
+    def _chunk_text(self, text: str, size: int = 512) -> list[str]:
+        """Découpe simplifiée : un paragraphe = un chunk."""
+        return [chunk.strip() for chunk in text.split("\n") if chunk.strip()]
+
+
+if __name__ == "__main__":
+    docs = [
+        "Le réseau social utilise SQLite pour stocker les utilisateurs.",
+        "Les publications sont affichées de la plus récente à la plus ancienne.",
+    ]
+    agent = RAGAgent(FakeLLM(), SimpleVectorStore())
+    agent.index_documents(docs)
+    print(agent.query("Comment sont affichées les publications ?"))
+```
+
+#### Exécuter le fichier
+
+```bash
+python3 rag_agent.py
+```
+
+#### Résultat attendu
+
+```text
+Réponse générée à partir du contexte fourni.
 ```
 
 ---
 
 ## 5. Stratégies de Chunking
+
+### Principe expliqué simplement
+
+Le **chunking** consiste à découper un document long en petits morceaux appelés `chunks`.
+
+Un agent ne recherche presque jamais dans un document entier. Il recherche dans des morceaux plus petits. Chaque morceau est transformé en embedding, puis stocké dans le vector store.
+
+```text
+Document complet
+→ chunk 1
+→ chunk 2
+→ chunk 3
+→ embeddings
+→ recherche sémantique
+```
+
+#### Pourquoi c'est utile ?
+
+- Un petit morceau est plus précis qu'un document entier
+- Le Large Language Model reçoit seulement les passages utiles
+- Le coût en tokens diminue
+- Les réponses sont mieux ancrées dans le bon contexte
+
+#### Limite importante
+
+Si les chunks sont trop petits, ils perdent le contexte. S'ils sont trop grands, ils contiennent trop d'informations inutiles. Le bon compromis dépend du type de document.
 
 | Stratégie | Description | Quand |
 |---|---|---|
@@ -248,7 +384,7 @@ Si le contexte ne contient pas l'information, dis-le."""
 | **Semantic** | Découpage par paragraphe/section | Documents structurés |
 | **Sentence** | Découpage par phrase | Textes narratifs |
 | **Recursive** | Découpage récursif avec overlap | Documents longs |
-| **Agentic** | Découpage intelligent par LLM | Qualité maximale |
+| **Agentic** | Découpage intelligent par Large Language Model | Qualité maximale |
 
 ---
 
@@ -270,7 +406,7 @@ graph TD
     Agent --> DB[Base de données<br/>Données structurées]
     
     CT --> |"Sliding Window"| LLM
-    VS --> |"RAG"| LLM
+    VS --> |"Retrieval-Augmented Generation"| LLM
     DB --> |"Query"| LLM
     
     LLM --> R[Réponse]
@@ -285,9 +421,43 @@ graph TD
 
 ### 6.2 Exemple : Agent qui retient
 
+#### Où créer le fichier ?
+
+**Point de départ :** vous devriez être dans `~/agentic-labs`. Si c'est le cas, restez ici ou recréez le dossier.
+
+```bash
+mkdir -p chapitre-05-rag
+cd chapitre-05-rag
+pwd
+```
+
+**Résultat attendu :** `pwd` doit se terminer par `chapitre-05-rag`, au même endroit que `rag_agent.py`.
+
 Créez `agent_memoire_vectorielle.py` :
 
 ```python
+class LLM:
+    """Encodeur factice : transforme un texte en ensemble de mots."""
+
+    def embed(self, texts: list[str]) -> list[set[str]]:
+        return [set(text.lower().split()) for text in texts]
+
+
+class VectorStore:
+    def __init__(self):
+        self.memories = []
+
+    def add(self, embedding, text: str):
+        self.memories.append((embedding, text))
+
+    def search(self, embedding, k=3):
+        scored = []
+        for stored_embedding, text in self.memories:
+            scored.append((len(embedding & stored_embedding), text))
+        scored.sort(reverse=True)
+        return [text for score, text in scored[:k] if score > 0]
+
+
 class AgentAvecMemoire:
     def __init__(self):
         # Initialise l'agent avec mémoire vectorielle et court-terme
@@ -304,6 +474,25 @@ class AgentAvecMemoire:
         """Recherche dans la mémoire long-terme."""
         emb = self.llm.embed([question])[0]  # Calcule l'embedding de la question
         return self.vs.search(emb, k=3)  # Retourne les 3 souvenirs les plus pertinents
+
+
+if __name__ == "__main__":
+    agent = AgentAvecMemoire()
+    agent.remember("Paris", "capitale de la France")
+    agent.remember("SQLite", "base de données embarquée")
+    print(agent.recall("Que sais-tu sur Paris ?"))
+```
+
+#### Exécuter le fichier
+
+```bash
+python3 agent_memoire_vectorielle.py
+```
+
+#### Résultat attendu
+
+```text
+['Paris: capitale de la France']
 ```
 
 ---
@@ -339,13 +528,18 @@ L'agent doit savoir :
 
 ### 7.2 Corrigé — Étape 1 : Structure
 
+**Point de départ :** ouvrez un terminal dans votre dossier d'exercices. Ce TP crée un **nouveau dossier indépendant** nommé `agent-memoire`.
+
 ```bash
 mkdir agent-memoire && cd agent-memoire
+pwd
 ```
+
+**Résultat attendu :** `pwd` doit se terminer par `agent-memoire`. Les fichiers `agent_memoire.py`, `test_agent_memoire.py`, `opencode.json` et `AGENTS.md` seront créés dans ce dossier.
 
 ### 7.3 Corrigé — Étape 2 : Agent avec mémoire
 
-Créez le fichier `agent_memoire.py` :
+Vous êtes toujours dans `agent-memoire/`. Créez le fichier `agent_memoire.py` à la racine de ce dossier :
 
 ```python
 import sqlite3  # Module pour la base de données SQLite (persistance des données)
@@ -390,7 +584,7 @@ class AgentMemoire:
         # Récupère un fait par sa clé depuis la mémoire persistante
         cursor = self.conn.execute(
             "SELECT valeur FROM memoire WHERE cle = ?", (cle,)
-        )  # Requête paramétrée pour éviter les injections SQL
+        )  # Requête paramétrée pour éviter les injections Structured Query Language
         row = cursor.fetchone()  # Récupère la première ligne du résultat
         return row[0] if row else None  # Retourne la valeur ou None si inexistante
     
@@ -514,7 +708,81 @@ python3 -m unittest -v test_agent_memoire.py
 
 ### 7.6 Corrigé — Étape 5 : Configurer opencode
 
-Créez `opencode.json` et `AGENTS.md` (cf. Lab 1). Lancez opencode et demandez :
+#### Pourquoi ajouter `opencode.json` et `AGENTS.md` ici ?
+
+À ce stade, votre agent mémoire fonctionne déjà en Python pur. L'objectif est maintenant d'utiliser opencode pour l'améliorer proprement : ajouter une commande, écrire des tests, ou refactorer le code sans perdre le contexte du projet.
+
+- `opencode.json` dit à opencode quel modèle utiliser et quel agent lancer
+- `AGENTS.md` explique à l'agent ce que fait le projet mémoire et quelles règles respecter
+
+#### Où créer les fichiers ?
+
+Créez-les dans le dossier `agent-memoire/`, au même niveau que `agent_memoire.py` :
+
+```text
+agent-memoire/
+├── agent_memoire.py
+├── test_agent_memoire.py
+├── opencode.json
+└── AGENTS.md
+```
+
+Vous êtes toujours dans `agent-memoire/`. Créez `opencode.json` à la racine de ce dossier :
+
+```text
+agent-memoire/
+├── agent_memoire.py
+├── test_agent_memoire.py
+└── opencode.json          ← à créer maintenant
+```
+
+Créez `opencode.json` :
+
+```jsonc
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "opencode/big-pickle",
+  "default_agent": "developer",
+  "instructions": ["AGENTS.md"],
+  "agent": {
+    "developer": {
+      "mode": "primary",
+      "description": "Améliore l'agent avec mémoire persistante"
+    }
+  }
+}
+```
+
+Vous êtes toujours dans `agent-memoire/`. Créez `AGENTS.md` au même niveau que `opencode.json` :
+
+```text
+agent-memoire/
+├── agent_memoire.py
+├── test_agent_memoire.py
+├── opencode.json
+└── AGENTS.md              ← à créer maintenant
+```
+
+Créez `AGENTS.md` :
+
+```markdown
+# Agent mémoire persistante
+
+Ce projet contient un agent Python qui stocke des informations dans SQLite.
+
+## Règles
+
+- Préserver la persistance SQLite
+- Ajouter des tests pour chaque nouvelle commande
+- Ne pas supprimer les données sans commande explicite
+- Garder le code simple et pédagogique
+```
+
+#### Résultat attendu
+
+opencode charge `AGENTS.md` via `opencode.json`. L'agent comprend qu'il travaille sur un projet de mémoire persistante et qu'il doit protéger les données SQLite.
+
+Lancez opencode et demandez :
 
 ```
 "Ajoute une commande 'oublie tout' qui vide la mémoire"
@@ -534,7 +802,13 @@ Créez `opencode.json` et `AGENTS.md` (cf. Lab 1). Lancez opencode et demandez :
 Pour une vraie mémoire sémantique, utilisez des embeddings :
 
 ```bash
-pip install chromadb sentence-transformers
+python3 -m pip install chromadb sentence-transformers
+```
+
+Windows PowerShell :
+
+```powershell
+py -m pip install chromadb sentence-transformers
 ```
 
 Et remplacez SQLite par Chroma pour la recherche par similarité.
@@ -543,7 +817,7 @@ Et remplacez SQLite par Chroma pour la recherche par similarité.
 
 - Ajoutez une date d'expiration aux souvenirs
 - Implémentez un "résumé automatique" des longues conversations
-- Utilisez opencode avec l'agent développeur pour ajouter une API (Application Programming Interface) REST (Representational State Transfer)
+- Utilisez opencode avec l'agent développeur pour ajouter une Application Programming Interface Representational State Transfer
 
 ---
 
@@ -551,8 +825,8 @@ Et remplacez SQLite par Chroma pour la recherche par similarité.
 
 1. Un agent a besoin de **quatre types de mémoire** : court-terme, sémantique, épisodique, procédurale
 2. Les **embeddings** transforment le texte en vecteurs numériques comparables
-3. Le **RAG** combine recherche vectorielle et génération LLM pour répondre à partir de documents
-4. Le **chunking** (découpage des documents) est une étape critique de la qualité du RAG
+3. Le **Retrieval-Augmented Generation** combine recherche vectorielle et génération Large Language Model pour répondre à partir de documents
+4. Le **chunking** (découpage des documents) est une étape critique de la qualité du Retrieval-Augmented Generation
 5. La **mémoire long-terme** permet à un agent de retenir des informations entre les sessions
 
 ---
@@ -562,4 +836,4 @@ Et remplacez SQLite par Chroma pour la recherche par similarité.
 - [Chapitre 4 — Architecture Agentique](./CHAPITRE-04-architecture-agent.md)
 - [Chapitre 6 — Multi-Agent Orchestration](./CHAPITRE-06-multi-agent.md)
 - [Chroma Documentation](https://docs.trychroma.com/)
-- [LangChain RAG Guide](https://python.langchain.com/docs/use_cases/question_answering/)
+- [LangChain Retrieval-Augmented Generation Guide](https://python.langchain.com/docs/use_cases/question_answering/)
