@@ -1,4 +1,4 @@
-# Partie 4 — Architecture Agentique
+# Chapitre 4 — Architecture Agentique
 
 ## Objectifs pédagogiques
 
@@ -9,13 +9,33 @@
 
 ---
 
+## Prérequis
+
+Avant de commencer cette chapitre, assurez-vous d'avoir :
+
+- Terminé le **[Chapitre 3](CHAPITRE-03-prompt-tool-use.md)** et son TP assistant CLI
+- Python 3.10+ installé
+- opencode fonctionnel
+- Compris les notions de prompt, outil et pattern ReAct
+
+### Vérification
+
+```bash
+python3 --version
+opencode --version
+```
+
+> **Aucune dépendance supplémentaire** : le TP utilise uniquement la bibliothèque standard Python.
+
+---
+
 ## 1. Qu'est-ce qu'un Agent ?
 
 ### 1.1 Définition
 
 Un **agent** est un système qui :
 1. **Perçoit** son environnement (entrée utilisateur, données, événements)
-2. **Raisonné** à partir de ces perceptions (via un LLM)
+2. **Raisonne** à partir de ces perceptions (via un LLM)
 3. **Agit** sur son environnement (réponse, appel d'outil, modification)
 
 ### 1.2 LLM seul vs Agent
@@ -273,6 +293,193 @@ graph TD
 
 ---
 
+## 6. Travaux Pratiques — Boucle agent minimale
+
+> **Projet reseau social** : ce TP introduit la boucle agent qui servira ensuite à automatiser les actions du réseau social : lire une demande utilisateur, choisir une action, exécuter un outil, puis répondre.
+
+**Objectif :** Implémenter un agent simple avec une boucle perception → raisonnement → action.
+
+**Durée :** 1h30
+
+---
+
+### 6.1 Énoncé
+
+Vous devez créer un agent CLI capable de :
+
+1. Lire une demande utilisateur
+2. Identifier l'intention : aide, heure, calcul, mémoire court-terme
+3. Exécuter l'outil adapté
+4. Conserver l'historique de la session
+5. Répondre clairement à l'utilisateur
+
+**Fichiers à créer :**
+- `agent-loop/agent.py` — boucle agent complète
+- `agent-loop/test_agent.py` — tests avec `unittest`
+
+---
+
+### 6.2 Corrigé — Étape 1 : Créer le projet
+
+```bash
+mkdir -p agent-loop
+cd agent-loop
+```
+
+### 6.3 Corrigé — Étape 2 : Créer l'agent
+
+Créez `agent.py` :
+
+```python
+from datetime import datetime
+
+
+class Agent:
+    def __init__(self):
+        # Mémoire court-terme : elle existe seulement pendant la session
+        self.history = []
+
+    def perceive(self, user_input: str) -> str:
+        """Étape 1 : recevoir et normaliser l'entrée utilisateur."""
+        text = user_input.strip()
+        self.history.append({"role": "user", "content": text})
+        return text
+
+    def reason(self, perception: str) -> dict:
+        """Étape 2 : décider quelle action exécuter."""
+        text = perception.lower()
+
+        if text in {"quit", "exit"}:
+            return {"action": "stop"}
+        if "heure" in text:
+            return {"action": "time"}
+        if "historique" in text:
+            return {"action": "history"}
+        if "calcul" in text:
+            expression = perception.split(":", 1)[-1].strip()
+            return {"action": "calculate", "expression": expression}
+        return {"action": "help"}
+
+    def act(self, decision: dict) -> str:
+        """Étape 3 : exécuter l'action décidée."""
+        action = decision["action"]
+
+        if action == "stop":
+            return "STOP"
+        if action == "time":
+            return datetime.now().strftime("Il est %H:%M:%S")
+        if action == "history":
+            return f"Historique : {len(self.history)} message(s) utilisateur"
+        if action == "calculate":
+            try:
+                # Exemple pédagogique : eval est dangereux en production.
+                return str(eval(decision["expression"]))
+            except Exception as exc:
+                return f"Erreur de calcul : {exc}"
+        return "Commandes : heure | calcul: 2 + 2 | historique | quit"
+
+    def run_once(self, user_input: str) -> str:
+        """Exécute une itération complète de la boucle agent."""
+        perception = self.perceive(user_input)
+        decision = self.reason(perception)
+        response = self.act(decision)
+        self.history.append({"role": "assistant", "content": response})
+        return response
+
+
+if __name__ == "__main__":
+    agent = Agent()
+    while True:
+        user_input = input("\n> ")
+        response = agent.run_once(user_input)
+        if response == "STOP":
+            print("Fin de session.")
+            break
+        print(response)
+```
+
+### 6.4 Corrigé — Étape 3 : Tester manuellement
+
+```bash
+python3 agent.py
+```
+
+Essayez :
+
+```text
+> heure
+> calcul: 10 + 5
+> historique
+> quit
+```
+
+### 6.5 Corrigé — Étape 4 : Ajouter les tests
+
+Créez `test_agent.py` :
+
+```python
+import unittest
+
+from agent import Agent
+
+
+class TestAgentLoop(unittest.TestCase):
+    def setUp(self):
+        self.agent = Agent()
+
+    def test_calculate(self):
+        self.assertEqual(self.agent.run_once("calcul: 2 + 2"), "4")
+
+    def test_history(self):
+        self.agent.run_once("bonjour")
+        result = self.agent.run_once("historique")
+        self.assertIn("message", result)
+
+    def test_help(self):
+        result = self.agent.run_once("commande inconnue")
+        self.assertIn("Commandes", result)
+
+    def test_stop(self):
+        self.assertEqual(self.agent.run_once("quit"), "STOP")
+
+
+if __name__ == "__main__":
+    unittest.main()
+```
+
+Lancez les tests :
+
+```bash
+python3 -m unittest -v test_agent.py
+```
+
+---
+
+### 6.6 Résultat attendu
+
+```text
+agent-loop/
+├── agent.py
+└── test_agent.py
+```
+
+- L'agent accepte des commandes en boucle
+- Chaque demande passe par perception, raisonnement, action
+- L'historique de session est conservé
+- Les tests passent
+
+---
+
+### 6.7 Validation
+
+- [ ] `python3 agent.py` lance l'agent interactif
+- [ ] `calcul: 10 + 5` retourne `15`
+- [ ] `historique` affiche le nombre de messages
+- [ ] `python3 -m unittest -v test_agent.py` passe
+- [ ] Vous savez identifier les trois étapes : percevoir, raisonner, agir
+
+---
+
 ## Points clés à retenir
 
 1. Un **agent** est un LLM enveloppé dans une boucle perception → raisonnement → action
@@ -285,6 +492,6 @@ graph TD
 
 ## Liens
 
-- [Partie 3 — Prompt & Tool Use](./PARTIE-03-prompt-tool-use.md)
-- [Partie 5 — Mémoire & RAG (Retrieval-Augmented Generation)](./PARTIE-05-memoire-rag.md)
-- [Partie 6 — Multi-Agent Orchestration](./PARTIE-06-multi-agent.md)
+- [Chapitre 3 — Prompt & Tool Use](./CHAPITRE-03-prompt-tool-use.md)
+- [Chapitre 5 — Mémoire & RAG (Retrieval-Augmented Generation)](./CHAPITRE-05-memoire-rag.md)
+- [Chapitre 6 — Multi-Agent Orchestration](./CHAPITRE-06-multi-agent.md)

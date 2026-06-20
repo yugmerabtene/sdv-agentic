@@ -2,7 +2,7 @@
 # track-progress.yml — Suivi automatique de progression du cours
 # 
 # Ce workflow deterministe (zero token LLM) detecte les modifications
-# dans les fichiers PARTIE-*.md et met a jour le GitHub Project V2
+# dans les fichiers CHAPITRE-*.md et met a jour le GitHub Project V2
 # "Agentic Developer Course - Progression" en consequence.
 #
 # Permissions :
@@ -17,12 +17,12 @@
 
 name: Suivi de progression du cours
 
-# Declencheur : a chaque push vers main, quand un fichier PARTIE-*.md change
+# Declencheur : a chaque push vers main, quand un fichier CHAPITRE-*.md change
 on:
   push:
     branches: [main]
     paths:
-      - "PARTIE-*.md"
+      - "CHAPITRE-*.md"
 
 # Permissions accordees au GITHUB_TOKEN embarque par GitHub Actions
 permissions:
@@ -32,7 +32,7 @@ permissions:
 
 jobs:
   # Job unique : analyser les fichiers modifies et synchroniser le board
-  track-parties:
+  track-chapitres:
     runs-on: ubuntu-latest
     steps:
       # Etape 1 : recuperer le code source du depot
@@ -42,32 +42,32 @@ jobs:
           fetch-depth: 2   # 2 commits suffisent pour le diff
           ref: main
 
-      # Etape 2 : verifier que le diff contient bien des PARTIES modifies
+      # Etape 2 : verifier que le diff contient bien des CHAPITRES modifies
       - name: Analyser les fichiers modifies
         id: diff
         run: |
-          # Extrait la liste des fichiers PARTIE-*.md modifies dans ce push
-          CHANGED=$(git diff --name-only HEAD~1 HEAD -- 'PARTIE-*.md' || true)
+          # Extrait la liste des fichiers CHAPITRE-*.md modifies dans ce push
+          CHANGED=$(git diff --name-only HEAD~1 HEAD -- 'CHAPITRE-*.md' || true)
           
           if [ -z "$CHANGED" ]; then
-            echo "Aucune partie modifiee dans ce commit."
+            echo "Aucune chapitre modifiee dans ce commit."
             echo "changed=false" >> $GITHUB_OUTPUT
           else
             echo "Fichiers modifies : $CHANGED"
             echo "changed=true" >> $GITHUB_OUTPUT
-            # Convertit les noms de fichiers en numeros de partie
-            # Exemple : PARTIE-01-histoire-ia.md -> 01
+            # Convertit les noms de fichiers en numeros de chapitre
+            # Exemple : CHAPITRE-01-histoire-ia.md -> 01
             for file in $CHANGED; do
-              NUM=$(echo "$file" | grep -oP 'PARTIE-\K\d{2}')
+              NUM=$(echo "$file" | grep -oP 'CHAPITRE-\K\d{2}')
               if [ -n "$NUM" ]; then
-                echo "partie_${NUM}=true" >> $GITHUB_OUTPUT
+                echo "chapitre_${NUM}=true" >> $GITHUB_OUTPUT
               fi
             done
           fi
 
       # Etape 3 : mettre a jour le Project board
       # Utilise gh CLI (authentifie via GITHUB_TOKEN) pour deplacer
-      # les cartes des PARTIES modifiees de "A faire" vers "En cours"
+      # les cartes des CHAPITRES modifiees de "A faire" vers "En cours"
       - name: Synchroniser le Project board
         if: steps.diff.outputs.changed == 'true'
         env:
@@ -84,12 +84,12 @@ jobs:
           STATUS_FIELD="Sprint Status"
           EN_COURS_ID="01c2105f"
           
-          # Pour chaque Partie 01 a 10, verifier si elle a ete modifiee
+          # Pour chaque Chapitre 01 a 10, verifier si elle a ete modifiee
           for num in 01 02 03 04 05 06 07 08 09 10; do
-            # Variable dynamique : partie_01, partie_02, etc.
-            VAR_NAME="partie_$num"
+            # Variable dynamique : chapitre_01, chapitre_02, etc.
+            VAR_NAME="chapitre_$num"
             if [ "${!VAR_NAME}" = "true" ]; then
-              echo "Mise a jour : Partie $num -> En cours"
+              echo "Mise a jour : Chapitre $num -> En cours"
               
               # Convertir le numero en numero d'issue
               # Les issues sont numerotees 2..11 (1 = test supprime)
@@ -107,7 +107,7 @@ jobs:
                       --id "$ITEM_ID" \
                       --field "$STATUS_FIELD" \
                       --single-select "$EN_COURS_ID"
-                    echo "  -> Partie $num deplacee vers 'En cours'"
+                    echo "  -> Chapitre $num deplacee vers 'En cours'"
                   fi
                 done
             fi

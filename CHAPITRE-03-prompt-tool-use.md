@@ -1,4 +1,4 @@
-# Partie 3 — Prompt Engineering & Tool Use
+# Chapitre 3 — Prompt Engineering & Tool Use
 
 ## Objectifs pédagogiques
 
@@ -6,6 +6,25 @@
 - Savoir concevoir un system prompt efficace
 - Comprendre et implémenter le function calling
 - Maîtriser le pattern ReAct (Reasoning + Acting)
+
+---
+
+## Prérequis
+
+Avant de commencer cette chapitre, assurez-vous d'avoir :
+
+- Terminé les **[Chapitres 1](CHAPITRE-01-histoire-ia.md)** et **[Chapitre 2](CHAPITRE-02-fondations-llm.md)** avec leurs TP
+- Python 3.10+ et opencode installés
+- Compris les bases de la tokenisation (P2)
+
+### Vérification
+
+```bash
+# Tester que tout est fonctionnel
+python3 --version && opencode --version
+```
+
+> **Aucune dépendance supplémentaire** pour cette chapitre — Python standard suffit.
 
 ---
 
@@ -318,7 +337,7 @@ Si un outil échoue, explique pourquoi à l'utilisateur.
 
 ---
 
-## 6. Travaux Pratiques — Assistant CLI (Command Line Interface) avec Outils
+## 6. Travaux Pratiques — Assistant CLI avec Outils
 
 > **Projet reseau social** : ce TP s'appuie sur le reseau social defini dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md). L'assistant CLI que vous allez construire permettra de manipuler les utilisateurs et publications de cette application.
 
@@ -328,7 +347,26 @@ Si un outil échoue, explique pourquoi à l'utilisateur.
 
 ---
 
-### 6.1 Structure du projet
+### 6.1 Énoncé
+
+Vous devez creer un assistant interactif en ligne de commande avec :
+
+1. Un outil **meteo** qui retourne la temperature d'une ville
+2. Un outil **calcul** qui evalue une expression mathematique
+3. Un systeme de **detection automatique** : l'assistant reconnait quelle action executer selon la question
+4. Un fichier de configuration **opencode.json** pour ameliorer l'assistant avec un agent
+5. Des **tests** pour chaque outil
+
+**Fichiers à créer :**
+- `assistant-cli/assistant.py` — l'assistant avec ses outils
+- `assistant-cli/opencode.json` — configuration pour l'amelioration par agent
+- `assistant-cli/AGENTS.md` — description de l'equipe
+- `assistant-cli/.opencode/skills/common.md` — règles communes de l'agent
+- `assistant-cli/test_assistant.py` — tests automatisés sans dépendance externe
+
+---
+
+### 6.2 Corrigé — Étape 1 : Structure du projet
 
 ```bash
 mkdir assistant-cli && cd assistant-cli
@@ -391,16 +429,22 @@ if __name__ == "__main__":
         print(agent.run(q))  # Affiche la réponse de l'assistant
 ```
 
-### 6.2 Tester sans agent
+### 6.3 Corrigé — Étape 2 : Tester sans agent
 
 ```bash
-python assistant.py
+python3 assistant.py
 > météo à Paris
 > calcul: 42 + 18
 > quit
 ```
 
-### 6.3 Configurer opencode pour l'assistant
+### 6.4 Corrigé — Étape 3 : Configurer opencode pour l'assistant
+
+Créez les dossiers nécessaires :
+
+```bash
+mkdir -p .opencode/skills
+```
 
 Créez un fichier `opencode.json` à la racine du projet :
 
@@ -421,7 +465,83 @@ Créez un fichier `opencode.json` à la racine du projet :
 }
 ```
 
-### 6.4 Améliorer avec l'agent
+Créez `AGENTS.md` :
+
+```markdown
+# Assistant CLI avec outils
+
+Ce projet contient un assistant en ligne de commande qui utilise deux outils :
+
+- `meteo(ville)` : retourne une météo simulée
+- `calculer(expression)` : calcule une expression mathématique simple
+
+## Objectif
+
+Améliorer progressivement l'assistant avec opencode : meilleure détection d'intention, nouveaux outils, tests.
+```
+
+Créez `.opencode/skills/common.md` :
+
+```markdown
+# Règles communes
+
+Langage : Python 3.10+
+
+Conventions :
+- Code simple et lisible
+- Commentaires pédagogiques
+- Tests avec la bibliothèque standard `unittest`
+- Ne pas ajouter de dépendance externe sans justification
+```
+
+### 6.5 Corrigé — Étape 4 : Ajouter les tests
+
+Créez `test_assistant.py` :
+
+```python
+import unittest
+
+from assistant import Assistant
+
+
+class TestAssistant(unittest.TestCase):
+    def setUp(self):
+        # Crée un assistant neuf avant chaque test
+        self.agent = Assistant()
+
+    def test_meteo_paris(self):
+        # Vérifie que l'outil météo répond pour Paris
+        result = self.agent.run("météo à Paris")
+        self.assertIn("15°C", result)
+        self.assertIn("Paris", result)
+
+    def test_calcul_simple(self):
+        # Vérifie un calcul mathématique simple
+        result = self.agent.run("calcul: 42 + 18")
+        self.assertEqual(result, "60")
+
+    def test_expression_invalide(self):
+        # Vérifie qu'une expression invalide ne fait pas planter l'assistant
+        result = self.agent.run("calcul: 42 +")
+        self.assertIn("Erreur", result)
+
+    def test_question_inconnue(self):
+        # Vérifie que l'assistant répond même s'il ne sait pas traiter la demande
+        result = self.agent.run("Bonjour")
+        self.assertIn("Je ne sais pas", result)
+
+
+if __name__ == "__main__":
+    unittest.main()
+```
+
+Lancez les tests :
+
+```bash
+python3 -m unittest -v test_assistant.py
+```
+
+### 6.6 Corrigé — Étape 5 : Améliorer avec l'agent
 
 Lancez opencode et demandez-lui d'améliorer l'assistant :
 
@@ -431,14 +551,15 @@ Lancez opencode et demandez-lui d'améliorer l'assistant :
 "Ajoute des tests pour chaque outil"
 ```
 
-### 6.5 Validation
+### 6.7 Corrigé — Étape 6 : Validation
 
 - [ ] L'assistant répond correctement aux questions météo
 - [ ] L'assistant calcule des expressions mathématiques
 - [ ] L'assistant gère les cas d'erreur (ville inconnue, expression invalide)
-- [ ] Les tests passent
+- [ ] `python3 -m unittest -v test_assistant.py` passe
+- [ ] `opencode` charge bien `opencode.json` et `AGENTS.md`
 
-### 6.6 Pour aller plus loin
+### 6.8 Pour aller plus loin
 
 - Implémentez le vrai pattern ReAct avec une boucle LLM
 - Ajoutez un outil de recherche web (fichier local)
@@ -458,7 +579,7 @@ Lancez opencode et demandez-lui d'améliorer l'assistant :
 
 ## Liens
 
-- [Partie 2 — Architecture des LLMs](./PARTIE-02-fondations-llm.md)
-- [Partie 4 — Architecture Agentique](./PARTIE-04-architecture-agent.md)
+- [Chapitre 2 — Architecture des LLMs](./CHAPITRE-02-fondations-llm.md)
+- [Chapitre 4 — Architecture Agentique](./CHAPITRE-04-architecture-agent.md)
 - [Référence OpenAI Function Calling](https://platform.openai.com/docs/guides/function-calling)
 - [ReAct Paper (Yao et al., 2023)](https://arxiv.org/abs/2210.03629)

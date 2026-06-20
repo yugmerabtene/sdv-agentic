@@ -1,4 +1,4 @@
-# Partie 10 — Opencode & Mise en Pratique Agentique
+# Chapitre 10 — Opencode & Mise en Pratique Agentique
 
 ## Objectifs pédagogiques
 
@@ -7,6 +7,29 @@
 - Rédiger des skills efficaces
 - Orchestrer un projet via agents Scrum
 - Réaliser les labs pratiques
+
+---
+
+## Prérequis
+
+Avant de commencer cette chapitre, assurez-vous d'avoir :
+
+- Terminé les **Chapitres 1 à 9** et leurs TPs
+- opencode installé et fonctionnel
+- Git installé
+- GitHub CLI (`gh`) installé si vous voulez automatiser issues/projects
+- Les bases de Python, SQLite, tests, CI/CD et permissions opencode
+
+### Vérification finale
+
+```bash
+python3 --version
+opencode --version
+git --version
+gh --version
+```
+
+> Si `gh --version` échoue, vous pouvez tout de même faire les labs locaux. Seules les chapitres GitHub Project/Issues nécessitent `gh`.
 
 ---
 
@@ -233,14 +256,35 @@ Dans le fichier de configuration, les agents peuvent déléguer des tâches :
 
 ---
 
-#### Étape 1 — Initialisation
+#### Énoncé
+
+Vous devez créer un premier projet opencode minimal avec :
+
+1. Un dépôt Git initialisé
+2. Un fichier `opencode.json`
+3. Un agent principal `scrum-master`
+4. Un sous-agent `developer`
+5. Une skill commune
+6. Un fichier `AGENTS.md`
+7. Un premier fichier généré par l'agent
+
+**Fichiers à créer :**
+- `mon-premier-agent/opencode.json`
+- `mon-premier-agent/.opencode/skills/common.md`
+- `mon-premier-agent/AGENTS.md`
+- `mon-premier-agent/hello.py` (généré ou demandé à l'agent)
+- `mon-premier-agent/test_hello.py` (généré ou demandé à l'agent)
+
+---
+
+#### Corrigé — Étape 1 : Initialisation
 
 ```bash
 mkdir mon-premier-agent && cd mon-premier-agent
 git init
 ```
 
-#### Étape 2 — Configurer opencode
+#### Corrigé — Étape 2 : Configurer opencode
 
 Créez `opencode.json` :
 
@@ -268,7 +312,7 @@ Créez `opencode.json` :
 }
 ```
 
-#### Étape 3 — Créer les skills
+#### Corrigé — Étape 3 : Créer les skills
 
 Créez `.opencode/skills/common.md` :
 
@@ -284,7 +328,7 @@ Conventions :
 - Tests avec pytest
 ```
 
-#### Étape 4 — Créer AGENTS.md
+#### Corrigé — Étape 4 : Créer AGENTS.md
 
 ```markdown
 # Équipe
@@ -299,7 +343,7 @@ Conventions :
 Demandez au scrum-master de réaliser des tâches simples.
 ```
 
-#### Étape 5 — Interagir
+#### Corrigé — Étape 5 : Interagir
 
 Lancez opencode :
 
@@ -332,7 +376,7 @@ Essayez ces instructions :
 
 ### 4.2 Lab 2 — Equipe d'Agents avec CI/CD et Project Board
 
-> **Projet reseau social** : ce lab integre la chaine CI/CD (Partie 8) a l'equipe d'agents opencode. Les agents produisent du code, le pipeline le valide, et le Project board suit la progression automatiquement.
+> **Projet reseau social** : ce lab integre la chaine CI/CD (Chapitre 8) a l'equipe d'agents opencode. Les agents produisent du code, le pipeline le valide, et le Project board suit la progression automatiquement.
 
 **Objectif :** Configurer une equipe d'agents opencode avec pipeline CI/CD et tableau de bord GitHub Projects.
 
@@ -340,7 +384,28 @@ Essayez ces instructions :
 
 ---
 
-#### Étape 1 — Structurer le projet
+#### Énoncé
+
+Vous devez configurer une équipe agentique capable de développer, tester et préparer le déploiement d'une application.
+
+L'équipe doit contenir :
+
+1. Un agent `scrum-master` coordinateur
+2. Un agent `developer` pour code et tests
+3. Un agent `devops` pour CI/CD et Docker
+4. Des permissions explicites pour chaque agent
+5. Un workflow GitHub Actions
+6. Une base pour connecter un Scrum Board GitHub
+
+**Fichiers à créer :**
+- `equipe-agentic/opencode.json`
+- `equipe-agentic/.opencode/skills/*.md`
+- `equipe-agentic/AGENTS.md`
+- `equipe-agentic/.github/workflows/cicd-equipe.yml`
+
+---
+
+#### Corrigé — Étape 1 : Structurer le projet
 
 ```bash
 mkdir equipe-agentic && cd equipe-agentic
@@ -348,7 +413,7 @@ git init
 mkdir -p .opencode/skills .github/workflows
 ```
 
-#### Étape 2 — Configurer l'équipe d'agents
+#### Corrigé — Étape 2 : Configurer l'équipe d'agents
 
 Créez `opencode.json` avec les permissions commentees :
 
@@ -409,10 +474,10 @@ Créez `opencode.json` avec les permissions commentees :
 ```
 
 Chaque permission est explicitement definie :
-- **read/edite :** `allow` — les agents ont acces au code
+- **read/edit :** `allow` — les agents ont acces au code
 - **bash.commandes :** certaines sont autorisees directement (`allow`), d'autres demandent confirmation (`ask`)
 
-#### Étape 3 — Ajouter le pipeline CI/CD
+#### Corrigé — Étape 3 : Ajouter le pipeline CI/CD
 
 Créez `.github/workflows/cicd-equipe.yml` :
 
@@ -445,7 +510,7 @@ jobs:
       - run: pytest tests/ -v --tb=short
 ```
 
-#### Étape 4 — Créer le Scrum Board
+#### Corrigé — Étape 4 : Créer le Scrum Board
 
 ```bash
 # Creer un Project V2 (via l'interface GitHub ou l'API)
@@ -459,7 +524,7 @@ gh issue create --title "Sprint 1 — Initialisation" \
 # (via l'interface GitHub > champ "Sprint Status")
 ```
 
-#### Étape 5 — Orchestrer via agents opencode
+#### Corrigé — Étape 5 : Orchestrer via agents opencode
 
 Lancez opencode et demandez au scrum-master :
 
@@ -476,6 +541,146 @@ Les agents opencode :
 2. Le **developer** ecrit le code applicatif et les tests
 3. Le **devops** genere les workflows GitHub Actions
 4. Le pipeline s'execute a chaque push et le board se met a jour
+
+---
+
+### 4.3 Lab 3 — Projet Final : Réseau Social MVP
+
+> **Projet reseau social** : ce lab lance la réalisation complète du MVP décrit dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md).
+
+**Objectif :** Utiliser l'équipe d'agents pour générer progressivement l'application réseau social : authentification, publications, administration, tests, Docker et CI/CD.
+
+**Durée :** 4h+
+
+---
+
+#### Énoncé
+
+Vous devez demander à l'équipe opencode de construire le MVP du réseau social en respectant le cahier des charges.
+
+Le projet final doit contenir :
+
+1. Une application Python web simple
+2. Une base SQLite
+3. Une authentification utilisateur
+4. Un mur public de publications
+5. Des droits utilisateur/admin
+6. Des tests automatisés
+7. Un Dockerfile
+8. Une CI/CD GitHub Actions
+9. Une documentation de lancement
+
+**Fichiers attendus :**
+- `app/` — code applicatif
+- `tests/` — tests unitaires, intégration, sécurité
+- `Dockerfile`
+- `README.md`
+- `.github/workflows/cicd-projet.yml`
+- `opencode.json`
+- `AGENTS.md`
+
+---
+
+#### Corrigé — Étape 1 : Initialiser le projet final
+
+```bash
+mkdir reseau-social-agentic
+cd reseau-social-agentic
+git init
+mkdir -p app tests/unit tests/integration tests/security .github/workflows .opencode/skills
+```
+
+#### Corrigé — Étape 2 : Copier le cahier des charges
+
+Depuis la racine du cours, copiez le CDC dans le projet final :
+
+```bash
+mkdir -p docs
+cp ../projet/gestion_de_projet/cdc.md docs/cdc.md
+```
+
+Si vous travaillez depuis un autre dossier, adaptez le chemin du fichier `cdc.md`.
+
+#### Corrigé — Étape 3 : Demander l'architecture à l'équipe
+
+Lancez opencode :
+
+```bash
+opencode
+```
+
+Demandez au `scrum-master` :
+
+```text
+Lis docs/cdc.md puis propose une architecture MVP simple pour le réseau social.
+Contraintes : Python, SQLite, Tailwind CSS, Docker unique, tests automatisés.
+Ne code pas encore. Donne d'abord le plan des fichiers et des sprints.
+```
+
+#### Corrigé — Étape 4 : Générer Sprint 1
+
+```text
+Implémente le Sprint 1 du CDC : initialisation du projet, Dockerfile, structure applicative.
+Ajoute les tests minimaux et documente les commandes de lancement.
+```
+
+Validez localement :
+
+```bash
+python3 -m pytest tests/ -v
+docker build -t reseau-social-agentic .
+```
+
+#### Corrigé — Étape 5 : Générer les sprints suivants
+
+Exécutez les demandes une par une, en validant les tests à chaque sprint :
+
+```text
+Implémente le Sprint 2 : inscription, connexion, déconnexion, sessions.
+```
+
+```text
+Implémente le Sprint 3 : mur public, création, affichage et suppression des publications.
+```
+
+```text
+Implémente le Sprint 4 : profil utilisateur, administration, rôles.
+```
+
+```text
+Implémente le Sprint 5 : tests complets, CI/CD, documentation, stabilisation.
+```
+
+Après chaque sprint :
+
+```bash
+python3 -m pytest tests/ -v
+ruff check .
+git status
+```
+
+#### Corrigé — Étape 6 : Validation finale
+
+```bash
+docker build -t reseau-social-agentic .
+docker run --rm -p 8000:8000 reseau-social-agentic
+```
+
+Ouvrez ensuite l'application dans le navigateur selon le port documenté par l'agent.
+
+#### Checklist finale
+
+- [ ] Le CDC est présent dans `docs/cdc.md`
+- [ ] L'application démarre localement
+- [ ] L'inscription fonctionne
+- [ ] La connexion/déconnexion fonctionne
+- [ ] Un utilisateur peut publier un message
+- [ ] Les messages sont affichés du plus récent au plus ancien
+- [ ] Les droits admin/utilisateur sont testés
+- [ ] `python3 -m pytest tests/ -v` passe
+- [ ] `ruff check .` passe
+- [ ] L'image Docker se construit
+- [ ] Le pipeline CI/CD existe
 
 ---
 
@@ -516,7 +721,7 @@ opencode -t "Vérifie que le Dockerfile est valide"
 
 ## Liens
 
-- [Partie 1 — Histoire de l'IA (Intelligence Artificielle)](./PARTIE-01-histoire-ia.md)
-- [Partie 4 — Architecture Agentique](./PARTIE-04-architecture-agent.md)
-- [Partie 7 — MCP & Standards](./PARTIE-07-mcp-standards.md)
+- [Chapitre 1 — Histoire de l'IA (Intelligence Artificielle)](./CHAPITRE-01-histoire-ia.md)
+- [Chapitre 4 — Architecture Agentique](./CHAPITRE-04-architecture-agent.md)
+- [Chapitre 7 — MCP & Standards](./CHAPITRE-07-mcp-standards.md)
 - [Documentation opencode](https://opencode.ai)

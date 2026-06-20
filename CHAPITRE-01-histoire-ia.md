@@ -1,4 +1,4 @@
-# Partie 1 — Histoire & Genèse de l'IA
+# Chapitre 1 — Histoire & Genèse de l'IA
 
 ## Objectifs pédagogiques
 
@@ -6,6 +6,66 @@
 - Savoir situer chaque découverte dans son contexte
 - Distinguer les ruptures fondamentales des améliorations incrémentales
 - Comprendre pourquoi les systèmes agentiques émergent aujourd'hui
+
+---
+
+## Prérequis
+
+Avant de commencer cette chapitre, installez les outils suivants :
+
+### 1. Python 3.10+
+
+```bash
+# Vérifier si Python est déjà installé
+python3 --version
+
+# Si ce n'est pas le cas (Ubuntu/Debian) :
+sudo apt update && sudo apt install python3 python3-pip -y
+
+# Sur macOS :
+# brew install python3
+
+# Sur Windows :
+# https://www.python.org/downloads/
+```
+
+### 2. pip (gestionnaire de paquets Python)
+
+```bash
+# Vérifier pip
+pip3 --version
+
+# Si absent :
+sudo apt install python3-pip -y  # Linux
+# Ou :
+python3 -m ensurepip --upgrade
+```
+
+### 3. Opencode + big-pickle (modèle gratuit)
+
+```bash
+# Installer opencode
+pip install opencode
+
+# Vérifier l'installation
+opencode --version
+
+# Tester le modèle gratuit big-pickle
+opencode -m opencode/big-pickle -t "Bonjour ! Quel est ton nom et ton rôle ?"
+```
+
+> **Résultat attendu :** l'agent opencode répond avec une présentation (ex: "Je suis un assistant opencode basé sur big-pickle...").
+
+### Tableau de vérification
+
+```bash
+# Exécutez ces commandes pour vérifier que tout est prêt
+echo "--- Python ---" && python3 --version && \
+echo "--- pip ---" && pip3 --version && \
+echo "--- Opencode ---" && opencode --version
+```
+
+Si une commande échoue, revenez à l'étape correspondante avant de continuer.
 
 ---
 
@@ -262,6 +322,170 @@ Anthropic introduit **MCP**, un standard ouvert pour connecter LLMs à des sourc
 Les LLMs seuls sont insuffisants pour les applications réelles. La compétence la plus demandée en 2026 n'est pas la *prompt engineering* mais l'**architecture agentique** : concevoir des systèmes où des LLMs collaborant avec des outils, de la mémoire et d'autres agents résolvent des problèmes complexes de façon autonome.
 
 Ce cours vous donne les clés pour concevoir, construire et déployer ces systèmes.
+
+---
+
+---
+
+## 6. Travaux Pratiques — Premier agent opencode
+
+> **Projet reseau social** : ce premier TP prepare votre environnement de travail pour l'ensemble du cours. Vous allez installer les outils necessaires (Python, opencode, big-pickle), verifier leur bon fonctionnement, puis interagir avec votre premier agent.
+
+**Objectif :** Installer et configurer votre environnement de development agentique, executer votre premier agent opencode.
+
+**Durée :** 30 min
+
+---
+
+### Énoncé
+
+Vous devez :
+
+1. Installer Python 3.10+ (si pas déjà fait)
+2. Installer opencode et le modele gratuit big-pickle
+3. Creer un premier projet opencode
+4. Interagir avec l'agent via la ligne de commande
+5. Verifier que tout fonctionne correctement
+
+**Fichiers à créer :**
+- `mon-premier-agent/opencode.json` — configuration de l'agent
+- `mon-premier-agent/AGENTS.md` — description de l'equipe
+
+---
+
+### Corrigé pas à pas
+
+#### Étape 1 — Creer le dossier du projet
+
+```bash
+mkdir -p mon-premier-agent
+cd mon-premier-agent
+```
+
+#### Étape 2 — Initialiser Git
+
+```bash
+git init
+```
+
+Vous devriez voir :
+
+```
+Initialized empty Git repository in /chemin/vers/mon-premier-agent/.git/
+```
+
+#### Étape 3 — Configurer opencode
+
+Creez un fichier `opencode.json` :
+
+```jsonc
+{
+  "$schema": "https://opencode.ai/config.json",  // Validation du format
+  "model": "opencode/big-pickle",                 // Modele gratuit
+  "default_agent": "decouverte",                  // Nom de l'agent par defaut
+  "agent": {
+    "decouverte": {
+      "mode": "primary",                          // Agent principal
+      "description": "Agent de decouverte du cours"
+    }
+  }
+}
+```
+
+#### Étape 4 — Creer le fichier d'equipe
+
+Creez `AGENTS.md` :
+
+```markdown
+# Mon premier agent
+
+Agent de decouverte installe pour le cours Agentic Developer Craftsmanship.
+
+## Utilisation
+
+- Demandez a l'agent de repondre a des questions sur l'histoire de l'IA
+- Testez ses capacites avec des instructions simples
+- Explorez les limites du modele big-pickle
+```
+
+#### Étape 5 — Lancer opencode
+
+```bash
+opencode
+```
+
+Vous entrez dans l'interface interactive d'opencode. Essayez ces instructions :
+
+```
+Qui a invente le test de Turing et en quoi consiste-t-il ?
+```
+
+```
+Que s'est-il passe en 2012 avec AlexNet ?
+```
+
+```
+Qu'est-ce que le pattern ReAct ?
+```
+
+```
+Quelle est la particularite de ce cours ?
+```
+
+#### Étape 6 — Quitter opencode
+
+```bash
+# Tapez simplement :
+exit
+```
+
+#### Étape 7 — Test en mode one-shot
+
+Vous pouvez aussi interagir sans entrer dans l'interface interactive :
+
+```bash
+opencode -t "Qu'est-ce que le test de Turing ?"
+```
+
+L'agent repond directement puis se termine.
+
+---
+
+### Résultat attendu
+
+Après ces étapes :
+
+```
+mon-premier-agent/
+├── opencode.json          ← Configuration de l'agent
+├── AGENTS.md              ← Description de l'équipe
+└── .git/                  ← Dépôt Git initialisé
+```
+
+- L'agent opencode répond aux questions sur l'histoire de l'IA
+- Le modèle big-pickle fonctionne sans abonnement API
+- Vous pouvez interagir en mode interactif ou one-shot
+
+---
+
+### Validation
+
+- [ ] `python3 --version` affiche >= 3.10
+- [ ] `pip3 --version` fonctionne
+- [ ] `opencode --version` affiche un numéro de version
+- [ ] `opencode -m opencode/big-pickle -t "test"` répond sans erreur
+- [ ] Le dossier `mon-premier-agent/` contient `opencode.json` et `AGENTS.md`
+- [ ] `git status` affiche "On branch main" ou "master"
+
+---
+
+### Points clés à retenir
+
+1. **Opencode** transforme un LLM en assistant interactif accessible en ligne de commande
+2. **big-pickle** est un modèle libre et gratuit — pas d'abonnement API nécessaire
+3. La configuration se fait via `opencode.json` (agent, modèle, permissions)
+4. `AGENTS.md` documente le rôle et l'utilisation de l'équipe d'agents
+5. Deux modes d'interaction : **interactif** (`opencode`) et **one-shot** (`opencode -t "..."`)
 
 ---
 

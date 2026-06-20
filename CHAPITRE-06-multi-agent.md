@@ -1,4 +1,4 @@
-# Partie 6 — Multi-Agent Orchestration
+# Chapitre 6 — Multi-Agent Orchestration
 
 ## Objectifs pédagogiques
 
@@ -6,6 +6,26 @@
 - Maîtriser les patterns de communication entre agents
 - Savoir implémenter un Supervisor Agent
 - Connaître les approches asynchrones et files d'attente
+
+---
+
+## Prérequis
+
+Avant de commencer cette chapitre, assurez-vous d'avoir :
+
+- Terminé le **[Chapitre 5](CHAPITRE-05-memoire-rag.md)** et son TP mémoire persistante
+- opencode installé et fonctionnel
+- Git installé
+- Compris les fichiers `opencode.json`, `AGENTS.md` et `.opencode/skills/`
+
+### Vérification
+
+```bash
+opencode --version
+git --version
+```
+
+> **Aucune dépendance Python obligatoire** : ce TP configure une équipe d'agents avec opencode.
 
 ---
 
@@ -297,7 +317,7 @@ class AsyncAgentOrchestrator:
 | **Fallback** | Agent de remplacement si le principal échoue | `agent_b if agent_a fails` |
 | **Circuit Breaker** | Arrêter les appels après N échecs consécutifs | Arrêt temporaire puis reprise |
 | **Timeout** | Limiter le temps d'exécution d'un agent | `asyncio.wait_for(task, timeout=30)` |
-| **Graceful degradation** | Réponse partielle si un agent est indisponible | "Module X indisponible, voici le reste" |
+| **Graceful degradation** | Réponse chapitrelle si un agent est indisponible | "Module X indisponible, voici le reste" |
 
 ---
 
@@ -309,13 +329,37 @@ class AsyncAgentOrchestrator:
 
 **Durée :** 3h
 
-### Étape 1 — Créer le projet
+---
+
+### 6.1 Énoncé
+
+Vous devez configurer une équipe opencode avec :
+
+1. Un **scrum-master** qui joue le rôle de supervisor
+2. Un agent **backend-dev** pour APIs, logique métier et authentification
+3. Un agent **frontend-dev** pour interfaces et templates
+4. Un agent **data-dev** pour SQLite, migrations et mémoire/RAG
+5. Des skills dédiées pour cadrer chaque rôle
+6. Une validation manuelle de la délégation
+
+**Fichiers à créer :**
+- `supervisor-agent/opencode.json` — configuration multi-agent
+- `supervisor-agent/AGENTS.md` — documentation de l'équipe
+- `supervisor-agent/.opencode/skills/scrum_master.md`
+- `supervisor-agent/.opencode/skills/backend.md`
+- `supervisor-agent/.opencode/skills/frontend.md`
+- `supervisor-agent/.opencode/skills/data.md`
+
+---
+
+### 6.2 Corrigé — Étape 1 : Créer le projet
 
 ```bash
 mkdir supervisor-agent && cd supervisor-agent
+mkdir -p .opencode/skills
 ```
 
-### Étape 2 — Configurer l'équipe
+### 6.3 Corrigé — Étape 2 : Configurer l'équipe
 
 `opencode.json` :
 
@@ -351,7 +395,7 @@ mkdir supervisor-agent && cd supervisor-agent
 }
 ```
 
-### Étape 3 — Créer les skills spécialisées
+### 6.4 Corrigé — Étape 3 : Créer les skills spécialisées
 
 **`.opencode/skills/scrum_master.md`**
 
@@ -406,7 +450,7 @@ Tu gères le schéma de base de données, les migrations,
 les index vectoriels pour le RAG.
 ```
 
-### Étape 4 — AGENTS.md
+### 6.5 Corrigé — Étape 4 : AGENTS.md
 
 Créez un fichier `AGENTS.md` :
 
@@ -426,7 +470,7 @@ Donnez une tâche au scrum-master. Il la décomposera
 et déléguera aux sous-agents appropriés.
 ```
 
-### Étape 5 — Tester la délégation
+### 6.6 Corrigé — Étape 5 : Tester la délégation
 
 Lancez opencode et essayez :
 
@@ -441,7 +485,7 @@ Le scrum-master devrait déléguer :
 - La page HTML → `@frontend-dev`
 - La table visites → `@data-dev`
 
-### Étape 6 — Ajouter des tests
+### 6.7 Corrigé — Étape 6 : Ajouter des tests
 
 Demandez au scrum-master :
 
@@ -450,7 +494,7 @@ Demandez au scrum-master :
 "Vérifie que le scrum-master délègue correctement en regardant les logs"
 ```
 
-### Validation
+### 6.8 Validation
 
 - [ ] Le scrum-master analyse et décompose la demande
 - [ ] Chaque sous-agent reçoit des tâches adaptées à son rôle
@@ -477,6 +521,6 @@ Demandez au scrum-master :
 
 ## Liens
 
-- [Partie 5 — Mémoire & RAG](./PARTIE-05-memoire-rag.md)
-- [Partie 7 — MCP (Model Context Protocol) & Standards](./PARTIE-07-mcp-standards.md)
-- [Partie 10 — Opencode & Labs](./PARTIE-10-opencode-labs.md)
+- [Chapitre 5 — Mémoire & RAG](./CHAPITRE-05-memoire-rag.md)
+- [Chapitre 7 — MCP (Model Context Protocol) & Standards](./CHAPITRE-07-mcp-standards.md)
+- [Chapitre 10 — Opencode & Labs](./CHAPITRE-10-opencode-labs.md)

@@ -1,4 +1,4 @@
-# Partie 7 — MCP (Model Context Protocol) & Standards d'Interopérabilité
+# Chapitre 7 — MCP (Model Context Protocol) & Standards d'Interopérabilité
 
 ## Objectifs pédagogiques
 
@@ -6,6 +6,30 @@
 - Savoir exposer un service via MCP
 - Connaître A2A (Agent-to-Agent) et les standards émergents
 - Pouvoir connecter un agent opencode à des services externes
+
+---
+
+## Prérequis
+
+Avant de commencer cette chapitre, assurez-vous d'avoir :
+
+- Terminé le **[Chapitre 6](CHAPITRE-06-multi-agent.md)** et son TP supervisor
+- Python 3.10+ installé
+- opencode fonctionnel
+- Compris la notion d'outil exposé à un agent
+
+### Installation des dépendances
+
+```bash
+pip install mcp
+```
+
+### Vérification
+
+```bash
+python3 -c "import mcp; print('MCP installe')"
+opencode --version
+```
 
 ---
 
@@ -199,7 +223,7 @@ Le fichier de configuration opencode permet de déclarer :
   "$schema": "https://opencode.ai/config.json",
   "model": "opencode/big-pickle",
   "default_agent": "scrum-master",
-  "instructions": ["AGENTS.md", "PARTIE-01-histoire-ia.md"],
+  "instructions": ["AGENTS.md", "CHAPITRE-01-histoire-ia.md"],
   "agents": {
     "scrum-master": {
       "mode": "primary",
@@ -282,96 +306,103 @@ Inversement, vous pouvez exposer les capacités de votre projet opencode via MCP
 
 ---
 
-### Étape 1 — Installer le SDK MCP
+### 7.1 Énoncé
+
+Vous devez créer un serveur MCP météo utilisable par un agent opencode.
+
+Le serveur doit :
+
+1. Déclarer un outil `get_weather`
+2. Recevoir une ville en paramètre
+3. Retourner une météo simulée
+4. Être testable en ligne de commande
+5. Être connectable depuis `opencode.json`
+
+**Fichiers à créer :**
+- `serveur-mcp/serveur_meteo.py` — serveur MCP
+- `serveur-mcp/client_test.py` — client de test
+- `serveur-mcp/opencode.json` — connexion opencode au serveur
+
+---
+
+### 7.2 Corrigé — Étape 1 : Installer le SDK MCP
 
 ```bash
 mkdir serveur-mcp && cd serveur-mcp
 pip install mcp
 ```
 
-### Étape 2 — Serveur MCP minimal
+### 7.3 Corrigé — Étape 2 : Serveur MCP minimal
 
 Créez un fichier `serveur_meteo.py` :
 
 ```python
-from mcp.server import Server          # Classe principale du serveur MCP
-from mcp.types import Tool, TextContent  # Types MCP : outil et contenu texte
+from mcp.server.fastmcp import FastMCP
 
-app = Server("meteo-server")            # Initialise le serveur MCP météo
+# Crée un serveur MCP nommé "meteo-server".
+mcp = FastMCP("meteo-server")
 
-# Déclare l'outil "get_weather" accessible par les agents
-@app.list_tools()
-async def list_tools() -> list[Tool]:
-    return [
-        Tool(
-            name="get_weather",                    # Nom de l'outil
-            description="Obtenir la météo d'une ville",  # Description pour le LLM
-            parameters={
-                "type": "object",                  # Schéma JSON des paramètres
-                "properties": {
-                    "city": {
-                        "type": "string",
-                        "description": "Nom de la ville"
-                    }
-                },
-                "required": ["city"]
-            }
-        )
-    ]
 
-# Logique appelée quand un agent invoque l'outil "get_weather"
-@app.call_tool()
-async def call_tool(name: str, args: dict) -> list[TextContent]:
-    if name == "get_weather":
-        # Dictionnaire de données météo simulées pour différentes villes
-        temperatures = {
-            "paris": "15°C, ciel nuageux",
-            "tokyo": "22°C, ensoleillé",
-            "londres": "12°C, pluie légère",
-            "new york": "18°C, vent modéré",
-        }
-        city = args["city"].lower()                # Normalise le nom en minuscules
-        # Retourne la météo connue ou une valeur par défaut
-        result = temperatures.get(city, f"20°C à {args['city']}, données approximatives")
-        return [TextContent(result)]
+@mcp.tool()
+def get_weather(city: str) -> str:
+    """Retourne une météo simulée pour une ville."""
+    # Dictionnaire de données météo simulées.
+    temperatures = {
+        "paris": "15°C, ciel nuageux",
+        "tokyo": "22°C, ensoleillé",
+        "londres": "12°C, pluie légère",
+        "new york": "18°C, vent modéré",
+    }
+    city_key = city.lower().strip()
+    return temperatures.get(city_key, f"20°C à {city}, données approximatives")
 
-    raise ValueError(f"Outil inconnu: {name}")
 
-# Point d'entrée : démarre le serveur MCP sur l'entrée-sortie standard (stdio)
+# Point d'entrée : démarre le serveur MCP en transport stdio.
 if __name__ == "__main__":
-    app.run(transport="stdio")
+    mcp.run()
 ```
 
-### Étape 3 — Tester le serveur
+### 7.4 Corrigé — Étape 3 : Tester le serveur
 
 ```bash
-python serveur_meteo.py
+python3 serveur_meteo.py
 ```
 
 Le serveur écoute sur stdio (utilisable par un client MCP).
 
-### Étape 4 — Client MCP
+### 7.5 Corrigé — Étape 4 : Client MCP
 
 Créez un fichier `client_test.py` :
 
 ```python
-import asyncio                          # Bibliothèque pour la programmation asynchrone
-from mcp.client import Client           # Client MCP pour se connecter à un serveur
+from serveur_meteo import get_weather
 
-async def test():
-    # Connexion au serveur MCP lancé via la commande Python
-    async with Client.connect("python serveur_meteo.py") as client:
-        tools = await client.list_tools()                     # Récupère la liste des outils disponibles
-        print("Outils disponibles:", [t.name for t in tools]) # Affiche les noms des outils
 
-        # Appelle l'outil "get_weather" avec la ville "Paris"
-        result = await client.call_tool("get_weather", {"city": "Paris"})
-        print("Résultat:", result)                            # Affiche le résultat météo
+def test_weather():
+    """Test local de la logique métier avant branchement MCP."""
+    assert "15°C" in get_weather("Paris")
+    assert "22°C" in get_weather("Tokyo")
+    assert "20°C" in get_weather("Ville inconnue")
 
-asyncio.run(test())  # Lance le test asynchrone
+
+if __name__ == "__main__":
+    test_weather()
+    print("Tests locaux OK")
 ```
 
-### Étape 5 — Connecter à opencode
+Exécutez le test local :
+
+```bash
+python3 client_test.py
+```
+
+Résultat attendu :
+
+```text
+Tests locaux OK
+```
+
+### 7.6 Corrigé — Étape 5 : Connecter à opencode
 
 Ajoutez dans `opencode.json` :
 
@@ -393,7 +424,7 @@ Ajoutez dans `opencode.json` :
 }
 ```
 
-### Étape 6 — Tester avec opencode
+### 7.7 Corrigé — Étape 6 : Tester avec opencode
 
 Lancez opencode et demandez :
 
@@ -403,7 +434,7 @@ Lancez opencode et demandez :
 "Quelle est la différence de température entre Londres et New York ?"
 ```
 
-### Validation
+### 7.8 Validation
 
 - [ ] Le serveur MCP répond aux requêtes
 - [ ] Le client MCP se connecte et appelle les outils
@@ -430,7 +461,7 @@ Lancez opencode et demandez :
 
 ## Liens
 
-- [Partie 6 — Multi-Agent Orchestration](./PARTIE-06-multi-agent.md)
-- [Partie 10 — Opencode & Labs](./PARTIE-10-opencode-labs.md)
+- [Chapitre 6 — Multi-Agent Orchestration](./CHAPITRE-06-multi-agent.md)
+- [Chapitre 10 — Opencode & Labs](./CHAPITRE-10-opencode-labs.md)
 - [Documentation MCP](https://modelcontextprotocol.io)
 - [opencode Documentation](https://opencode.ai)

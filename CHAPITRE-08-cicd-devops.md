@@ -1,4 +1,4 @@
-# Partie 8 — CI/CD (Continuous Integration / Continuous Deployment) & DevOps pour Agents
+# Chapitre 8 — CI/CD (Continuous Integration / Continuous Deployment) & DevOps pour Agents
 
 ## Objectifs pédagogiques
 
@@ -6,6 +6,35 @@
 - Mettre en place une CI/CD complète pour un projet agentique
 - Savoir monitorer les performances et coûts des agents
 - Connaître les bonnes pratiques DevOps pour systèmes agentiques
+
+---
+
+## Prérequis
+
+Avant de commencer cette chapitre, assurez-vous d'avoir :
+
+- Terminé le **[Chapitre 7](CHAPITRE-07-mcp-standards.md)** et son TP serveur MCP
+- Python 3.10+ installé
+- Git installé
+- Un compte GitHub
+- GitHub CLI (`gh`) installé si vous voulez automatiser les issues/projects
+
+### Installation des dépendances Python
+
+```bash
+pip install pytest ruff bandit
+```
+
+### Vérification
+
+```bash
+python3 --version
+git --version
+pytest --version
+ruff --version
+bandit --version
+gh --version  # optionnel, utile pour GitHub Projects
+```
 
 ---
 
@@ -84,9 +113,11 @@ def test_agent_behavior():
 
 ---
 
-## 3. Pipeline CI/CD pour Agents
+## 3. Pipeline CI/CD Professionnel (Fichier Unique)
 
 ### 3.1 Architecture
+
+Le pipeline est concu en **9 phases** organisees en dependances paralleles. Chaque phase a un objectif precis et des permissions minimales.
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {
@@ -95,76 +126,143 @@ def test_agent_behavior():
   'lineColor': '#818cf8'
 }}}%%
 graph TD
-    P1[Phase 1<br/>Setup] --> P2[Phase 2<br/>Qualité]
-    P2 --> P3[Phase 3<br/>Tests agents]
-    P3 --> P4[Phase 4<br/>Build]
-    P4 --> P5[Phase 5<br/>Tests artefact]
-    P5 --> P6[Phase 6<br/>Scan sécurité]
-    P6 --> P7[Phase 7<br/>Déploiement]
-    P7 --> P8[Phase 8<br/>Post-vérification]
+    subgraph "Branches"
+        F[feature/*] --> D[develop]
+        X[fix/*] --> D
+        D --> M[main]
+        R[release/*] --> M
+    end
     
-    style P1 fill:#7c3aed,color:#fff,stroke:#5b21b6
-    style P2 fill:#0891b2,color:#fff,stroke:#155e75
-    style P3 fill:#059669,color:#fff,stroke:#047857
-    style P4 fill:#d97706,color:#fff,stroke:#b45309
-    style P5 fill:#2563eb,color:#fff,stroke:#1d4ed8
-    style P6 fill:#dc2626,color:#fff,stroke:#b91c1c
-    style P7 fill:#9333ea,color:#fff,stroke:#7e22ce
-    style P8 fill:#059669,color:#fff,stroke:#047857
+    subgraph "Pipeline CI/CD"
+        Q[1 Qualite<br/>ruff + mypy] --> U[2 Unitaires<br/>pytest unit/]
+        Q --> I[3 Integration<br/>pytest integ/ + DB]
+        Q --> S[5 Securite<br/>pip-audit + bandit]
+        U --> N[4 Non-regression<br/>snapshots]
+        U --> B[6 Build<br/>Docker]
+        I --> B
+        B --> E[7 E2E<br/>httpx]
+        N --> E
+        S --> E
+        E --> P[8 Deploiement<br/>CD prete prod]
+        P --> PB[9 Scrum Board<br/>mise a jour]
+    end
+    
+    M -->|"push"| Q
+    D -->|"push/PR"| Q
+    F -->|"PR"| Q
+    
+    style Q fill:#7c3aed,color:#fff
+    style U fill:#0891b2,color:#fff
+    style I fill:#0891b2,color:#fff
+    style N fill:#059669,color:#fff
+    style S fill:#dc2626,color:#fff
+    style B fill:#d97706,color:#fff
+    style E fill:#2563eb,color:#fff
+    style P fill:#9333ea,color:#fff
+    style PB fill:#10b981,color:#fff
+    style F fill:#1e293b,color:#f1f5f9
+    style X fill:#1e293b,color:#f1f5f9
+    style R fill:#1e293b,color:#f1f5f9
+    style D fill:#3b82f6,color:#fff
+    style M fill:#10b981,color:#fff
 ```
 
-### 3.2 Pipeline YAML (YAML Ain't Markup Language) (GitHub Actions)
+### 3.2 Pipeline YAML unique
 
-Créez `.github/workflows/cicd-agent.yml` :
+Le fichier complet se trouve dans `.github/workflows/cicd-projet.yml`. Il contient les **9 phases** dans un seul fichier YAML :
+
+| Phase | Job | Depend de | Parallelisable | Permissions |
+|---|---|---|---|---|
+| **1 Qualite** | `quality` | — | — | lecture seule |
+| **2 Unitaires** | `unit-tests` | quality | avec phase 3, 5 | lecture seule |
+| **3 Integration** | `integration-tests` | quality | avec phase 2, 5 | lecture seule + service DB |
+| **4 Non-regression** | `regression-tests` | unit-tests | — | lecture seule |
+| **5 Securite** | `security` | quality | avec phase 2, 3 | lecture seule |
+| **6 Build** | `build` | unit-tests, integration-tests | — | lecture + packages write |
+| **7 E2E** | `e2e-tests` | build | — | lecture seule |
+| **8 Deploiement** | `deploy` | toutes sauf 9 | — | environment: production |
+| **9 Scrum board** | `update-board` | deploy | — | projects write |
+
+Extrait du pipeline :
 
 ```yaml
-name: CI/CD Agent
+name: CI/CD Projet Social
 
-on: [push, pull_request]  # Déclencheur : push ou pull request
+# Declencheur : toutes les branches du workflow Gitflow
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - "feature/**"
+      - "fix/**"
+      - "release/**"
+  pull_request:
+    branches:
+      - develop
+      - main
 
-jobs:
-  quality:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: { python-version: "3.12" }
-      - run: pip install -r requirements-dev.txt
-      - run: ruff check .  # Vérification du linting
-      - run: mypy .  # Vérification des types
-
-  test-agents:
-    needs: quality  # Dépend du job quality
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-      - run: pip install -r requirements-dev.txt
-      - name: Exécuter les tests agents
-        run: pytest tests/ -v --benchmark
-      - name: Vérifier les coûts tokens
-        run: python scripts/check_token_cost.py --max 1000
-
-  build:
-    needs: test-agents  # Dépend du job test-agents
-    runs-on: ubuntu-latest
-    steps:
-      - run: docker build -t agent-app .  # Construction de l'image
-      - run: docker run -d --name agent-test agent-app
-      - run: |
-          sleep 5
-          curl -sf http://localhost:8000/health  # Vérification santé
-      - run: docker rm -f agent-test
-
-  deploy:
-    needs: build  # Dépend du job build
-    if: github.ref == 'refs/heads/main'  # Déploiement uniquement sur main
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Déploiement..."
+# Annule les runs precedents sur la meme branche
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 ```
 
-### 3.5 Integration avec GitHub Projects
+Chaque phase est independante et peut etre executee separement. L'option `continue-on-error: true` est utilisee sur les phases non-bloquantes (securite, non-regression) pour ne pas bloquer le pipeline sur des alertes.
+
+### 3.3 Strategie de Branching Professionnelle
+
+Le pipeline suit le modele **GitFlow simplifie** (ou GitHub Flow enrichi) :
+
+```
+main (production, protegee)
+  └── develop (integration, protegee avec PR obligatoire)
+       ├── feature/ajout-moderation   ← nouvelles fonctionnalites
+       ├── fix/correction-auth        ← corrections de bugs
+       └── release/v1.2.0             ← preparation de mise en production
+```
+
+Regles :
+
+| Branche | Protection | CI declenchee | Deploiement |
+|---|---|---|---|
+| `feature/*` | Aucune | PR vers develop | Non |
+| `fix/*` | Aucune | PR vers develop | Non |
+| `develop` | PR requise, review requise | Push + PR | Non |
+| `release/*` | PR requise | Push + PR | Non |
+| `main` | PR requise, review requise, statuts CI obligatoires | Push + PR | **Oui** (phase 8) |
+
+Avantages de cette strategie :
+- **Isolation** : chaque fonctionnalite est developpee dans sa branche
+- **Qualite** : les PR vers develop declenchent toute la CI
+- **Stabilite** : main ne recoit que du code valide par toutes les phases
+- **Traçabilite** : chaque commit est lie a une issue/feature
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {
+  'primaryColor': '#3b82f6',
+  'primaryTextColor': '#fff',
+  'lineColor': '#93c5fd'
+}}}%%
+gitGraph
+    commit id: "CDC"
+    branch develop
+    checkout develop
+    branch feature/auth
+    commit id: "Inscription API"
+    commit id: "Login JWT"
+    checkout develop
+    merge feature/auth
+    branch fix/cors
+    commit id: "Correction CORS"
+    checkout develop
+    merge fix/cors
+    checkout main
+    merge develop tag: "v1.0.0"
+    commit id: "Deploiement"
+```
+
+### 3.4 Integration avec GitHub Projects
 
 Un pipeline CI/CD ne se limite pas a builder et deployer. Il peut aussi **mettre a jour automatiquement un Scrum board** pour suivre la progression du projet en temps reel, sans cout de token LLM supplementaire.
 
@@ -178,7 +276,7 @@ Un pipeline CI/CD ne se limite pas a builder et deployer. Il peut aussi **mettre
 }}}%%
 graph LR
     C[Commit push] --> W[Workflow GH Actions]
-    W --> D["Diff detecte (PARTIE-*.md)"]
+    W --> D["Diff detecte (CHAPITRE-*.md)"]
     D --> P["gh project item-edit"]
     P --> B["Board mis a jour<br/>Backlog -> In Progress"]
     
@@ -191,13 +289,13 @@ graph LR
 
 #### Workflow de suivi (zero token LLM)
 
-Le fichier `.github/workflows/track-progress.yml` utilise uniquement la CLI `gh` (pas de LLM) pour detecter les fichiers PARTIE-*.md modifies et deplacer automatiquement les cartes dans le Scrum board.
+Le fichier `.github/workflows/track-progress.yml` utilise uniquement la CLI `gh` (pas de LLM) pour detecter les fichiers CHAPITRE-*.md modifies et deplacer automatiquement les cartes dans le Scrum board.
 
 Caracteristiques :
 - **Cout : zero token** — bash + gh CLI, pas d'appel LLM
 - **Temps reel** — execute a chaque push sur main
 - **Automatique** — plus besoin de deplacer les cartes a la main
-- **Filtre par fichier** — seule la PARTIE modifiee est mise a jour
+- **Filtre par fichier** — seul le chapitre modifie est mis a jour
 
 ```yaml
 name: Suivi de progression du cours
@@ -206,7 +304,7 @@ on:
   push:
     branches: [main]
     paths:
-      - "PARTIE-*.md"
+      - "CHAPITRE-*.md"
 
 permissions:
   contents: read        # Lecture seule pour le diff
@@ -214,7 +312,7 @@ permissions:
   projects: write       # Mise a jour du Project board
 
 jobs:
-  track-parties:
+  track-chapitres:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -223,7 +321,7 @@ jobs:
 
       - name: Analyser les fichiers modifies
         run: |
-          CHANGED=$(git diff --name-only HEAD~1 HEAD -- 'PARTIE-*.md' || true)
+          CHANGED=$(git diff --name-only HEAD~1 HEAD -- 'CHAPITRE-*.md' || true)
           echo "Fichiers modifies : $CHANGED"
 ```
 
@@ -249,7 +347,7 @@ graph TB
         I3["Issue P3"] -.-> BL
     end
     
-    W["track-progress.yml"] -->|"commit sur PARTIE-02.md"| IP
+    W["track-progress.yml"] -->|"commit sur CHAPITRE-02.md"| IP
     
     style BL fill:#6b7280,color:#fff
     style TD fill:#3b82f6,color:#fff
@@ -351,12 +449,32 @@ Avec opencode + big-pickle (modèle gratuit), le coût est **zéro**. Cette sect
 
 ---
 
-### Étape 1 — Structure du projet
+### 6.1 Énoncé
+
+Vous devez créer un mini-projet agentique avec :
+
+1. Un assistant Python simple
+2. Des tests comportementaux
+3. Des tests qualité (`ruff`)
+4. Une structure de dossiers compatible CI/CD
+5. Un pipeline GitHub Actions générable par opencode
+6. Une vérification locale avant push
+
+**Fichiers à créer :**
+- `cicd-agents/assistant.py`
+- `cicd-agents/tests/unit/test_agent_behavior.py`
+- `cicd-agents/tests/unit/test_quality.py`
+- `cicd-agents/.github/workflows/cicd-projet.yml`
+
+---
+
+### 6.2 Corrigé — Étape 1 : Structure du projet
 
 Commencez par créer la structure du projet et un assistant CLI (Command Line Interface) minimal :
 
 ```bash
 mkdir cicd-agents && cd cicd-agents
+mkdir -p tests/unit tests/integration tests/regression tests/e2e .github/workflows
 ```
 
 Créez `assistant.py` :
@@ -386,14 +504,14 @@ class Assistant:
             expr = user_input.split(":", 1)[-1].strip()
             try:
                 return str(eval(expr))
-            except:
+            except Exception:
                 return "Erreur de calcul"
         return f"Je ne comprends pas: {user_input}"
 ```
 
-### Étape 2 — Tests comportementaux
+### 6.3 Corrigé — Étape 2 : Tests comportementaux
 
-Créez `tests/test_agent_behavior.py` :
+Créez `tests/unit/test_agent_behavior.py` :
 
 ```python
 import sys
@@ -437,9 +555,9 @@ def test_ville_inconnue():
     assert result  # Ne doit pas planter
 ```
 
-### Étape 3 — Tests de qualité
+### 6.4 Corrigé — Étape 3 : Tests de qualité
 
-Créez `tests/test_quality.py` :
+Créez `tests/unit/test_quality.py` :
 
 ```python
 import subprocess
@@ -456,70 +574,68 @@ def test_imports():
     assert result.returncode == 0, f"Import échoué:\n{result.stderr}"
 ```
 
-### Étape 4 — Pipeline GitHub Actions
+### 6.5 Corrigé — Étape 4 : Pipeline CI/CD unique (agentic)
 
-Créez `.github/workflows/test-agents.yml` :
+Le pipeline du cours est defini dans `.github/workflows/cicd-projet.yml` (fichier unique, 9 phases). Vous pouvez le **generer** via opencode en demandant au scrum-master :
 
-```yaml
-name: Test Agents
-
-on: [push, pull_request]  # Déclenché à chaque push ou pull request
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4  # Récupère le code source
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"  # Version de Python ciblée
-      
-      - name: Installer les dépendances
-        run: |
-          python -m pip install --upgrade pip
-          pip install pytest ruff
-      
-      - name: Qualité (ruff)
-        run: ruff check .  # Vérification du linting
-      
-      - name: Tests agents
-        run: pytest tests/ -v  # Exécution des tests unitaires
+```
+"Génère le pipeline CI/CD complet dans .github/workflows/cicd-projet.yml :
+ - 9 phases : qualité, tests unitaires, tests intégration (avec base de données),
+   non-régression (snapshots), sécurité, build Docker, E2E (httpx),
+   déploiement (prêt pour la prod, étapes commentées), mise à jour Scrum board
+ - Protection des branches : feature/* → develop → main
+ - Concurrency group pour annuler les builds obsolètes
+ - Permissions minimales sur chaque job"
 ```
 
-Ce pipeline vient compléter l'exemple de la section 3.2 : il se concentre sur la qualité et les tests agents, tandis que le précédent couvrait la construction et le déploiement.
+Les agents opencode :
+1. Le **scrum-master** analyse la demande et consulte le CDC
+2. Le **devops** genere le fichier YAML avec toutes les phases
+3. Le **tester** cree les squelettes de dossiers de tests
+4. Le pipeline est operationnel au prochain push
 
-### Étape 5 — Tester en local
+### 6.6 Corrigé — Étape 5 : Structure des dossiers de tests
+
+Le pipeline attend cette structure :
+
+```
+tests/
+├── unit/          ← tests unitaires (phase 2)
+├── integration/   ← tests d'intégration avec base de données (phase 3)
+├── regression/    ← tests de non-régression, snapshots (phase 4)
+└── e2e/           ← tests E2E via httpx (phase 7)
+```
+
+Les dossiers ont déjà été créés à l'étape 1. Si vous avez créé les tests à la racine par erreur, déplacez-les :
 
 ```bash
-pip install pytest ruff
+mkdir -p tests/{unit,integration,regression,e2e}
+mv test_agent_behavior.py tests/unit/  # seulement si le fichier est à la racine
+mv test_quality.py tests/unit/         # seulement si le fichier est à la racine
+```
+
+### 6.7 Corrigé — Étape 6 : Tester en local
+
+```bash
+pip install pytest ruff bandit
 ruff check .
-pytest tests/ -v
+pytest tests/unit/ -v
 ```
 
-### Étape 6 — Configurer opencode pour le pipeline
+### 6.8 Corrigé — Étape 7 : Créer le Scrum Board
 
-Demandez à l'agent opencode :
-
-```
-"Ajoute un job 'benchmark' qui mesure le temps de réponse des outils"
-"Ajoute un seuil d'échec : si un outil met plus de 2 secondes, le test échoue"
-"Ajoute un rapport de couverture de code"
-```
-
-### Étape 7 — Créer le Scrum Board
-
-Mettez en place un tableau Scrum pour suivre la progression des PARTIES et du pipeline CI/CD :
+Mettez en place un tableau Scrum pour suivre la progression des CHAPITRES et du pipeline CI/CD :
 
 1. **Créez un GitHub Project V2** (onglet Projects > New project)
 2. **Ajoutez les colonnes Scrum** : Backlog | To Do | In Progress | Review | Done
-3. **Créez une Issue pour chaque Partie** (P1 a P10) et associez-les au Project
+3. **Créez une Issue pour chaque Chapitre** (P1 a P10) et associez-les au Project
 4. **Ajoutez un workflow de suivi** : creez `.github/workflows/track-progress.yml`
 
-Le workflow `track-progress.yml` detecte automatiquement les pushes sur les fichiers PARTIE-*.md et deplace la carte correspondante de "Backlog" vers "In Progress". Zero token LLM necessaire.
+Le workflow `track-progress.yml` detecte automatiquement les pushes sur les fichiers CHAPITRE-*.md et deplace la carte correspondante de "Backlog" vers "In Progress". Zero token LLM necessaire.
 
 ```bash
 # Exemple : creer une issue depuis le terminal
-gh issue create --title "Partie 8 — CI/CD & DevOps" \
+gh issue create --title "Chapitre 8 — CI/CD & DevOps" \
   --label "course" --body "Suivi de progression"
 
 # Ajouter l'issue au project (colonne "Backlog")
@@ -527,18 +643,44 @@ gh project item-edit --project-id <NUM_PROJECT> --id <ITEM_ID> \
   --field "Sprint Status" --single-select "Backlog"
 ```
 
-### Validation
+### 6.9 Corrigé — Étape 8 : Activer le déploiement (CD)
 
-- [ ] `pytest tests/` passe avec tous les tests verts
+La phase 8 du pipeline est **prête pour la production mais commentée**. Pour l'activer :
+
+1. Configurez un registre Docker (GitHub Container Registry)
+2. Ajoutez les secrets GitHub : `DEPLOY_HOST`, `DEPLOY_KEY`, `DEPLOY_USER`
+3. Decommentez les etapes dans `cicd-projet.yml` (phase 8)
+
+Ou demandez a l'agent opencode :
+
+```
+"Active le déploiement sur le serveur de production :
+ - Décommente les étapes Docker push et SSH
+ - Configure les secrets GitHub
+ - Teste le déploiement"
+```
+
+L'agent devops :
+1. Lit la phase 8 commentee dans le YAML
+2. Decommente les etapes necessaires
+3. Propose les commandes pour configurer les secrets
+
+### 6.10 Validation
+
+- [ ] `pytest tests/unit/ -v` passe avec tous les tests verts
 - [ ] `ruff check .` passe sans erreur
-- [ ] Le pipeline GitHub Actions est configuré
+- [ ] Le pipeline `.github/workflows/cicd-projet.yml` est configuré
 - [ ] Les tests comportementaux valident les cas normaux ET les cas d'erreur
+- [ ] Le Scrum board est visible dans l'onglet Projects
+- [ ] Le workflow `track-progress.yml` est configuré
+- [ ] La phase "Deploiement" affiche une simulation (production desactivee)
 
 ### Pour aller plus loin
 
-- Ajoutez un benchmark qui mesure les tokens consommés par appel
-- Créez un test de non-régression : exécutez l'agent sur 10 questions et stockez les réponses attendues
-- Mettez en place un déploiement automatique si tous les tests passent
+- Ajoutez un job de benchmark qui mesure les tokens consommés par appel
+- Créez un test de non-régression avec syrupy (snapshots)
+- Activez le deploiement sur un serveur de test (staging)
+- Ajoutez une notification Slack/email en cas d'echec du pipeline
 
 ---
 
@@ -554,6 +696,6 @@ gh project item-edit --project-id <NUM_PROJECT> --id <ITEM_ID> \
 
 ## Liens
 
-- [Partie 9 — Sécurité & Safety](./PARTIE-09-securite.md)
-- [Partie 10 — Opencode & Labs](./PARTIE-10-opencode-labs.md)
+- [Chapitre 9 — Sécurité & Safety](./CHAPITRE-09-securite.md)
+- [Chapitre 10 — Opencode & Labs](./CHAPITRE-10-opencode-labs.md)
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)

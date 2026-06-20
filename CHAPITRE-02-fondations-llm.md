@@ -1,4 +1,4 @@
-# Partie 2 — Architecture des LLMs
+# Chapitre 2 — Architecture des LLMs
 
 ## Objectifs pédagogiques
 
@@ -6,6 +6,34 @@
 - Maîtriser la notion de fenêtre de contexte et ses implications
 - Connaître les différents types de modèles et leurs usages
 - Comprendre les scaling laws et l'émergence
+
+---
+
+## Prérequis
+
+Avant de commencer cette chapitre, assurez-vous d'avoir :
+
+- Terminé le **[Chapitre 1](CHAPITRE-01-histoire-ia.md)** et son TP (environnement opencode fonctionnel)
+- Python 3.10+ installé
+- pip à jour
+
+### Installation des dépendances
+
+```bash
+# Dépendances : tiktoken pour tokeniser, pytest pour valider le TP
+pip install tiktoken pytest
+
+# Vérification
+pip show tiktoken pytest
+```
+
+### Vérification
+
+```bash
+python3 -c "import tiktoken; print(tiktoken.__version__)"
+```
+
+> **Résultat attendu :** un numéro de version s'affiche (ex: `0.7.0`).
 
 ---
 
@@ -263,6 +291,267 @@ graph TD
 
 ---
 
+## 7. Travaux Pratiques — Visualiser la tokenisation
+
+> **Projet reseau social** : dans ce TP, vous allez tokeniser des phrases de l'application reseau social (messages, noms d'utilisateur) pour comprendre comment un LLM les "voit" et estimer le cout en tokens des futures fonctionnalites.
+
+**Objectif :** Installer tiktoken, tokeniser du texte, comprendre la difference entre mots et tokens, estimer le cout d'un message.
+
+**Durée :** 45 min
+
+---
+
+### Énoncé
+
+Vous devez :
+
+1. Installer tiktoken (tokeniseur OpenAI compatible avec big-pickle)
+2. Ecrire un script Python qui tokenise une phrase
+3. Afficher chaque token, son ID, et le nombre total de tokens
+4. Comparer des phrases en francais et en anglais
+5. Estimer le nombre de tokens dans un message du reseau social
+
+**Fichiers à créer :**
+- `tokenisation/demo_tokenisation.py` — script de demonstration
+- `tokenisation/test_tokenisation.py` — tests de verification
+
+---
+
+### Corrigé pas à pas
+
+#### Étape 1 — Creer le dossier
+
+```bash
+mkdir -p tokenisation
+cd tokenisation
+```
+
+#### Étape 2 — Script de tokenisation
+
+Creez `demo_tokenisation.py` :
+
+```python
+import tiktoken
+
+# Charge l'encodeur compatible avec big-pickle (cl100k_base)
+# est le meme encodeur que GPT-4, adapte au code et au texte
+enc = tiktoken.get_encoding("cl100k_base")
+
+# Phrase a tokeniser (exemple d'un message du reseau social)
+phrase = "Bonjour tout le monde ! Je viens de publier mon premier message."
+
+# Tokenisation : convertit le texte en une liste d'entiers (IDs de tokens)
+tokens = enc.encode(phrase)
+
+# Decodage inverse : reconvertit chaque ID en texte lisible
+texte_tokens = [enc.decode([t]) for t in tokens]
+
+print("=" * 60)
+print("DEMONSTRATION DE TOKENISATION")
+print("=" * 60)
+
+# Affiche la phrase originale
+print(f"\nPhrase originale : {phrase}")
+print(f"Nombre de caracteres : {len(phrase)}")
+print(f"Nombre de tokens : {len(tokens)}")
+print(f"Rapport caracteres/token : {len(phrase) / len(tokens):.1f}")
+
+# Affiche chaque token avec son ID et sa representation texte
+print(f"\n{'ID':<8} {'Token':<20} {'Repr. texte'}")
+print("-" * 60)
+for i, (token_id, token_text) in enumerate(zip(tokens, texte_tokens)):
+    print(f"{token_id:<8} {repr(token_text):<20} {token_text}")
+
+# Exemple 2 : comparaison francais / anglais
+print("\n" + "=" * 60)
+print("COMPARAISON FRANCAIS / ANGLAIS")
+print("=" * 60)
+
+phrases = {
+    "francais": "Les agents intelligents transforment le developpement logiciel",
+    "anglais": "Intelligent agents are transforming software development",
+}
+
+for langue, texte in phrases.items():
+    nb_tokens = len(enc.encode(texte))
+    print(f"\n{langue.upper()} : {texte}")
+    print(f"  Tokens : {nb_tokens} | Caracteres : {len(texte)} | Ratio : {len(texte)/nb_tokens:.1f}")
+
+# Exemple 3 : estimation du cout d'un message pour le reseau social
+print("\n" + "=" * 60)
+print("ESTIMATION DU COUT D'UN MESSAGE")
+print("=" * 60)
+
+message = (
+    "Salut ! Voici mon premier post sur le reseau social. "
+    "Je suis tres content de decouvrir cette plateforme. "
+    "Au fait, est-ce que quelqu'un sait comment modifier "
+    "son profil ? Merci d'avance pour votre aide !"
+)
+
+nb_tokens = len(enc.encode(message))
+# big-pickle est gratuit mais l'estimation reste utile
+# si on migre vers un modele payant
+cout_estime = (nb_tokens / 1000) * 0.01  # $0.01/1K tokens (exemple)
+print(f"\nMessage : {message[:80]}...")
+print(f"  Tokens : {nb_tokens}")
+print(f"  Cout estime (modele payant) : ${cout_estime:.6f}")
+print(f"  Avec big-pickle : GRATUIT")
+```
+
+#### Étape 3 — Executer le script
+
+```bash
+python3 demo_tokenisation.py
+```
+
+**Resultat attendu :**
+
+```
+============================================================
+DEMONSTRATION DE TOKENISATION
+============================================================
+
+Phrase originale : Bonjour tout le monde ! Je viens de publier mon premier message.
+Nombre de caracteres : 68
+Nombre de tokens : 12
+Rapport caracteres/token : 5.7
+
+ID       Token                Repr. texte
+------------------------------------------------------------
+...
+```
+
+Les IDs de tokens seront differents selon l'encodeur, mais vous verrez chaque token individuel.
+
+#### Étape 4 — Tests unitaires
+
+Creez `test_tokenisation.py` :
+
+```python
+import tiktoken
+
+enc = tiktoken.get_encoding("cl100k_base")
+
+
+def test_tokenisation_longueur():
+    """Vérifie que la tokenisation produit bien des tokens."""
+    texte = "Hello world"
+    tokens = enc.encode(texte)
+    assert len(tokens) > 0, "La tokenisation devrait produire des tokens"
+
+
+def test_tokenisation_decodage():
+    """Vérifie que le décodage redonne le texte original."""
+    texte = "Bonjour le monde"
+    tokens = enc.encode(texte)
+    decode = enc.decode(tokens)
+    assert decode == texte, (
+        f"Le decodage devrait redonner le texte original. "
+        f"Obtenu: {decode}"
+    )
+
+
+def test_tokenisation_non_vide():
+    """Vérifie qu'une chaîne vide donne zéro token."""
+    tokens = enc.encode("")
+    assert len(tokens) == 0, "Une chaine vide devrait donner 0 token"
+
+
+def test_tokenisation_message_reseau_social():
+    """Vérifie qu'un message type reseau social tient dans le contexte."""
+    message = "Salut ! Voici mon premier post sur le reseau social."
+    tokens = enc.encode(message)
+    # Le contexte minimal est 4096 tokens, largement suffisant
+    assert len(tokens) < 4096, (
+        f"Un message devrait tenir dans le contexte. "
+        f"Tokens: {len(tokens)}"
+    )
+
+
+def test_comparaison_francais_anglais():
+    """Vérifie que l'anglais est plus dense en tokens que le français."""
+    phrase_fr = "Les agents intelligents transforment le developpement"
+    phrase_en = "Intelligent agents transform development"
+
+    tokens_fr = len(enc.encode(phrase_fr))
+    tokens_en = len(enc.encode(phrase_en))
+
+    print(f"\nFrancais : {len(phrase_fr)} chars -> {tokens_fr} tokens")
+    print(f"Anglais  : {len(phrase_en)} chars -> {tokens_en} tokens")
+
+    # En moyenne l'anglais a un ratio caracteres/token plus eleve
+    ratio_fr = len(phrase_fr) / tokens_fr
+    ratio_en = len(phrase_en) / tokens_en
+    assert ratio_en > ratio_fr, (
+        f"L'anglais devrait etre plus dense. "
+        f"FR: {ratio_fr:.1f}, EN: {ratio_en:.1f}"
+    )
+```
+
+#### Étape 5 — Lancer les tests
+
+```bash
+python3 -m pytest test_tokenisation.py -v
+```
+
+#### Étape 6 — Explorer avec opencode
+
+```bash
+# Revenir a la racine du cours
+cd ..
+
+# Lancer opencode et demander :
+opencode
+```
+
+Dans l'interface interactive :
+
+```
+Explique moi comment fonctionne la tokenisation avec tiktoken
+```
+
+```
+Quel est l'impact du nombre de tokens sur le cout d'un appel LLM ?
+```
+
+---
+
+### Résultat attendu
+
+```
+tokenisation/
+├── demo_tokenisation.py    ← Script de demonstration
+└── test_tokenisation.py    ← Tests unitaires
+```
+
+- Le script affiche chaque token avec son ID
+- La comparaison FR/EN montre que l'anglais est plus dense (moins de tokens)
+- Les tests passent (pytest vert)
+- Vous comprenez la difference entre mots et tokens
+
+---
+
+### Validation
+
+- [ ] `pip show tiktoken` affiche la version installee
+- [ ] `python3 demo_tokenisation.py` affiche les tokens et leurs IDs
+- [ ] `python3 -m pytest test_tokenisation.py -v` passe (5 tests verts)
+- [ ] Le rapport caracteres/token du francais est inferieur a celui de l'anglais
+- [ ] Vous pouvez expliquer pourquoi "fascinants" est decoupe en plusieurs tokens
+
+---
+
+### Points clés à retenir
+
+1. Un **token** n'est pas un mot : c'est une unite plus petite (sous-mot, caractere)
+2. **1 token ≈ 0.75 mot** en francais, **≈ 0.25 mot** en anglais
+3. Les mots rares ou longs sont decoupes en plusieurs tokens
+4. Le nombre de tokens impacte le **cout** (si modele payant) et la **fenetre de contexte**
+5. `tiktoken` est l'outil de reference pour compter les tokens
+
+---
+
 ## Points clés à retenir
 
 1. Un LLM est un **prédicteur de tokens** entraîné sur des masses de texte
@@ -276,8 +565,8 @@ graph TD
 
 ## Liens
 
-- [Partie 1 — Histoire de l'IA (Intelligence Artificielle)](./PARTIE-01-histoire-ia.md)
-- [Partie 3 — Prompt & Tool Use](./PARTIE-03-prompt-tool-use.md)
+- [Chapitre 1 — Histoire de l'IA (Intelligence Artificielle)](./CHAPITRE-01-histoire-ia.md)
+- [Chapitre 3 — Prompt & Tool Use](./CHAPITRE-03-prompt-tool-use.md)
 - [Documentation technique — Architecture Transformer (Vaswani et al., 2017)](https://arxiv.org/abs/1706.03762)
 
 ---

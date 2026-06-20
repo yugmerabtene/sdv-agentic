@@ -1,4 +1,4 @@
-# Partie 5 — Mémoire & RAG (Retrieval-Augmented Generation)
+# Chapitre 5 — Mémoire & RAG (Retrieval-Augmented Generation)
 
 ## Objectifs pédagogiques
 
@@ -6,6 +6,31 @@
 - Maîtriser les embeddings et vector stores
 - Savoir implémenter un RAG (Retrieval-Augmented Generation)
 - Connaître les stratégies de mémoire long-terme
+
+---
+
+## Prérequis
+
+Avant de commencer cette chapitre, assurez-vous d'avoir :
+
+- Terminé le **[Chapitre 4](CHAPITRE-04-architecture-agent.md)** et son TP boucle agent
+- Python 3.10+ installé
+- Compris la différence entre mémoire court-terme et historique persistant
+
+### Vérification
+
+```bash
+python3 --version
+python3 -c "import sqlite3; print(sqlite3.sqlite_version)"
+```
+
+> **Aucune dépendance externe obligatoire** pour le TP principal : SQLite est inclus avec Python.
+
+Pour l'option vectorielle en fin de TP :
+
+```bash
+pip install chromadb sentence-transformers
+```
 
 ---
 
@@ -293,13 +318,32 @@ class AgentAvecMemoire:
 
 ---
 
-### 7.1 Étape 1 — Structure
+### 7.1 Énoncé
+
+Vous devez créer un agent capable de retenir des informations entre deux exécutions du programme.
+
+L'agent doit savoir :
+
+1. Enregistrer un fait : `souviens-toi que Paris est la capitale de la France`
+2. Retrouver un fait : `que sais-tu sur Paris`
+3. Lister tous les sujets connus : `liste ce que tu sais`
+4. Persister les données dans une base SQLite
+5. Passer des tests de persistance
+
+**Fichiers à créer :**
+- `agent-memoire/agent_memoire.py` — agent avec mémoire persistante
+- `agent-memoire/test_agent_memoire.py` — tests automatisés
+- `agent-memoire/memoire.db` — base SQLite générée automatiquement
+
+---
+
+### 7.2 Corrigé — Étape 1 : Structure
 
 ```bash
 mkdir agent-memoire && cd agent-memoire
 ```
 
-### 7.2 Étape 2 — Agent avec mémoire
+### 7.3 Corrigé — Étape 2 : Agent avec mémoire
 
 Créez le fichier `agent_memoire.py` :
 
@@ -319,17 +363,17 @@ class AgentMemoire:
         self.conn.execute("""
             CREATE TABLE IF NOT EXISTS memoire (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                cle TEXT UNIQUE,  # Clé unique pour chaque souvenir (ex: "Paris")
-                valeur TEXT,       # Valeur associée à la clé (ex: "capitale de la France")
-                date_maj TIMESTAMP  # Date de dernière mise à jour du souvenir
+                cle TEXT UNIQUE,
+                valeur TEXT,
+                date_maj TIMESTAMP
             )
         """)  # Table des faits retenus par l'agent de façon persistante
         self.conn.execute("""
             CREATE TABLE IF NOT EXISTS historique (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                question TEXT,    # Question posée par l'utilisateur
-                reponse TEXT,     # Réponse donnée par l'agent
-                date TIMESTAMP    # Date de l'interaction
+                question TEXT,
+                reponse TEXT,
+                date TIMESTAMP
             )
         """)  # Table de l'historique des conversations
         self.conn.commit()  # Valide les créations de tables
@@ -397,10 +441,10 @@ if __name__ == "__main__":
         print(agent.run(q))  # Affiche la réponse de l'agent
 ```
 
-### 7.3 Étape 3 — Tester
+### 7.4 Corrigé — Étape 3 : Tester manuellement
 
 ```bash
-python agent_memoire.py
+python3 agent_memoire.py
 > souviens-toi que Paris est la capitale de la France
 > que sais-tu sur Paris
 > liste ce que tu sais
@@ -410,11 +454,65 @@ python agent_memoire.py
 Vérifiez que les données persistent :
 
 ```bash
-python agent_memoire.py
+python3 agent_memoire.py
 > que sais-tu sur Paris   # Doit encore répondre !
 ```
 
-### 7.4 Étape 4 — Configurer opencode
+### 7.5 Corrigé — Étape 4 : Ajouter les tests
+
+Créez `test_agent_memoire.py` :
+
+```python
+import os
+import tempfile
+import unittest
+
+from agent_memoire import AgentMemoire
+
+
+class TestAgentMemoire(unittest.TestCase):
+    def setUp(self):
+        # Base temporaire pour isoler chaque test
+        self.tmp = tempfile.NamedTemporaryFile(delete=False)
+        self.tmp.close()
+        self.agent = AgentMemoire(self.tmp.name)
+
+    def tearDown(self):
+        self.agent.conn.close()
+        os.unlink(self.tmp.name)
+
+    def test_retenir_et_rappeler(self):
+        self.agent.run("souviens-toi que Paris est la capitale de la France")
+        result = self.agent.run("que sais-tu sur Paris")
+        self.assertIn("capitale de la France", result)
+
+    def test_liste_connaissances(self):
+        self.agent.run("souviens-toi que SQLite est une base embarquee")
+        result = self.agent.run("liste ce que tu sais")
+        self.assertIn("SQLite", result)
+
+    def test_persistence(self):
+        self.agent.run("souviens-toi que Python est un langage")
+        self.agent.conn.close()
+
+        nouvel_agent = AgentMemoire(self.tmp.name)
+        result = nouvel_agent.run("que sais-tu sur Python")
+        nouvel_agent.conn.close()
+
+        self.assertIn("langage", result)
+
+
+if __name__ == "__main__":
+    unittest.main()
+```
+
+Lancez les tests :
+
+```bash
+python3 -m unittest -v test_agent_memoire.py
+```
+
+### 7.6 Corrigé — Étape 5 : Configurer opencode
 
 Créez `opencode.json` et `AGENTS.md` (cf. Lab 1). Lancez opencode et demandez :
 
@@ -424,14 +522,14 @@ Créez `opencode.json` et `AGENTS.md` (cf. Lab 1). Lancez opencode et demandez :
 "Crée un test qui vérifie la persistance des données"
 ```
 
-### 7.5 Validation
+### 7.7 Validation
 
 - [ ] L'agent retient les informations entre les sessions
 - [ ] L'agent peut lister ce qu'il connaît
 - [ ] Les données persistent après redémarrage (vérifiez avec SQLite)
-- [ ] Les tests passent
+- [ ] `python3 -m unittest -v test_agent_memoire.py` passe
 
-### 7.6 Aller plus loin — Version vectorielle
+### 7.8 Aller plus loin — Version vectorielle
 
 Pour une vraie mémoire sémantique, utilisez des embeddings :
 
@@ -441,7 +539,7 @@ pip install chromadb sentence-transformers
 
 Et remplacez SQLite par Chroma pour la recherche par similarité.
 
-### 7.7 Pour aller plus loin
+### 7.9 Pour aller plus loin
 
 - Ajoutez une date d'expiration aux souvenirs
 - Implémentez un "résumé automatique" des longues conversations
@@ -461,7 +559,7 @@ Et remplacez SQLite par Chroma pour la recherche par similarité.
 
 ## Liens
 
-- [Partie 4 — Architecture Agentique](./PARTIE-04-architecture-agent.md)
-- [Partie 6 — Multi-Agent Orchestration](./PARTIE-06-multi-agent.md)
+- [Chapitre 4 — Architecture Agentique](./CHAPITRE-04-architecture-agent.md)
+- [Chapitre 6 — Multi-Agent Orchestration](./CHAPITRE-06-multi-agent.md)
 - [Chroma Documentation](https://docs.trychroma.com/)
 - [LangChain RAG Guide](https://python.langchain.com/docs/use_cases/question_answering/)

@@ -1,116 +1,276 @@
-# Agentic-Developer-Craftsmanship
+# Agentic Developer Craftsmanship
 
-**Construisez des systemes agentiques professionnels — de l'histoire de l'IA au deploiement en production.**
+**Construisez des systèmes agentiques professionnels — de l'histoire de l'IA au déploiement en production.**
 
-Ce cours 100% open-source vous guide a travers les concepts fondamentaux et les techniques avancees du developpement d'agents autonomes. De la tokenisation a l'orchestration multi-agent, des memoire vectorielle aux protocoles d'interoperabilite, chaque notion est illustree par des exemples concrets et des travaux pratiques.
+Ce cours 100% open-source vous guide pas à pas à travers les concepts et techniques du développement d'agents autonomes. Chaque chapitre contient :
 
-**Particularite :** aucun abonnement API requis. L'ensemble du cours fonctionne avec `opencode` et le modele libre `big-pickle`.
+- **Une section théorique** avec schémas et explications
+- **Des prérequis clairs** : ce qu'il faut installer avant de commencer
+- **Un TP pratique** avec fichiers à créer, commandes à exécuter, et corrigé
+- **Une checklist de validation** pour vérifier votre progression
 
-**Fil rouge :** un projet de reseau social dont le cahier des charges est defini dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md). Chaque partie propose des TP qui construisent ce projet pas a pas via des agents opencode.
+**Particularité :** aucun abonnement API requis. Tout fonctionne avec `opencode` et le modèle gratuit `big-pickle`.
 
-[![Scrum Board](https://img.shields.io/badge/Scrum%20Board-Voir%20la%20progression-7c3aed?logo=github)](https://github.com/users/yugmerabtene/projects/13)
+**Fil rouge :** un réseau social dont le cahier des charges est dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md). Chaque TP construit ce projet pas à pas.
 
 ---
 
-## Sommaire
+## Parcours et progression
 
-### [Partie 1 — Histoire & Genese de l'IA](PARTIE-01-histoire-ia.md)
-Fondements, Transformers, ere generative, ere agentique, panorama 2026.
-- 1.1-1.6 : Les fondations (1950-2012)
-- 2.1-2.5 : La rupture Transformer (attention, scalabilite)
-- 3.1-3.4 : L'ere generative (GPT-3, RLHF, GPT-4)
-- 4.1-4.7 : L'ere agentique (tool use, ReAct, memoire, multi-agent, MCP, opencode)
-- 5.1-5.3 : Panorama 2026 (acteurs, benchmarks, limites)
+Le cours se découpe en **5 phases** qu'il faut suivre dans l'ordre :
 
-### [Partie 2 — Fondations des LLM (Large Language Model)](PARTIE-02-fondations-llm.md)
-Fonctionnement interne des modeles de langage.
-- 1 : Tokenisation
-- 2 : Mecanisme d'attention
-- 3 : Architecture Transformer
-- 4 : Scaling laws
-- 5 : Processus de generation
-- 6 : Types de modeles (proprietaire vs open-source)
+```
+Phase 1 ──► Phase 2 ──► Phase 3 ──► Phase 4 ──► Phase 5
+Fondamentaux    Interaction    Mémoire &      Production     Mise en
+(P1-P2)        avec LLMs      Collaboration  (P7-P8)        pratique
+               (P3-P4)        (P5-P6)                       (P9-P10)
+```
 
-### [Partie 3 — Prompt Engineering & Tool Use](PARTIE-03-prompt-tool-use.md)
-Maitriser les invites et les appels d'outils.
-- 1 : Fondamentaux du prompt (system, user, few-shot)
-- 2 : Techniques de prompting (CoT, ReAct)
-- 3 : Tool use & function calling
-- 4 : Pattern ReAct
-- 5 : Systeme de prompt pour agent
-- 6 : TP — Assistant CLI avec outils
+---
 
-### [Partie 4 — Architecture Agentique](PARTIE-04-architecture-agent.md)
-Concevoir un agent autonome.
-- 1 : Qu'est-ce qu'un agent ?
-- 2 : La boucle agent (percevoir, raisonner, agir)
-- 3 : Gestion du contexte
-- 4 : Planification
-- 5 : Architecture en production
+## Prérequis général
 
-### [Partie 5 — Memoire & RAG (Retrieval-Augmented Generation)](PARTIE-05-memoire-rag.md)
-Donner de la memoire aux agents.
-- 1 : Types de memoire (court-terme, long-terme, ephemere)
-- 2 : Embeddings & vectorisation
-- 3 : Vector stores (Chroma, FAISS)
-- 4 : RAG — Retrieval-Augmented Generation
-- 5 : Strategies de chunking
-- 6 : Memoire long-terme pour agents
-- 7 : TP — Agent avec memoire persistante
+Avant de commencer le **Chapitre 1**, installez ces outils :
 
-### [Partie 6 — Multi-Agent Orchestration](PARTIE-06-multi-agent.md)
-Coordonner plusieurs agents specialises.
-- 1 : Pourquoi plusieurs agents ?
-- 2 : Patterns de communication (supervisor, fan-out, debat)
-- 3 : Architecture Supervisor
-- 4 : Gestion asynchrone & files d'attente
-- 5 : Erreurs & resilience
-- 6 : TP — Supervisor multi-agent avec opencode
+```bash
+# 1. Vérifier Python (>= 3.10)
+python3 --version
 
-### [Partie 7 — MCP (Model Context Protocol) & Standards](PARTIE-07-mcp-standards.md)
-Standardiser les communications agentiques.
-- 1 : Pourquoi des standards ?
-- 2 : Architecture MCP (Modele Context Protocol)
-- 3 : Creer un serveur MCP avec Python
-- 4 : A2A — Agent-to-Agent Protocol
-- 5 : Standards dans le monde opencode
-- 6 : Interoperabilite avec opencode
-- 7 : TP — Serveur MCP
+# 2. Installer opencode
+pip install opencode
 
-### [Partie 8 — CI/CD & DevOps pour Agents](PARTIE-08-cicd-devops.md)
-Mettre en production des agents.
-- 1 : Pourquoi la CI/CD est cruciale
-- 2 : Tester des agents (unitaires, integration, benchmarks)
-- 3 : Pipeline CI/CD pour agents
-- 4 : Integration GitHub Projects (board temps reel, zero token)
-- 5 : Monitoring & observabilite
-- 6 : Gestion des couts tokens
-- 7 : TP — CI/CD + Project Board pour projet agentique
+# 3. Vérifier l'installation
+opencode --version
 
-### [Partie 9 — Securite & Safety des Agents](PARTIE-09-securite.md)
-Proteger les systemes agentiques.
-- 1 : Risques specifiques aux agents
-- 2 : Prompt injection
-- 3 : Jailbreak
-- 4 : Autorisations & permissions
-- 5 : OWASP Top 10 pour LLMs
-- 6 : Bonnes pratiques pour agents opencode
+# 4. Tester le modèle gratuit big-pickle
+opencode -m opencode/big-pickle -t "Bonjour, quel est ton rôle ?"
+```
 
-### [Partie 10 — Opencode & Mise en Pratique](PARTIE-10-opencode-labs.md)
-Configurer et executer une equipe d'agents.
-- 1 : Qu'est-ce qu'opencode ?
-- 2 : Configuration d'un projet opencode
-- 3 : Utiliser opencode en ligne de commande
-- 4 : Labs pratiques (decouverte, equipe Scrum, CI/CD)
-- 5 : Evaluation & validation
+> **Résultat attendu :** l'agent opencode répond avec une présentation.
+
+---
+
+## Les 10 chapitres du cours
+
+---
+
+### Phase 1 — Fondamentaux
+
+#### [Chapitre 1 — Histoire & Genèse de l'IA](CHAPITRE-01-histoire-ia.md)
+
+| | |
+|---|---|
+| **Théorie** | 1950 à 2026 : Turing, Transformers, ère générative, ère agentique |
+| **TP** | Installer Python, opencode, big-pickle — premier agent opérationnel |
+| **⏱ Durée** | 1h30 |
+| **Prérequis** | Python 3.10+, pip |
+
+```bash
+# Vérifications avant de commencer
+python3 --version && pip --version
+```
+
+---
+
+#### [Chapitre 2 — Fondations des LLM](CHAPITRE-02-fondations-llm.md)
+
+| | |
+|---|---|
+| **Théorie** | Tokenisation, attention, architecture Transformer, scaling laws |
+| **TP** | Tokenizer un texte avec Python, visualiser les tokens |
+| **⏱ Durée** | 1h30 |
+| **Prérequis** | Python 3.10+, pip |
+
+```bash
+# Nouvelles dépendances pour cette chapitre
+pip install tiktoken pytest
+```
+
+---
+
+### Phase 2 — Interaction avec les LLMs
+
+#### [Chapitre 3 — Prompt Engineering & Tool Use](CHAPITRE-03-prompt-tool-use.md)
+
+| | |
+|---|---|
+| **Théorie** | System prompt, few-shot, CoT, ReAct, function calling |
+| **TP** | Assistant CLI avec outils (météo, calcul) |
+| **⏱ Durée** | 2h |
+| **Prérequis** | Python 3.10+, pip, opencode |
+
+```bash
+# Aucune dépendance supplémentaire — Python standard suffit
+```
+
+---
+
+#### [Chapitre 4 — Architecture Agentique](CHAPITRE-04-architecture-agent.md)
+
+| | |
+|---|---|
+| **Théorie** | Boucle agent, contexte, planification, production |
+| **TP** | Implémenter une boucle agent perception→raisonnement→action |
+| **⏱ Durée** | 2h |
+| **Prérequis** | Chapitre 3 terminée, Python, opencode |
+
+```bash
+# Aucune dépendance supplémentaire
+```
+
+---
+
+### Phase 3 — Mémoire & Collaboration
+
+#### [Chapitre 5 — Mémoire & RAG](CHAPITRE-05-memoire-rag.md)
+
+| | |
+|---|---|
+| **Théorie** | Embeddings, vector stores, RAG, chunking, mémoire long-terme |
+| **TP** | Agent avec mémoire persistante (SQLite) |
+| **⏱ Durée** | 2h |
+| **Prérequis** | Chapitre 4 terminée, Python, pip, opencode |
+
+```bash
+# Nouvelles dépendances pour cette chapitre
+pip install chromadb sentence-transformers
+```
+
+---
+
+#### [Chapitre 6 — Multi-Agent Orchestration](CHAPITRE-06-multi-agent.md)
+
+| | |
+|---|---|
+| **Théorie** | Patterns supervisor, fan-out, débat, résilience |
+| **TP** | Configurer une équipe multi-agent avec opencode |
+| **⏱ Durée** | 2h |
+| **Prérequis** | Chapitre 5 terminée, Python, opencode, git |
+
+```bash
+# Vérifier git
+git --version
+```
+
+---
+
+### Phase 4 — Production
+
+#### [Chapitre 7 — MCP & Standards](CHAPITRE-07-mcp-standards.md)
+
+| | |
+|---|---|
+| **Théorie** | Model Context Protocol, A2A, interopérabilité |
+| **TP** | Créer un serveur MCP météo, le connecter à opencode |
+| **⏱ Durée** | 2h |
+| **Prérequis** | Chapitre 6 terminée, Python, pip, opencode |
+
+```bash
+# Nouvelles dépendances pour cette chapitre
+pip install mcp
+```
+
+---
+
+#### [Chapitre 8 — CI/CD & DevOps pour Agents](CHAPITRE-08-cicd-devops.md)
+
+| | |
+|---|---|
+| **Théorie** | Tests d'agents, pipeline CI/CD, monitoring, coûts tokens |
+| **TP** | Pipeline CI/CD complet + Scrum Board GitHub |
+| **⏱ Durée** | 3h |
+| **Prérequis** | Chapitre 7 terminée, Python, pip, opencode, git, compte GitHub |
+
+```bash
+# Nouvelles dépendances pour cette chapitre
+pip install pytest ruff bandit
+
+# Vérifier GitHub CLI
+gh --version
+```
+
+---
+
+### Phase 5 — Mise en pratique
+
+#### [Chapitre 9 — Sécurité & Safety des Agents](CHAPITRE-09-securite.md)
+
+| | |
+|---|---|
+| **Théorie** | Prompt injection, jailbreak, OWASP Top 10 LLM, permissions |
+| **TP** | Configurer les permissions opencode, tester des injections |
+| **⏱ Durée** | 1h30 |
+| **Prérequis** | Chapitre 8 terminée, Python, opencode, git |
+
+```bash
+# Aucune dépendance supplémentaire
+```
+
+---
+
+#### [Chapitre 10 — Opencode & Mise en Pratique](CHAPITRE-10-opencode-labs.md)
+
+| | |
+|---|---|
+| **Théorie** | Configuration opencode, équipe d'agents, skills |
+| **Lab 1** | Premier projet opencode avec 2 agents |
+| **Lab 2** | Équipe complète avec CI/CD et Project Board |
+| **Lab 3** | Développement complet du réseau social |
+| **⏱ Durée** | 4h |
+| **Prérequis** | Tous les chapitres 1-9 terminés, Python, opencode, git, GitHub |
+
+```bash
+# Vérification finale avant d'attaquer les labs
+python --version && opencode --version && git --version && gh --version
+```
 
 ---
 
 ## Stack technique
 
-| Outil | Role | Cout |
+| Outil | Rôle | Coût |
 |---|---|---|
 | [opencode](https://opencode.ai) | Plateforme agentic | Gratuit |
-| `opencode/big-pickle` | Modele LLM gratuit | Gratuit |
-| Python | Langage de developpement | Gratuit |
-| SQLite / Docker / GitHub Actions | Base de donnees, conteneurisation, CI/CD | Gratuit |
+| `opencode/big-pickle` | Modèle LLM gratuit | Gratuit |
+| Python 3.10+ | Langage de développement | Gratuit |
+| SQLite | Base de données embarquée | Gratuit |
+| Docker | Conteneurisation | Gratuit |
+| GitHub Actions | CI/CD | Gratuit |
+
+---
+
+## Comment utiliser ce cours
+
+1. **Suivez l'ordre** — chaque chapitre suppose les connaissances de la précédente
+2. **Lisez la théorie** — les concepts sont illustrés de schémas et d'exemples
+3. **Faites les prérequis** — les commandes d'installation sont en tête de chaque chapitre
+4. **Réalisez le TP** — fichiers à créer, commandes à exécuter, résultat attendu
+5. **Validez avec la checklist** — tout est vert ? Passez à la suite
+
+---
+
+## Projet fil rouge — Réseau social
+
+Chaque TP construit une pièce du projet final défini dans le
+[**Cahier des Charges**](projet/gestion_de_projet/cdc.md).
+
+| Chapitre | Contribution au projet |
+|--------|----------------------|
+| P1 | Environnement opencode configuré |
+| P2 | Compréhension des tokens et du contexte |
+| P3 | Assistant CLI avec outils |
+| P4 | Boucle agent pour interagir avec la base de données |
+| P5 | Mémoire persistante pour le fil d'actualité |
+| P6 | Équipe d'agents backend/frontend/data |
+| P7 | Serveur MCP pour exposer les APIs du réseau social |
+| P8 | Pipeline CI/CD qui teste et déploie l'application |
+| P9 | Permissions et sécurité des agents |
+| P10 | **Projet complet développé par l'équipe d'agents** |
+
+---
+
+## Ressources
+
+- [Scrum Board — Suivi de progression](https://github.com/users/yugmerabtene/projects/13)
+- [Documentation opencode](https://opencode.ai)
+- [Cahier des charges du projet](projet/gestion_de_projet/cdc.md)
