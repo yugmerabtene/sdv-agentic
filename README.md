@@ -1,4 +1,4 @@
-# SDV-Agentic-Dev
+# Agentic-Developer-Craftsmanship
 
 Cours 100% open-source sur le developpement de **systemes agentiques** — de l'histoire de l'IA (Intelligence Artificielle) a la mise en production d'agents autonomes avec opencode + `opencode/big-pickle` (zero API payante).
 
