@@ -69,7 +69,38 @@ Avant le Transformer, les modèles de séquence (RNN (Recurrent Neural Network),
 
 Le Transformer introduit **l'auto-attention** (*self-attention*, mécanisme d'attention qui pondère l'importance relative des mots) : chaque mot regarde tous les autres mots de la phrase en même temps et décide sur lesquels porter son attention.
 
-**Exemple (projet reseau social) :** Dans *"L'utilisateur publie un message"*, l'auto-attention calcule pour le mot *"publie"* un **poids d'attention** (score numerique entre 0 et 1) pour chaque autre mot : forte attention vers *"utilisateur"* (sujet, poids 0.6) et *"message"* (objet, poids 0.3), faible attention vers les mots environnants (poids ~0.1). Ces poids sont appris automatiquement par le modele pour capturer les relations grammaticales sans regles explicites.
+**Exemple (projet reseau social) — visualisation des poids d'attention :**
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'background': '#0f172a', 'primaryColor': '#7c3aed', 'secondaryColor': '#0ea5e9', 'tertiaryColor': '#f59e0b', 'primaryTextColor': '#f8fafc', 'lineColor': '#64748b'}}}%%
+graph LR
+    subgraph Entree["Phrase d'entree (4 tokens)"]
+        T1["'utilisateur'<br/>Token 1"]:::token
+        T2["'publie'<br/>Token 2"]:::token
+        T3["'un'<br/>Token 3"]:::token
+        T4["'message'<br/>Token 4"]:::token
+    end
+
+    subgraph Attention["Auto-attention depuis 'publie' (Token 2)"]
+        Q["Requete Q<br/>'publie' cherche"]:::query
+        K1["Cle K<br/>'utilisateur'"]:::key
+        K2["Cle K<br/>'publie'"]:::key
+        K3["Cle K<br/>'un'"]:::key
+        K4["Cle K<br/>'message'"]:::key
+    end
+
+    Q -->|"poids 0.60"| K1:::high
+    Q -->|"poids 0.10"| K2:::low
+    Q -->|"poids 0.05"| K3:::low
+    Q -->|"poids 0.25"| K4:::med
+
+    classDef token fill:#1e293b,color:#f8fafc,stroke:#7c3aed,stroke-width:2
+    classDef query fill:#7c3aed,color:#fff,stroke:#5b21b6
+    classDef key fill:#1e293b,color:#f8fafc,stroke:#475569
+    classDef high fill:#059669,color:#fff,stroke:#047857
+    classDef med fill:#f59e0b,color:#fff,stroke:#d97706
+    classDef low fill:#dc2626,color:#fff,stroke:#b91c1c
+```
 
 ### 2.4 La scalabilité
 
