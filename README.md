@@ -1,4 +1,4 @@
-# SdV-Agentic-Dev
+# SDV-Agentic-Dev
 
 > Cours 100% open-source sur le développement de **systèmes agentiques** — de l'histoire de l'IA (Intelligence Artificielle) à la mise en production d'agents autonomes.
 >

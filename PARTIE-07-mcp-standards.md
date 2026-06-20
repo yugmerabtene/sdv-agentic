@@ -50,7 +50,7 @@ graph TD
     
     subgraph "Serveur MCP"
         S1[Serveur Base de données]
-        S2[Serveur API (Application Programming Interface) Météo]
+        S2["Serveur API (Application Programming Interface) Météo"]
         S3[Serveur Fichiers]
         S4[Serveur Recherche]
     end

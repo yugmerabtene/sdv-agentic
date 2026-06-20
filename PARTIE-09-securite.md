@@ -25,7 +25,7 @@ graph TD
         P[Prompt système]
         M[Mémoire / Contexte]
         T[Outils externes]
-        D[Données RAG (Retrieval-Augmented Generation)]
+        D["Données RAG (Retrieval-Augmented Generation)"]
         C[Communication inter-agents]
     end
     
