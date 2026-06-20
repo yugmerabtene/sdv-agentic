@@ -445,7 +445,7 @@ Et remplacez SQLite par Chroma pour la recherche par similarité.
 
 - Ajoutez une date d'expiration aux souvenirs
 - Implémentez un "résumé automatique" des longues conversations
-- Utilisez opencode avec l'agent développeur pour ajouter une API REST
+- Utilisez opencode avec l'agent développeur pour ajouter une API (Application Programming Interface) REST (Representational State Transfer)
 
 ---
 

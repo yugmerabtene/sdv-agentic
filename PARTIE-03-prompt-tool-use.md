@@ -13,7 +13,7 @@
 
 ### 1.1 Structure d'un prompt
 
-Un prompt se compose de plusieurs éléments :
+Un prompt (instruction donnée au modèle de langage) se compose de plusieurs éléments :
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {
@@ -42,7 +42,7 @@ graph LR
 
 ### 1.2 System Prompt
 
-Le **system prompt** définit le rôle, le ton et les contraintes :
+Le **system prompt** (consigne de rôle et de comportement) définit le rôle, le ton et les contraintes :
 
 ```
 Tu es un assistant expert en développement Python.
@@ -78,7 +78,7 @@ Traduis en anglais : "Les agents IA sont fascinants"
 → "AI agents are fascinating"
 ```
 
-### 2.2 Few-shot
+### 2.2 Few-shot (apprentissage avec quelques exemples)
 
 Fournir **2-3 exemples** avant la question. Améliore la précision pour les tâches complexes.
 
@@ -136,7 +136,7 @@ Analyse ce Dockerfile et identifie les problèmes de sécurité.
 
 ### 3.1 Principe
 
-Le LLM peut déclarer qu'il souhaite utiliser un outil externe, sans l'exécuter lui-même.
+Le LLM (Large Language Model) peut déclarer qu'il souhaite utiliser un outil externe, sans l'exécuter lui-même.
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {
@@ -318,7 +318,7 @@ Si un outil échoue, explique pourquoi à l'utilisateur.
 
 ---
 
-## 6. Travaux Pratiques — Assistant CLI avec Outils
+## 6. Travaux Pratiques — Assistant CLI (Command Line Interface) avec Outils
 
 > **Projet fil rouge** : ce TP s'appuie sur le reseau social defini dans [`gestion_de_projet/cdc.md`](gestion_de_projet/cdc.md). L'assistant CLI que vous allez construire permettra de manipuler les utilisateurs et publications de cette application.
 

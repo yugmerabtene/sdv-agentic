@@ -365,7 +365,7 @@ opencode -t "Vérifie que le Dockerfile est valide"
 
 ## Liens
 
-- [Partie 1 — Histoire de l'IA](./PARTIE-01-histoire-ia.md)
+- [Partie 1 — Histoire de l'IA (Intelligence Artificielle)](./PARTIE-01-histoire-ia.md)
 - [Partie 4 — Architecture Agentique](./PARTIE-04-architecture-agent.md)
 - [Partie 7 — MCP & Standards](./PARTIE-07-mcp-standards.md)
 - [Documentation opencode](https://opencode.ai)

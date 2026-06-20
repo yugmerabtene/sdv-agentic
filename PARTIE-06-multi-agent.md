@@ -455,7 +455,7 @@ Demandez au scrum-master :
 - [ ] Le scrum-master analyse et décompose la demande
 - [ ] Chaque sous-agent reçoit des tâches adaptées à son rôle
 - [ ] Les sous-agents produisent du code cohérent entre eux
-- [ ] L'application finale fonctionne (backend + frontend + DB)
+- [ ] L'application finale fonctionne (backend + frontend + DB (Base de données))
 
 ### Pour aller plus loin
 

@@ -1,6 +1,6 @@
 # SdV-Agentic-Dev
 
-> Cours 100% open-source sur le développement de **systèmes agentiques** — de l'histoire de l'IA à la mise en production d'agents autonomes.
+> Cours 100% open-source sur le développement de **systèmes agentiques** — de l'histoire de l'IA (Intelligence Artificielle) à la mise en production d'agents autonomes.
 >
 > **Stack :** opencode + big-pickle — gratuit, zéro dépendance payante.
 
@@ -53,7 +53,7 @@ graph TB
 ### Partie 1 — Histoire & Genèse de l'IA
 Des premiers tests de Turing à l'explosion des Transformers, en passant par les hivers, la révolution deep learning et l'avènement des systèmes agentiques.
 
-### Partie 2 — Architecture des LLMs
+### Partie 2 — Architecture des LLM (Large Language Model)s
 Tokenisation, mécanisme d'attention, context window, scaling laws, modèles open-source.
 
 ### Partie 3 — Prompt Engineering & Tool Use
@@ -62,16 +62,16 @@ System prompt, few-shot, chain-of-thought, function calling, pattern ReAct (Reas
 ### Partie 4 — Architecture Agentique
 Boucle agent, état, planification, outils, mémoire court-terme.
 
-### Partie 5 — Mémoire & RAG
+### Partie 5 — Mémoire & RAG (Retrieval-Augmented Generation)
 Embeddings, vector stores, retrieval-augmented generation, mémoire long-terme persistante.
 
 ### Partie 6 — Multi-Agent Orchestration
 Supervisor, fan-out, débat, patterns de communication, files d'attente asynchrones.
 
-### Partie 7 — MCP & Standards d'Interopérabilité
+### Partie 7 — MCP (Model Context Protocol) & Standards d'Interopérabilité
 Model Context Protocol, A2A (Agent-to-Agent), connexion d'agents à des services externes.
 
-### Partie 8 — CI/CD & DevOps pour Agents
+### Partie 8 — CI/CD (Continuous Integration / Continuous Deployment) & DevOps pour Agents
 Pipeline complet, tests d'agents, monitoring, gestion des coûts tokens.
 
 ### Partie 9 — Sécurité & Safety des Agents
@@ -238,7 +238,7 @@ graph LR
 
 Ce cours s'appuie sur un projet concret : une **application web sociale simplifiee** (mur public, authentification, gestion d'utilisateurs). Le Cahier des Charges est defini dans [`gestion_de_projet/cdc.md`](gestion_de_projet/cdc.md).
 
-Les TPs de chaque PARTIE montrent comment utiliser l'agentic (opencode + `opencode/big-pickle`) pour construire ce projet etape par etape : de l'assistant CLI au deploiement CI/CD en passant par l'equipe multi-agent et les serveurs MCP.
+Les TPs de chaque PARTIE montrent comment utiliser l'agentic (opencode + `opencode/big-pickle`) pour construire ce projet etape par etape : de l'assistant CLI (Command Line Interface) au deploiement CI/CD en passant par l'equipe multi-agent et les serveurs MCP.
 
 A noter : le code source de l'application n'est **pas** fourni dans ce depot. Il est genere par les agents opencode a partir du CDC. Le repo contient uniquement le cours et la specification.
 

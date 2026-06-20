@@ -181,7 +181,7 @@ graph TD
 
 ### 4.2 Matrice de permissions
 
-| Agent | Lecture DB | Écriture DB | Exécution code | Appels API (Application Programming Interface) | Accès fichiers |
+| Agent | Lecture DB (Base de Donnees) | Écriture DB | Exécution code | Appels API (Application Programming Interface) | Accès fichiers |
 |---|---|---|---|---|---|
 | Assistant | Oui (public) | Non | Non | Oui (météo) | Non |
 | Modérateur | Oui (posts) | Oui (modération) | Non | Non | Non |

@@ -17,7 +17,7 @@ Chaque plateforme agentique a sa propre façon de :
 - Définir des outils
 - Gérer la mémoire
 - Communiquer avec d'autres agents
-- Exposer des APIs
+- Exposer des API (Application Programming Interface)
 
 **Résultat :** Les agents sont difficiles à porter, interconnecter et maintenir.
 
@@ -25,7 +25,7 @@ Chaque plateforme agentique a sa propre façon de :
 
 Le **Model Context Protocol** (Anthropic, 2025) est un standard ouvert qui définit comment un LLM (Large Language Model)/agent se connecte à des sources de données et des outils.
 
-> MCP est à l'IA ce que USB-C est à l'électronique : **un connecteur universel**.
+> MCP est à l'IA (Intelligence Artificielle) ce que USB-C est à l'électronique : **un connecteur universel**.
 
 ---
 
@@ -71,9 +71,9 @@ graph TD
 
 | Composant | Rôle | Exemple |
 |---|---|---|
-| **Hôte** | Application qui utilise un LLM | opencode, Claude Desktop, IDE |
-| **Client** | Connecte l'hôte aux serveurs MCP | SDK MCP (Python, TypeScript) |
-| **Serveur** | Expose des ressources, outils et prompts | Serveur fichier, serveur DB, serveur API |
+| **Hôte** | Application qui utilise un LLM | opencode, Claude Desktop, IDE (Integrated Development Environment) |
+| **Client** | Connecte l'hôte aux serveurs MCP | SDK (Software Development Kit) MCP (Python, TypeScript) |
+| **Serveur** | Expose des ressources, outils et prompts | Serveur fichier, serveur DB (Base de Donnees), serveur API |
 
 ### 2.2 Primitives MCP
 
@@ -414,7 +414,7 @@ Lancez opencode et demandez :
 
 - Ajoutez un outil `get_time(city)` qui retourne l'heure locale
 - Créez un serveur MCP pour votre base de données (ex: SQLite)
-- Hébergez le serveur MCP via HTTP au lieu de stdio
+- Hébergez le serveur MCP via HTTP (Hypertext Transfer Protocol) au lieu de stdio
 
 ---
 

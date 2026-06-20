@@ -113,7 +113,7 @@ graph TD
     style P8 fill:#059669,color:#fff,stroke:#047857
 ```
 
-### 3.2 Pipeline YAML (GitHub Actions)
+### 3.2 Pipeline YAML (YAML Ain't Markup Language) (GitHub Actions)
 
 Créez `.github/workflows/cicd-agent.yml` :
 
@@ -257,7 +257,7 @@ Avec opencode + big-pickle (modèle gratuit), le coût est **zéro**. Cette sect
 
 ### Étape 1 — Structure du projet
 
-Commencez par créer la structure du projet et un assistant CLI minimal :
+Commencez par créer la structure du projet et un assistant CLI (Command Line Interface) minimal :
 
 ```bash
 mkdir cicd-agents && cd cicd-agents

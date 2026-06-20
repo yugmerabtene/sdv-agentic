@@ -29,7 +29,7 @@ Alan Turing pose la question : *« Les machines peuvent-elles penser ? »* Il pr
 
 - Les promesses n'ont pas été tenues. Les gouvernements réduisent les financements.
 - Les systèmes experts sont fragiles : chaque nouvelle règle peut casser les précédentes.
-- **Leçon :** L'intelligence ne peut pas être programmée manuellement à grande échelle. Il faut que la machine apprenne par elle-même.
+- **Conclusion :** L'intelligence ne peut pas être programmée manuellement à grande échelle. Il faut que la machine apprenne par elle-même.
 
 ### 1.4 La renaissance (1980-1990)
 
@@ -39,12 +39,12 @@ Alan Turing pose la question : *« Les machines peuvent-elles penser ? »* Il pr
 ### 1.5 Le deuxième hiver (1990-2000)
 
 - Les SVM (Support Vector Machines) et méthodes bayésiennes dominent. Les réseaux de neurones sont jugés trop instables.
-- **Leçon :** Sans données massives ni calcul parallèle, le deep learning ne peut pas exprimer son potentiel.
+- **Conclusion :** Sans données massives ni calcul parallèle, le deep learning ne peut pas exprimer son potentiel.
 
 ### 1.6 La révolution du Big Data (2000-2012)
 
 - Internet explose → données massives disponibles.
-- GPU gaming → calcul parallèle accessible.
+- GPU (Graphics Processing Unit) gaming → calcul parallèle accessible.
 - **2009** : Fei-Fei Li lance **ImageNet** — 14 millions d'images labellisées.
 - **2012** : **AlexNet** (Krizhevsky, Sutskever, Hinton) gagne ImageNet avec une avance écrasante. Le deep learning entre dans l'ère moderne.
 
@@ -56,18 +56,18 @@ Alan Turing pose la question : *« Les machines peuvent-elles penser ? »* Il pr
 
 ### 2.1 Le papier fondateur
 
-En juin 2017, Vaswani et al. publient **"Attention Is All You Need"** (Google Research). L'article propose une architecture radicalement nouvelle : le **Transformer**.
+En juin 2017, Vaswani et al. publient **"Attention Is All You Need"** (Google Research). L'article propose une architecture radicalement nouvelle : le **Transformer** (architecture de deep learning basée sur l'auto-attention).
 
 ### 2.2 Le problème que ça résout
 
-Avant le Transformer, les modèles de séquence (RNN, LSTM) traitaient les mots un par un, séquentiellement :
+Avant le Transformer, les modèles de séquence (RNN (Recurrent Neural Network), LSTM (Long Short-Term Memory)) traitaient les mots un par un, séquentiellement :
 - Impossible de paralléliser → lent
 - Difficulté à capturer les dépendances longues (au-delà de ~50 mots)
 - Gradient qui disparaît (*vanishing gradient*) dans les longues séquences
 
 ### 2.3 Le mécanisme d'attention
 
-Le Transformer introduit **l'auto-attention** (*self-attention*) : chaque mot regarde tous les autres mots de la phrase en même temps et décide sur lesquels porter son attention.
+Le Transformer introduit **l'auto-attention** (*self-attention*, mécanisme d'attention qui pondère l'importance relative des mots) : chaque mot regarde tous les autres mots de la phrase en même temps et décide sur lesquels porter son attention.
 
 **Exemple :** Dans *"La chatte, qui avait faim, a mangé la souris"*, le mot *"a mangé"* doit *faire attention* à *"chatte"* (sujet), pas à *"souris"* (objet) pour l'accord du verbe.
 
@@ -80,15 +80,15 @@ Contrairement aux RNN, le Transformer peut être parallélisé et **scalé** : p
 | Avant Transformer | Après Transformer |
 |:---|---:|
 | Traitement séquentiel (lent) | Parallélisable (rapide) |
-| Contexte limité (~50-100 tokens) | Contexte long (128K+ tokens) |
+| Contexte limité (~50-100 tokens) (unité de texte, mot ou sous-mot) | Contexte long (128K+ tokens) |
 | Scaling difficile | Scaling linéaire avec les ressources |
-| Un domaine à la fois (NLP ou vision) | Architecture universelle (texte, image, audio, code) |
+| Un domaine à la fois (NLP (Natural Language Processing) ou vision) | Architecture universelle (texte, image, audio, code) |
 
 ---
 
 ## 3. L'Ère Générative (2020-2023)
 
-### 3.1 GPT-3 et l'émergence (2020)
+### 3.1 GPT-3 (Generative Pre-trained Transformer 3) et l'émergence (2020)
 
 OpenAI publie GPT-3 (175 milliards de paramètres). La découverte n'est pas le modèle lui-même, mais **l'émergence** :
 - GPT-2 (1.5B) était faible sur les tâches complexes
@@ -189,7 +189,7 @@ Anthropic introduit **MCP**, un standard ouvert pour connecter LLMs à des sourc
 
 ### 4.7 GitHub Agents & opencode (2026)
 
-- **GitHub Copilot Coding Agent** : agent autonome dans l'IDE, capable de chercher, lire, éditer, exécuter des tests
+- **GitHub Copilot Coding Agent** : agent autonome dans l'IDE (Integrated Development Environment), capable de chercher, lire, éditer, exécuter des tests
 - **Opencode** : plateforme agentic open-source orchestrant des équipes d'agents spécialisés via des fichiers de configuration (`opencode.json`, `AGENTS.md`)
 - Les agents deviennent des membres à part entière de l'équipe de développement
 

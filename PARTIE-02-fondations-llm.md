@@ -13,7 +13,7 @@
 
 ### 1.1 Principe
 
-Un LLM ne lit pas du texte, il lit des **tokens** — des morceaux de mots ou caractères.
+Un LLM ne lit pas du texte, il lit des **tokens** (unités de texte, mots ou sous-mots) — des morceaux de mots ou caractères.
 
 ```
 "Les agents IA sont fascinants"
@@ -30,7 +30,7 @@ Un LLM ne lit pas du texte, il lit des **tokens** — des morceaux de mots ou ca
 
 | Capacité | Tokens | Mots (français) |
 |---|---|---|
-| Contexte court (GPT-3) | 4 096 | ~3 000 |
+| Contexte court (GPT (Generative Pre-trained Transformer)-3) | 4 096 | ~3 000 |
 | Contexte long (GPT-4) | 128 000 | ~96 000 |
 | Contexte géant (Claude 4) | 200 000 | ~150 000 |
 | Contexte infini (Gemini) | 1 000 000 | ~750 000 |
@@ -53,7 +53,7 @@ Dans une phrase, les mots n'ont pas tous la même importance et leurs relations 
 
 ### 2.2 Solution : Self-Attention
 
-Chaque token calcule un **score d'attention** avec tous les autres tokens de la phrase :
+Chaque token calcule un **score d'attention** (mécanisme de pondération contextuelle) avec tous les autres tokens de la phrase :
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {
@@ -125,7 +125,7 @@ graph TD
 
 ### 3.2 Les couches
 
-1. **Embedding** : chaque token → vecteur numérique dense (ex: 4096 dimensions)
+1. **Embedding** (représentation vectorielle d'un token) : chaque token → vecteur numérique dense (ex: 4096 dimensions)
 2. **Positional Encoding** : ajoute une information de position (ordre des mots)
 3. **Multi-Head Attention** : calcule les relations entre tous les tokens
 4. **Feed Forward** : réseau de neurones classique qui transforme chaque token
@@ -218,7 +218,7 @@ Contrôle l'**aléas** dans la sélection du prochain token :
 
 | Modèle | Forces | Usage |
 |---|---|---|
-| Llama 4 | Performant, communauté | Fine-tuning local |
+| Llama 4 | Performant, communauté | Fine-tuning (ajustement fin du modèle sur des données spécifiques) local |
 | Mistral | Efficient, léger | Applications embarquées |
 | DeepSeek | Raisonnement, math | Tâches complexes |
 | Qwen | Multilingue | International |
@@ -277,7 +277,7 @@ graph TD
 
 ## Liens
 
-- [Partie 1 — Histoire de l'IA](./PARTIE-01-histoire-ia.md)
+- [Partie 1 — Histoire de l'IA (Intelligence Artificielle)](./PARTIE-01-histoire-ia.md)
 - [Partie 3 — Prompt & Tool Use](./PARTIE-03-prompt-tool-use.md)
 - [Documentation technique — Architecture Transformer (Vaswani et al., 2017)](https://arxiv.org/abs/1706.03762)
 
