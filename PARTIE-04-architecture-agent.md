@@ -118,7 +118,7 @@ Un agent peut être dans plusieurs états :
 
 ### 2.3 Implémentation minimale
 
-> **Projet fil rouge** : l'architecture agentique developpee ici sera utilisee pour coordonner le developpement du reseau social defini dans [`gestion_de_projet/cdc.md`](gestion_de_projet/cdc.md).
+> **Projet fil rouge** : l'architecture agentique developpee ici sera utilisee pour coordonner le developpement du reseau social defini dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md).
 
 Créez `agent_simple.py` :
 

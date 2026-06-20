@@ -69,7 +69,7 @@ Avant le Transformer, les modèles de séquence (RNN (Recurrent Neural Network),
 
 Le Transformer introduit **l'auto-attention** (*self-attention*, mécanisme d'attention qui pondère l'importance relative des mots) : chaque mot regarde tous les autres mots de la phrase en même temps et décide sur lesquels porter son attention.
 
-**Exemple :** Dans *"La chatte, qui avait faim, a mangé la souris"*, le mot *"a mangé"* doit *faire attention* à *"chatte"* (sujet), pas à *"souris"* (objet) pour l'accord du verbe.
+**Exemple (projet fil rouge) :** Dans *"L'utilisateur a publié un message sur le mur"*, le mot *"publié"* doit *faire attention* à *"utilisateur"* (sujet) ET à *"message"* (objet) pour comprendre l'action, tandis que *"mur"* donne le contexte (public vs. privé).
 
 ### 2.4 La scalabilité
 
@@ -193,7 +193,7 @@ Anthropic introduit **MCP**, un standard ouvert pour connecter LLMs à des sourc
 - **Opencode** : plateforme agentic open-source orchestrant des équipes d'agents spécialisés via des fichiers de configuration (`opencode.json`, `AGENTS.md`)
 - Les agents deviennent des membres à part entière de l'équipe de développement
 
-> **Projet fil rouge** : tout au long de ce cours, nous utiliserons comme fil rouge le developpement d'une application web sociale simplifiee (inspiree de Twitter/Facebook). Le Cahier des Charges complet est disponible dans [`gestion_de_projet/cdc.md`](gestion_de_projet/cdc.md). Chaque TP montrera comment l'agentic permet de construire ce projet concret.
+> **Projet fil rouge** : tout au long de ce cours, nous utiliserons comme fil rouge le developpement d'une application web sociale simplifiee (inspiree de Twitter/Facebook). Le Cahier des Charges complet est disponible dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md). Chaque TP montrera comment l'agentic permet de construire ce projet concret.
 
 ---
 
@@ -243,4 +243,4 @@ Ce cours vous donne les clés pour concevoir, construire et déployer ces systè
 - GitHub, *"Copilot Coding Agent"* (2026)
 
 ---
-**Projet fil rouge** : [`gestion_de_projet/cdc.md`](gestion_de_projet/cdc.md)
+**Projet fil rouge** : [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md)

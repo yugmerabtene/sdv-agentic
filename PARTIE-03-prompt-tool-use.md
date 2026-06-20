@@ -320,7 +320,7 @@ Si un outil échoue, explique pourquoi à l'utilisateur.
 
 ## 6. Travaux Pratiques — Assistant CLI (Command Line Interface) avec Outils
 
-> **Projet fil rouge** : ce TP s'appuie sur le reseau social defini dans [`gestion_de_projet/cdc.md`](gestion_de_projet/cdc.md). L'assistant CLI que vous allez construire permettra de manipuler les utilisateurs et publications de cette application.
+> **Projet fil rouge** : ce TP s'appuie sur le reseau social defini dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md). L'assistant CLI que vous allez construire permettra de manipuler les utilisateurs et publications de cette application.
 
 **Objectif :** Créer un assistant en ligne de commande qui utilise des outils (tool use) avec le pattern ReAct.
 

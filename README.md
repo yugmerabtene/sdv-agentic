@@ -236,7 +236,7 @@ graph LR
 
 ### Projet fil rouge
 
-Ce cours s'appuie sur un projet concret : une **application web sociale simplifiee** (mur public, authentification, gestion d'utilisateurs). Le Cahier des Charges est defini dans [`gestion_de_projet/cdc.md`](gestion_de_projet/cdc.md).
+Ce cours s'appuie sur un projet concret : une **application web sociale simplifiee** (mur public, authentification, gestion d'utilisateurs). Le Cahier des Charges est defini dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md).
 
 Les TPs de chaque PARTIE montrent comment utiliser l'agentic (opencode + `opencode/big-pickle`) pour construire ce projet etape par etape : de l'assistant CLI (Command Line Interface) au deploiement CI/CD en passant par l'equipe multi-agent et les serveurs MCP.
 

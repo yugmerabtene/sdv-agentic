@@ -247,7 +247,7 @@ Avec opencode + big-pickle (modèle gratuit), le coût est **zéro**. Cette sect
 
 ## 6. Travaux Pratiques — CI/CD (Continuous Integration / Continuous Deployment) pour Agents
 
-> **Projet fil rouge** : la chaine CI/CD mise en place ici build, teste et deploie automatiquement le reseau social defini dans [`gestion_de_projet/cdc.md`](gestion_de_projet/cdc.md).
+> **Projet fil rouge** : la chaine CI/CD mise en place ici build, teste et deploie automatiquement le reseau social defini dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md).
 
 **Objectif :** Mettre en place un pipeline CI/CD complet qui teste et valide des agents automatiquement.
 

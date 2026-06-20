@@ -260,7 +260,7 @@ graph TD
 
 ---
 
-> **Projet fil rouge** : le projet social defini dans [`gestion_de_projet/cdc.md`](gestion_de_projet/cdc.md) utilisera les LLMs via opencode pour automatiser le developpement de ses fonctionnalites (authentification, mur public, gestion utilisateurs).
+> **Projet fil rouge** : le projet social defini dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md) utilisera les LLMs via opencode pour automatiser le developpement de ses fonctionnalites (authentification, mur public, gestion utilisateurs).
 
 ---
 
@@ -282,4 +282,4 @@ graph TD
 - [Documentation technique — Architecture Transformer (Vaswani et al., 2017)](https://arxiv.org/abs/1706.03762)
 
 ---
-**Projet fil rouge** : [`gestion_de_projet/cdc.md`](gestion_de_projet/cdc.md)
+**Projet fil rouge** : [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md)

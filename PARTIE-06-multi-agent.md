@@ -303,7 +303,7 @@ class AsyncAgentOrchestrator:
 
 ## 6. Travaux Pratiques — Supervisor Multi-Agent avec Opencode
 
-> **Projet fil rouge** : l'equipe multi-agent que vous allez configurer a pour objectif d'implementer les fonctionnalites du reseau social defini dans [`gestion_de_projet/cdc.md`](gestion_de_projet/cdc.md).
+> **Projet fil rouge** : l'equipe multi-agent que vous allez configurer a pour objectif d'implementer les fonctionnalites du reseau social defini dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md).
 
 **Objectif :** Configurer une équipe d'agents opencode avec un Supervisor qui délègue à des spécialistes.
 

@@ -283,7 +283,7 @@ class AgentAvecMemoire:
 
 ---
 
-> **Projet fil rouge** : la memoire agentique permet de suivre l'avancement du developpement du reseau social (cf. [`gestion_de_projet/cdc.md`](gestion_de_projet/cdc.md)) en conservant le contexte entre les sessions.
+> **Projet fil rouge** : la memoire agentique permet de suivre l'avancement du developpement du reseau social (cf. [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md)) en conservant le contexte entre les sessions.
 
 ## 7. Travaux Pratiques — Agent avec Mémoire Persistante
 

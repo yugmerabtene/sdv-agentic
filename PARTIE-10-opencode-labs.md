@@ -225,7 +225,7 @@ Dans le fichier de configuration, les agents peuvent déléguer des tâches :
 
 ### 4.1 Lab 1 — Premier Projet Opencode
 
-> **Projet fil rouge** : ce lab final configure opencode pour developper l'ensemble du reseau social defini dans [`gestion_de_projet/cdc.md`](gestion_de_projet/cdc.md) avec une equipe d'agents Scrum.
+> **Projet fil rouge** : ce lab final configure opencode pour developper l'ensemble du reseau social defini dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md) avec une equipe d'agents Scrum.
 
 **Objectif :** Configurer votre premier projet opencode avec une équipe d'agents et interagir avec eux.
 

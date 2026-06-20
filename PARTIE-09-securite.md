@@ -49,7 +49,7 @@ graph TD
 
 ---
 
-> **Projet fil rouge** : les securites appliquees ici protegent le reseau social defini dans [`gestion_de_projet/cdc.md`](gestion_de_projet/cdc.md).
+> **Projet fil rouge** : les securites appliquees ici protegent le reseau social defini dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md).
 
 ## 2. Prompt Injection
 
