@@ -232,30 +232,28 @@ Contrôle l'**aléas** dans la sélection du prochain token :
   'lineColor': '#60a5fa'
 }}}%%
 graph TD
-    Q[Quel modèle pour mon agent ?] --> Q1["Budget ?"]
-    Q --> Q2["Latence ?"]
-    Q --> Q3["Contexte nécessaire ?"]
-    Q --> Q4["Données sensibles ?"]
+    Q["Quel modèle choisir ?"]:::question
+    Q --> B{"Budget ?"}:::crit1
     
-    Q1 --> |"Élevé"| P[Propriétaire]
-    Q1 --> |"Faible"| OS[Open-source]
+    B -->|"Élevé ($$$)"| L{"Latence ?"}:::crit2
+    B -->|"Faible ($)"| L
     
-    Q2 --> |"Critique"| OS
-    Q2 --> |"Acceptable"| P
+    L -->|"Critique"| C{"Contexte ?"}:::crit3
+    L -->|"Acceptable"| C
     
-    Q3 --> |">100K tokens"| P
-    Q3 --> |"<32K tokens"| OS
+    C -->|"> 100K tokens"| D{"Données sensibles ?"}:::crit4
+    C -->|"< 32K tokens"| D
     
-    Q4 --> |"Oui"| OS[Open-source local]
-    Q4 --> |"Non"| P
-    
-    style Q fill:#1e293b,color:#f1f5f9,stroke:#334155
-    style Q1 fill:#7c3aed,color:#fff,stroke:#5b21b6
-    style Q2 fill:#0891b2,color:#fff,stroke:#155e75
-    style Q3 fill:#059669,color:#fff,stroke:#047857
-    style Q4 fill:#d97706,color:#fff,stroke:#b45309
-    style P fill:#dc2626,color:#fff,stroke:#b91c1c
-    style OS fill:#2563eb,color:#fff,stroke:#1d4ed8
+    D -->|"Oui"| OS["Open-source local"]:::res_os
+    D -->|"Non"| PR["Propriétaire / cloud"]:::res_prop
+
+    classDef question fill:#1e293b,color:#f1f5f9,stroke:#7c3aed,stroke-width:2
+    classDef crit1 fill:#7c3aed,color:#fff,stroke:#5b21b6
+    classDef crit2 fill:#0891b2,color:#fff,stroke:#155e75
+    classDef crit3 fill:#059669,color:#fff,stroke:#047857
+    classDef crit4 fill:#d97706,color:#fff,stroke:#b45309
+    classDef res_os fill:#2563eb,color:#fff,stroke:#1d4ed8
+    classDef res_prop fill:#dc2626,color:#fff,stroke:#b91c1c
 ```
 
 ---
