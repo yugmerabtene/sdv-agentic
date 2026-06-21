@@ -493,17 +493,17 @@ Si un outil échoue, explique pourquoi à l'utilisateur.
 
 ### 6.1 Énoncé
 
-Vous devez creer un assistant interactif en ligne de commande avec :
+Vous devez créer un assistant interactif en ligne de commande avec :
 
-1. Un outil **meteo** qui retourne la temperature d'une ville
-2. Un outil **calcul** qui evalue une expression mathematique
-3. Un systeme de **detection automatique** : l'assistant reconnait quelle action executer selon la question
-4. Un fichier de configuration **opencode.json** pour ameliorer l'assistant avec un agent
+1. Un outil **météo** qui retourne la température d'une ville
+2. Un outil **calcul** qui évalue une expression mathématique
+3. Un système de **détection automatique** : l'assistant reconnaît quelle action exécuter selon la question
+4. Un fichier de configuration **opencode.json** pour améliorer l'assistant avec un agent
 5. Des **tests** pour chaque outil
 
 **Fichiers à créer :**
 - `assistant-cli/assistant.py` — l'assistant avec ses outils
-- `assistant-cli/opencode.json` — configuration pour l'amelioration par agent
+- `assistant-cli/opencode.json` — configuration pour l'amélioration par agent
 - `assistant-cli/AGENTS.md` — description de l'équipe
 - `assistant-cli/.opencode/skills/common.md` — règles communes de l'agent
 - `assistant-cli/test_assistant.py` — tests automatisés sans dépendance externe

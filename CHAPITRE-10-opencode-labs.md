@@ -523,7 +523,7 @@ Essayez ces instructions :
 
 ---
 
-### 4.2 Lab 2 — Equipe d'Agents avec CI/CD (Continuous Integration / Continuous Deployment) et Project Board
+### 4.2 Lab 2 — Équipe d'Agents avec CI/CD (Continuous Integration / Continuous Deployment) et Project Board
 
 > **Projet réseau social** : ce lab intègre la chaîne CI/CD (Continuous Integration / Continuous Deployment) (Chapitre 8) à l'équipe d'agents opencode. Les agents produisent du code, le pipeline le valide, et le Project board suit la progression automatiquement.
 
@@ -604,7 +604,7 @@ Créez `opencode.json` avec les permissions commentees :
   "agent": {
     "scrum-master": {
       "mode": "primary",
-      "description": "Coordonne l'equipe, delegue aux sous-agents",
+      "description": "Coordonne l'équipe, délègue aux sous-agents",
       "skills": ["common", "scrum_master"],
       "permission": {
         "read": "allow",

@@ -658,7 +658,7 @@ pwd
 <p>Vous devez :</p>
 <ol>
 <li>Installer Python 3.10+ (si pas déjà fait)</li>
-<li>Installer opencode et le modele gratuit big-pickle</li>
+<li>Installer opencode et le modèle gratuit big-pickle</li>
 <li>Créer un premier projet opencode</li>
 <li>Interagir avec l&rsquo;agent via la ligne de commande</li>
 <li>Vérifier que tout fonctionne correctement</li>
@@ -695,8 +695,8 @@ git init
 <p>Créez un fichier <code>opencode.json</code> :</p>
 <pre><code class="language-jsonc">{
   &quot;$schema&quot;: &quot;https://opencode.ai/config.json&quot;,  // Validation du format
-  &quot;model&quot;: &quot;opencode/big-pickle&quot;,                 // Modele gratuit
-  &quot;default_agent&quot;: &quot;decouverte&quot;,                  // Nom de l'agent par defaut
+  &quot;model&quot;: &quot;opencode/big-pickle&quot;,                 // Modèle gratuit
+  &quot;default_agent&quot;: &quot;decouverte&quot;,                  // Nom de l'agent par défaut
   &quot;agent&quot;: {
     &quot;decouverte&quot;: {
       &quot;mode&quot;: &quot;primary&quot;,                          // Agent principal
@@ -718,13 +718,13 @@ git init
 <p>Créez <code>AGENTS.md</code> :</p>
 <pre><code class="language-markdown"># Mon premier agent
 
-Agent de decouverte installe pour le cours Agentic Developer Craftsmanship.
+Agent de découverte installé pour le cours Agentic Developer Craftsmanship.
 
 ## Utilisation
 
-- Demandez a l'agent de repondre a des questions sur l'histoire de l'IA
-- Testez ses capacites avec des instructions simples
-- Explorez les limites du modele big-pickle
+- Demandez à l'agent de répondre à des questions sur l'histoire de l'IA
+- Testez ses capacités avec des instructions simples
+- Explorez les limites du modèle big-pickle
 </code></pre>
 <h5>Résultat attendu</h5>
 <p>Le fichier documente le rôle de l&rsquo;agent. Quand vous relirez le projet plus tard, vous saurez immédiatement pourquoi cet agent existe et comment l&rsquo;utiliser.</p>
@@ -1281,22 +1281,22 @@ print(&quot;-&quot; * 60)
 for i, (token_id, token_text) in enumerate(zip(tokens, texte_tokens)):
     print(f&quot;{token_id:&lt;8} {repr(token_text):&lt;20} {token_text}&quot;)
 
-# Exemple 2 : comparaison francais / anglais
+# Exemple 2 : comparaison français / anglais
 print(&quot;\n&quot; + &quot;=&quot; * 60)
 print(&quot;COMPARAISON FRANCAIS / ANGLAIS&quot;)
 print(&quot;=&quot; * 60)
 
 phrases = {
-    &quot;francais&quot;: &quot;Les agents intelligents transforment le developpement logiciel&quot;,
+    &quot;francais&quot;: &quot;Les agents intelligents transforment le développement logiciel&quot;,
     &quot;anglais&quot;: &quot;Intelligent agents are transforming software development&quot;,
 }
 
 for langue, texte in phrases.items():
     nb_tokens = len(enc.encode(texte))
     print(f&quot;\n{langue.upper()} : {texte}&quot;)
-    print(f&quot;  Tokens : {nb_tokens} | Caracteres : {len(texte)} | Ratio : {len(texte)/nb_tokens:.1f}&quot;)
+    print(f&quot;  Tokens : {nb_tokens} | Caractères : {len(texte)} | Ratio : {len(texte)/nb_tokens:.1f}&quot;)
 
-# Exemple 3 : estimation du cout d'un message pour le reseau social
+# Exemple 3 : estimation du coût d'un message pour le réseau social
 print(&quot;\n&quot; + &quot;=&quot; * 60)
 print(&quot;ESTIMATION DU COUT D'UN MESSAGE&quot;)
 print(&quot;=&quot; * 60)
@@ -1310,11 +1310,11 @@ message = (
 
 nb_tokens = len(enc.encode(message))
 # big-pickle est gratuit mais l'estimation reste utile
-# si on migre vers un modele payant
+# si on migre vers un modèle payant
 cout_estime = (nb_tokens / 1000) * 0.01  # $0.01/1K tokens (exemple)
 print(f&quot;\nMessage : {message[:80]}...&quot;)
 print(f&quot;  Tokens : {nb_tokens}&quot;)
-print(f&quot;  Cout estime (modele payant) : ${cout_estime:.6f}&quot;)
+print(f&quot;  Coût estimé (modèle payant) : ${cout_estime:.6f}&quot;)
 print(f&quot;  Avec big-pickle : GRATUIT&quot;)
 </code></pre>
 <h4>Étape 3 — Exécuter le script</h4>
@@ -1379,7 +1379,7 @@ def test_tokenisation_message_reseau_social():
 
 def test_comparaison_francais_anglais():
     &quot;&quot;&quot;Vérifie que l'anglais est plus dense en tokens que le français.&quot;&quot;&quot;
-    phrase_fr = &quot;Les agents intelligents transforment le developpement&quot;
+    phrase_fr = &quot;Les agents intelligents transforment le développement&quot;
     phrase_en = &quot;Intelligent agents transform development&quot;
 
     tokens_fr = len(enc.encode(phrase_fr))
@@ -1411,7 +1411,7 @@ opencode
 <p>Dans l&rsquo;interface interactive :</p>
 <pre><code>Explique moi comment fonctionne la tokenisation avec tiktoken
 </code></pre>
-<pre><code>Quel est l'impact du nombre de tokens sur le cout d'un appel LLM (Large Language Model) ?
+<pre><code>Quel est l'impact du nombre de tokens sur le coût d'un appel LLM (Large Language Model) ?
 </code></pre>
 <hr />
 <h3 id="chapitre-2-resultat-attendu">Résultat attendu</h3>
@@ -1428,20 +1428,20 @@ opencode
 <hr />
 <h3 id="chapitre-2-validation">Validation</h3>
 <ul>
-<li>[ ] <code>pip show tiktoken</code> affiche la version installee</li>
+<li>[ ] <code>pip show tiktoken</code> affiche la version installée</li>
 <li>[ ] <code>python3 demo_tokenisation.py</code> affiche les tokens et leurs IDs</li>
 <li>[ ] <code>python3 -m pytest test_tokenisation.py -v</code> passe (5 tests verts)</li>
-<li>[ ] Le rapport caracteres/token du francais est inferieur a celui de l&rsquo;anglais</li>
-<li>[ ] Vous pouvez expliquer pourquoi &ldquo;fascinants&rdquo; est decoupe en plusieurs tokens</li>
+<li>[ ] Le rapport caractères/token du français est inférieur à celui de l&rsquo;anglais</li>
+<li>[ ] Vous pouvez expliquer pourquoi &ldquo;fascinants&rdquo; est découpé en plusieurs tokens</li>
 </ul>
 <hr />
 <h3 id="chapitre-2-points-cles-a-retenir">Points clés à retenir</h3>
 <ol>
-<li>Un <strong>token</strong> n&rsquo;est pas un mot : c&rsquo;est une unite plus petite (sous-mot, caractere)</li>
-<li><strong>1 token ≈ 0.75 mot</strong> en francais, <strong>≈ 0.25 mot</strong> en anglais</li>
-<li>Les mots rares ou longs sont decoupes en plusieurs tokens</li>
-<li>Le nombre de tokens impacte le <strong>cout</strong> (si modele payant) et la <strong>fenetre de contexte</strong></li>
-<li><code>tiktoken</code> est l&rsquo;outil de reference pour compter les tokens</li>
+<li>Un <strong>token</strong> n&rsquo;est pas un mot : c&rsquo;est une unité plus petite (sous-mot, caractère)</li>
+<li><strong>1 token ≈ 0.75 mot</strong> en français, <strong>≈ 0.25 mot</strong> en anglais</li>
+<li>Les mots rares ou longs sont découpés en plusieurs tokens</li>
+<li>Le nombre de tokens impacte le <strong>coût</strong> (si modèle payant) et la <strong>fenêtre de contexte</strong></li>
+<li><code>tiktoken</code> est l&rsquo;outil de référence pour compter les tokens</li>
 </ol>
 <hr />
 <h2 id="chapitre-2-points-cles-a-retenir-2">Points clés à retenir</h2>
@@ -1880,17 +1880,17 @@ Si un outil échoue, explique pourquoi à l'utilisateur.
 <p><strong>Durée :</strong> 2h</p>
 <hr />
 <h3 id="chapitre-3-6-1-enonce">6.1 Énoncé</h3>
-<p>Vous devez creer un assistant interactif en ligne de commande avec :</p>
+<p>Vous devez créer un assistant interactif en ligne de commande avec :</p>
 <ol>
-<li>Un outil <strong>meteo</strong> qui retourne la temperature d&rsquo;une ville</li>
-<li>Un outil <strong>calcul</strong> qui evalue une expression mathematique</li>
-<li>Un systeme de <strong>detection automatique</strong> : l&rsquo;assistant reconnait quelle action executer selon la question</li>
-<li>Un fichier de configuration <strong>opencode.json</strong> pour ameliorer l&rsquo;assistant avec un agent</li>
+<li>Un outil <strong>météo</strong> qui retourne la température d&rsquo;une ville</li>
+<li>Un outil <strong>calcul</strong> qui évalue une expression mathématique</li>
+<li>Un système de <strong>détection automatique</strong> : l&rsquo;assistant reconnaît quelle action exécuter selon la question</li>
+<li>Un fichier de configuration <strong>opencode.json</strong> pour améliorer l&rsquo;assistant avec un agent</li>
 <li>Des <strong>tests</strong> pour chaque outil</li>
 </ol>
 <p><strong>Fichiers à créer :</strong>
 - <code>assistant-cli/assistant.py</code> — l&rsquo;assistant avec ses outils
-- <code>assistant-cli/opencode.json</code> — configuration pour l&rsquo;amelioration par agent
+- <code>assistant-cli/opencode.json</code> — configuration pour l&rsquo;amélioration par agent
 - <code>assistant-cli/AGENTS.md</code> — description de l&rsquo;équipe
 - <code>assistant-cli/.opencode/skills/common.md</code> — règles communes de l&rsquo;agent
 - <code>assistant-cli/test_assistant.py</code> — tests automatisés sans dépendance externe</p>
@@ -5161,7 +5161,7 @@ gitGraph
     commit id: &quot;Deploiement&quot;
 </pre>
 <h3 id="chapitre-8-3-4-integration-avec-github-projects">3.4 Integration avec GitHub Projects</h3>
-<p>Un pipeline CI/CD (Continuous Integration / Continuous Deployment) ne se limite pas a builder et deployer. Il peut aussi <strong>mettre a jour automatiquement un Scrum board</strong> pour suivre la progression du projet en temps reel, sans cout de token LLM (Large Language Model) supplementaire.</p>
+<p>Un pipeline CI/CD (Continuous Integration / Continuous Deployment) ne se limite pas à builder et déployer. Il peut aussi <strong>mettre à jour automatiquement un Scrum board</strong> pour suivre la progression du projet en temps réel, sans coût supplémentaire en tokens LLM (Large Language Model).</p>
 <h4>Principe</h4>
 <pre class="mermaid">%%{init: {'theme': 'base', 'themeVariables': {
   'primaryColor': '#7c3aed',
@@ -5182,8 +5182,8 @@ graph LR
     style B fill:#1e293b,color:#f1f5f9,stroke:#334155
 </pre>
 <h4>Workflow de suivi (zéro token LLM (Large Language Model))</h4>
-<p>Le fichier <code>.github/workflows/track-progress.yml</code> doit être créé et utilise uniquement la CLI (Command Line Interface) <code>gh</code> (pas de LLM (Large Language Model)) pour detecter les fichiers CHAPITRE-*.md modifies et deplacer automatiquement les cartes dans le Scrum board.</p>
-<p>Caracteristiques :
+<p>Le fichier <code>.github/workflows/track-progress.yml</code> doit être créé et utilise uniquement la CLI (Command Line Interface) <code>gh</code> (sans LLM (Large Language Model)) pour détecter les fichiers CHAPITRE-*.md modifiés et déplacer automatiquement les cartes dans le Scrum board.</p>
+<p>Caractéristiques :
 - <strong>Coût : zéro token</strong> — bash + gh CLI (Command Line Interface), sans appel à un LLM (Large Language Model)
 - <strong>Temps réel</strong> — exécuté à chaque push sur <code>main</code>
 - <strong>Automatique</strong> — plus besoin de déplacer les cartes à la main
@@ -6838,7 +6838,7 @@ Demandez au scrum-master de réaliser des tâches simples.
 <li>Testez le changement d&rsquo;agent : <code>opencode -a developer</code></li>
 </ul>
 <hr />
-<h3 id="chapitre-10-4-2-lab-2-equipe-d-agents-avec-ci-cd-continuous-integration-continuous-deployment-et-project-board">4.2 Lab 2 — Equipe d&rsquo;Agents avec CI/CD (Continuous Integration / Continuous Deployment) et Project Board</h3>
+<h3 id="chapitre-10-4-2-lab-2-equipe-d-agents-avec-ci-cd-continuous-integration-continuous-deployment-et-project-board">4.2 Lab 2 — Équipe d&rsquo;Agents avec CI/CD (Continuous Integration / Continuous Deployment) et Project Board</h3>
 <blockquote>
 <p><strong>Projet réseau social</strong> : ce lab intègre la chaîne CI/CD (Continuous Integration / Continuous Deployment) (Chapitre 8) à l&rsquo;équipe d&rsquo;agents opencode. Les agents produisent du code, le pipeline le valide, et le Project board suit la progression automatiquement.</p>
 </blockquote>
@@ -6898,7 +6898,7 @@ pwd
   &quot;agent&quot;: {
     &quot;scrum-master&quot;: {
       &quot;mode&quot;: &quot;primary&quot;,
-      &quot;description&quot;: &quot;Coordonne l'equipe, delegue aux sous-agents&quot;,
+      &quot;description&quot;: &quot;Coordonne l'équipe, délègue aux sous-agents&quot;,
       &quot;skills&quot;: [&quot;common&quot;, &quot;scrum_master&quot;],
       &quot;permission&quot;: {
         &quot;read&quot;: &quot;allow&quot;,

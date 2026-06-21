@@ -407,7 +407,7 @@ gitGraph
 
 ### 3.4 Integration avec GitHub Projects
 
-Un pipeline CI/CD (Continuous Integration / Continuous Deployment) ne se limite pas a builder et deployer. Il peut aussi **mettre a jour automatiquement un Scrum board** pour suivre la progression du projet en temps reel, sans cout de token LLM (Large Language Model) supplementaire.
+Un pipeline CI/CD (Continuous Integration / Continuous Deployment) ne se limite pas à builder et déployer. Il peut aussi **mettre à jour automatiquement un Scrum board** pour suivre la progression du projet en temps réel, sans coût supplémentaire en tokens LLM (Large Language Model).
 
 #### Principe
 
@@ -432,9 +432,9 @@ graph LR
 
 #### Workflow de suivi (zéro token LLM (Large Language Model))
 
-Le fichier `.github/workflows/track-progress.yml` doit être créé et utilise uniquement la CLI (Command Line Interface) `gh` (pas de LLM (Large Language Model)) pour detecter les fichiers CHAPITRE-*.md modifies et deplacer automatiquement les cartes dans le Scrum board.
+Le fichier `.github/workflows/track-progress.yml` doit être créé et utilise uniquement la CLI (Command Line Interface) `gh` (sans LLM (Large Language Model)) pour détecter les fichiers CHAPITRE-*.md modifiés et déplacer automatiquement les cartes dans le Scrum board.
 
-Caracteristiques :
+Caractéristiques :
 - **Coût : zéro token** — bash + gh CLI (Command Line Interface), sans appel à un LLM (Large Language Model)
 - **Temps réel** — exécuté à chaque push sur `main`
 - **Automatique** — plus besoin de déplacer les cartes à la main

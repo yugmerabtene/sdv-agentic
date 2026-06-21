@@ -487,7 +487,7 @@ Votre ordinateur/
 Vous devez :
 
 1. Installer Python 3.10+ (si pas déjà fait)
-2. Installer opencode et le modele gratuit big-pickle
+2. Installer opencode et le modèle gratuit big-pickle
 3. Créer un premier projet opencode
 4. Interagir avec l'agent via la ligne de commande
 5. Vérifier que tout fonctionne correctement
@@ -545,8 +545,8 @@ Créez un fichier `opencode.json` :
 ```jsonc
 {
   "$schema": "https://opencode.ai/config.json",  // Validation du format
-  "model": "opencode/big-pickle",                 // Modele gratuit
-  "default_agent": "decouverte",                  // Nom de l'agent par defaut
+  "model": "opencode/big-pickle",                 // Modèle gratuit
+  "default_agent": "decouverte",                  // Nom de l'agent par défaut
   "agent": {
     "decouverte": {
       "mode": "primary",                          // Agent principal
@@ -579,13 +579,13 @@ Créez `AGENTS.md` :
 ```markdown
 # Mon premier agent
 
-Agent de decouverte installe pour le cours Agentic Developer Craftsmanship.
+Agent de découverte installé pour le cours Agentic Developer Craftsmanship.
 
 ## Utilisation
 
-- Demandez a l'agent de repondre a des questions sur l'histoire de l'IA
-- Testez ses capacites avec des instructions simples
-- Explorez les limites du modele big-pickle
+- Demandez à l'agent de répondre à des questions sur l'histoire de l'IA
+- Testez ses capacités avec des instructions simples
+- Explorez les limites du modèle big-pickle
 ```
 
 ##### Résultat attendu

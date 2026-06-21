@@ -385,22 +385,22 @@ print("-" * 60)
 for i, (token_id, token_text) in enumerate(zip(tokens, texte_tokens)):
     print(f"{token_id:<8} {repr(token_text):<20} {token_text}")
 
-# Exemple 2 : comparaison francais / anglais
+# Exemple 2 : comparaison français / anglais
 print("\n" + "=" * 60)
 print("COMPARAISON FRANCAIS / ANGLAIS")
 print("=" * 60)
 
 phrases = {
-    "francais": "Les agents intelligents transforment le developpement logiciel",
+    "francais": "Les agents intelligents transforment le développement logiciel",
     "anglais": "Intelligent agents are transforming software development",
 }
 
 for langue, texte in phrases.items():
     nb_tokens = len(enc.encode(texte))
     print(f"\n{langue.upper()} : {texte}")
-    print(f"  Tokens : {nb_tokens} | Caracteres : {len(texte)} | Ratio : {len(texte)/nb_tokens:.1f}")
+    print(f"  Tokens : {nb_tokens} | Caractères : {len(texte)} | Ratio : {len(texte)/nb_tokens:.1f}")
 
-# Exemple 3 : estimation du cout d'un message pour le reseau social
+# Exemple 3 : estimation du coût d'un message pour le réseau social
 print("\n" + "=" * 60)
 print("ESTIMATION DU COUT D'UN MESSAGE")
 print("=" * 60)
@@ -414,11 +414,11 @@ message = (
 
 nb_tokens = len(enc.encode(message))
 # big-pickle est gratuit mais l'estimation reste utile
-# si on migre vers un modele payant
+# si on migre vers un modèle payant
 cout_estime = (nb_tokens / 1000) * 0.01  # $0.01/1K tokens (exemple)
 print(f"\nMessage : {message[:80]}...")
 print(f"  Tokens : {nb_tokens}")
-print(f"  Cout estime (modele payant) : ${cout_estime:.6f}")
+print(f"  Coût estimé (modèle payant) : ${cout_estime:.6f}")
 print(f"  Avec big-pickle : GRATUIT")
 ```
 
@@ -494,7 +494,7 @@ def test_tokenisation_message_reseau_social():
 
 def test_comparaison_francais_anglais():
     """Vérifie que l'anglais est plus dense en tokens que le français."""
-    phrase_fr = "Les agents intelligents transforment le developpement"
+    phrase_fr = "Les agents intelligents transforment le développement"
     phrase_en = "Intelligent agents transform development"
 
     tokens_fr = len(enc.encode(phrase_fr))
@@ -539,7 +539,7 @@ Explique moi comment fonctionne la tokenisation avec tiktoken
 ```
 
 ```
-Quel est l'impact du nombre de tokens sur le cout d'un appel LLM (Large Language Model) ?
+Quel est l'impact du nombre de tokens sur le coût d'un appel LLM (Large Language Model) ?
 ```
 
 ---
@@ -561,21 +561,21 @@ tokenisation/
 
 ### Validation
 
-- [ ] `pip show tiktoken` affiche la version installee
+- [ ] `pip show tiktoken` affiche la version installée
 - [ ] `python3 demo_tokenisation.py` affiche les tokens et leurs IDs
 - [ ] `python3 -m pytest test_tokenisation.py -v` passe (5 tests verts)
-- [ ] Le rapport caracteres/token du francais est inferieur a celui de l'anglais
-- [ ] Vous pouvez expliquer pourquoi "fascinants" est decoupe en plusieurs tokens
+- [ ] Le rapport caractères/token du français est inférieur à celui de l'anglais
+- [ ] Vous pouvez expliquer pourquoi "fascinants" est découpé en plusieurs tokens
 
 ---
 
 ### Points clés à retenir
 
-1. Un **token** n'est pas un mot : c'est une unite plus petite (sous-mot, caractere)
-2. **1 token ≈ 0.75 mot** en francais, **≈ 0.25 mot** en anglais
-3. Les mots rares ou longs sont decoupes en plusieurs tokens
-4. Le nombre de tokens impacte le **cout** (si modele payant) et la **fenetre de contexte**
-5. `tiktoken` est l'outil de reference pour compter les tokens
+1. Un **token** n'est pas un mot : c'est une unité plus petite (sous-mot, caractère)
+2. **1 token ≈ 0.75 mot** en français, **≈ 0.25 mot** en anglais
+3. Les mots rares ou longs sont découpés en plusieurs tokens
+4. Le nombre de tokens impacte le **coût** (si modèle payant) et la **fenêtre de contexte**
+5. `tiktoken` est l'outil de référence pour compter les tokens
 
 ---
 
