@@ -149,6 +149,36 @@ def rewrite_internal_links(html):
     return re.sub(r'href="([^"]+)"', _rewrite, html)
 
 
+def build_section_nav(prev_section, next_section):
+    if not prev_section and not next_section:
+        return ""
+
+    prev_html = '<span class="chapter-nav-spacer"></span>'
+    next_html = '<span class="chapter-nav-spacer"></span>'
+
+    if prev_section:
+        prev_html = (
+            f'<a class="chapter-nav-link chapter-nav-prev" href="#{prev_section["id"]}">'
+            f'<span class="chapter-nav-kicker">Précédent</span>'
+            f'<span class="chapter-nav-title">&larr; {prev_section["title"]}</span>'
+            '</a>'
+        )
+
+    if next_section:
+        next_html = (
+            f'<a class="chapter-nav-link chapter-nav-next" href="#{next_section["id"]}">'
+            f'<span class="chapter-nav-kicker">Suivant</span>'
+            f'<span class="chapter-nav-title">{next_section["title"]} &rarr;</span>'
+            '</a>'
+        )
+
+    return (
+        '<nav class="chapter-nav" aria-label="Navigation entre sections">'
+        f'{prev_html}{next_html}'
+        '</nav>'
+    )
+
+
 def build_prerequisites_html():
     """Extract the 'Prérequis général' section from README.md."""
     readme_path = COURSE_DIR / "README.md"
@@ -248,14 +278,14 @@ def build_toc_html(include_prerequis=False):
 
 
 def build_content_html():
-    parts = []
+    blocks = []
 
     phase_colors = {
-        "Phase 1 — Fondamentaux": "#1e3a5f",
-        "Phase 2 — Interaction avec les LLMs": "#2563eb",
-        "Phase 3 — Mémoire & Collaboration": "#059669",
-        "Phase 4 — Production": "#7c3aed",
-        "Phase 5 — Mise en pratique": "#d97706",
+        "Phase 1 — Fondamentaux": "#55656d",
+        "Phase 2 — Interaction avec les LLMs": "#9a6446",
+        "Phase 3 — Mémoire & Collaboration": "#6c7a60",
+        "Phase 4 — Production": "#7a5d72",
+        "Phase 5 — Mise en pratique": "#b07a2a",
     }
 
     current_phase = None
@@ -279,14 +309,17 @@ def build_content_html():
             phase_title = PHASES[phase_num - 1][1]
             phase_desc = PHASES[phase_num - 1][2]
             color = phase_colors.get(phase, "#1e3a5f")
-            parts.append(f'''
+            blocks.append({
+                "type": "phase",
+                "html": f'''
 <section class="phase-divider" id="phase-{phase_num}" style="--phase-color: {color};">
     <div class="phase-badge">Phase {phase_num}</div>
     <h2 class="phase-title">{phase_title}</h2>
     <div class="phase-line"></div>
     <p class="phase-desc">{phase_desc}</p>
 </section>
-''')
+'''
+            })
 
         # Remove first h1
         md_content = re.sub(r'^#\s+.*$', '', md_content, count=1, flags=re.MULTILINE)
@@ -330,32 +363,28 @@ def build_content_html():
 
         # Output Ch1 theory
         if ch1_theory is not None:
-            parts.append(f'''
-<section class="chapter" id="{chap_id}">
-    <div class="chapter-header" style="background: linear-gradient(135deg, #0f172a, {phase_colors.get(phase, '#1e3a5f')});">
-        <div class="ch-meta">{phase}</div>
-        <h1>{title}</h1>
-    </div>
-    <div class="chapter-body">
-        {theory_html}
-    </div>
-</section>
-''')
+            blocks.append({
+                "type": "section",
+                "id": chap_id,
+                "meta": phase,
+                "title": title,
+                "body": theory_html,
+                "color": phase_colors.get(phase, '#1e3a5f'),
+                "appendix": False,
+            })
 
             # Insert README prerequis between theory and TP
             prerequis_html = build_prerequisites_html()
             if prerequis_html:
-                parts.append(f'''
-<section class="chapter" id="prerequis-installation">
-    <div class="chapter-header" style="background: linear-gradient(135deg, #0f172a, #059669);">
-        <div class="ch-meta">Prérequis</div>
-        <h1>Mise en place des prérequis</h1>
-    </div>
-    <div class="chapter-body">
-        {prerequis_html}
-    </div>
-</section>
-''')
+                blocks.append({
+                    "type": "section",
+                    "id": "prerequis-installation",
+                    "meta": "Prérequis",
+                    "title": "Mise en place des prérequis",
+                    "body": prerequis_html,
+                    "color": '#5b7553',
+                    "appendix": False,
+                })
 
             # Output Ch1 TP as a separate section
             if ch1_tp:
@@ -363,30 +392,26 @@ def build_content_html():
                 tp_html = fix_mermaid_html(tp_html)
                 tp_html = add_heading_ids(tp_html, prefix="chapitre-1-tp")
                 tp_html = rewrite_internal_links(tp_html)
-                parts.append(f'''
-<section class="chapter" id="chapitre-1-tp">
-    <div class="chapter-header" style="background: linear-gradient(135deg, #0f172a, {phase_colors.get(phase, '#1e3a5f')});">
-        <div class="ch-meta">{phase} — Travaux Pratiques</div>
-        <h1>{title} — TP</h1>
-    </div>
-    <div class="chapter-body">
-        {tp_html}
-    </div>
-</section>
-''')
+                blocks.append({
+                    "type": "section",
+                    "id": "chapitre-1-tp",
+                    "meta": f"{phase} — Travaux Pratiques",
+                    "title": f"{title} — TP",
+                    "body": tp_html,
+                    "color": phase_colors.get(phase, '#1e3a5f'),
+                    "appendix": False,
+                })
         else:
             # Normal chapters
-            parts.append(f'''
-<section class="chapter" id="{chap_id}">
-    <div class="chapter-header" style="background: linear-gradient(135deg, #0f172a, {phase_colors.get(phase, '#1e3a5f')});">
-        <div class="ch-meta">{phase}</div>
-        <h1>{title}</h1>
-    </div>
-    <div class="chapter-body">
-        {html}
-    </div>
-</section>
-''')
+            blocks.append({
+                "type": "section",
+                "id": chap_id,
+                "meta": phase,
+                "title": title,
+                "body": html,
+                "color": phase_colors.get(phase, '#1e3a5f'),
+                "appendix": False,
+            })
 
         chapter_count += 1
 
@@ -408,19 +433,45 @@ def build_content_html():
         html = rewrite_internal_links(html)
         app_id = slugify(label)
 
-        parts.append(f'''
-<section class="chapter appendix" id="{app_id}">
-    <div class="chapter-header" style="background: linear-gradient(135deg, #0f172a, #4c1d95);">
-        <div class="ch-meta">Annexe</div>
-        <h1>{label}</h1>
+        blocks.append({
+            "type": "section",
+            "id": app_id,
+            "meta": "Annexe",
+            "title": label,
+            "body": html,
+            "color": '#6b5b7b',
+            "appendix": True,
+        })
+
+    sections = [block for block in blocks if block["type"] == "section"]
+    section_lookup = {section["id"]: idx for idx, section in enumerate(sections)}
+    rendered = []
+
+    for block in blocks:
+        if block["type"] == "phase":
+            rendered.append(block["html"])
+            continue
+
+        idx = section_lookup[block["id"]]
+        prev_section = sections[idx - 1] if idx > 0 else None
+        next_section = sections[idx + 1] if idx < len(sections) - 1 else None
+        nav_html = build_section_nav(prev_section, next_section)
+        appendix_class = " appendix" if block["appendix"] else ""
+
+        rendered.append(f'''
+<section class="chapter{appendix_class}" id="{block["id"]}">
+    <div class="chapter-header" style="background: linear-gradient(135deg, #2d3748, {block["color"]});">
+        <div class="ch-meta">{block["meta"]}</div>
+        <h1>{block["title"]}</h1>
     </div>
     <div class="chapter-body">
-        {html}
+        {block["body"]}
+        {nav_html}
     </div>
 </section>
 ''')
 
-    return '\n'.join(parts)
+    return '\n'.join(rendered)
 
 
 def build_site():
