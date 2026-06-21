@@ -38,7 +38,7 @@ PHASES = [
     ("Phase 1", "Fondamentaux", "De l'histoire de l'IA aux bases des LLM", "#1e3a5f"),
     ("Phase 2", "Interaction avec les LLMs", "Prompt engineering, tool use et boucle agent", "#2563eb"),
     ("Phase 3", "Mémoire & Collaboration", "RAG, mémoire persistante et systèmes multi-agents", "#059669"),
-    ("Phase 4", "Production", "MCP, CI/CD et déploiement professionnel", "#7c3aed"),
+    ("Phase 4", "Production", "MCP, CI/CD et déploiement", "#7c3aed"),
     ("Phase 5", "Mise en pratique", "Sécurité et labs opencode complets", "#d97706"),
 ]
 
