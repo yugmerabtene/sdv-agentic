@@ -205,7 +205,7 @@
 
 <section class="phase-divider" style="--phase-color: #1e3a5f;">
     <div class="phase-badge">Phase 1</div>
-    <h2 class="phase-title">Mettre à jour les paquets</h2>
+    <h2 class="phase-title">Fondamentaux</h2>
     <div class="phase-line"></div>
     <p class="phase-desc">De l'histoire de l'IA aux bases des LLM</p>
 </section>
@@ -213,7 +213,7 @@
 
 <section class="chapter" id="chapitre-1">
     <div class="chapter-header" style="background: linear-gradient(135deg, #0f172a, #1e3a5f);">
-        <div class="ch-meta">Mettre à jour les paquets</div>
+        <div class="ch-meta">Phase 1 — Fondamentaux</div>
         <h1>Chapitre 1 — Introduction</h1>
     </div>
     <div class="chapter-body">
@@ -639,7 +639,7 @@ pwd
 
 <section class="chapter" id="chapitre-1-tp">
     <div class="chapter-header" style="background: linear-gradient(135deg, #0f172a, #1e3a5f);">
-        <div class="ch-meta">Mettre à jour les paquets — Travaux Pratiques</div>
+        <div class="ch-meta">Phase 1 — Fondamentaux — Travaux Pratiques</div>
         <h1>Chapitre 1 — Introduction — TP</h1>
     </div>
     <div class="chapter-body">
@@ -806,7 +806,7 @@ opencode -t &quot;Qu'est-ce que le test de Turing ?&quot;
 
 <section class="chapter" id="chapitre-2">
     <div class="chapter-header" style="background: linear-gradient(135deg, #0f172a, #1e3a5f);">
-        <div class="ch-meta">Mettre à jour les paquets</div>
+        <div class="ch-meta">Phase 1 — Fondamentaux</div>
         <h1>Chapitre 2 — Architecture des LLMs (Large Language Models)</h1>
     </div>
     <div class="chapter-body">
@@ -2885,6 +2885,34 @@ graph LR
 - Deux textes proches sémantiquement → vecteurs proches (similarité cosinus élevée)
 - Deux textes différents → vecteurs éloignés
 - La dimension typique : 384 à 3072 (selon le modèle)</p>
+<pre class="mermaid">%%{init: {'theme': 'base', 'themeVariables': {
+  'primaryColor': '#0f172a',
+  'primaryTextColor': '#f8fafc',
+  'lineColor': '#64748b',
+  'edgeLabelBackground': '#334155'
+}}}%%
+graph LR
+    A[&quot;Texte A&lt;br/&gt;Le chat dort sur le canapé&quot;]
+    B[&quot;Texte B&lt;br/&gt;Le félin repose sur le sofa&quot;]
+    C[&quot;Texte C&lt;br/&gt;Recette de pâte à pizza&quot;]
+
+    A --&gt; VA[&quot;Embedding A&lt;br/&gt;[0.12, -0.44, 0.87, ...]&quot;]
+    B --&gt; VB[&quot;Embedding B&lt;br/&gt;[0.10, -0.41, 0.85, ...]&quot;]
+    C --&gt; VC[&quot;Embedding C&lt;br/&gt;[-0.72, 0.33, -0.15, ...]&quot;]
+
+    VA &lt;-. &quot;similarité cosinus élevée&quot; .-&gt; VB
+    VA &lt;-. &quot;distance sémantique&quot; .-&gt; VC
+
+    D[&quot;Dimension typique&lt;br/&gt;384 à 3072&quot;] --&gt; VA
+
+    style A fill:#2563eb,color:#fff,stroke:#1d4ed8
+    style B fill:#2563eb,color:#fff,stroke:#1d4ed8
+    style C fill:#dc2626,color:#fff,stroke:#b91c1c
+    style VA fill:#1e293b,color:#f8fafc,stroke:#334155
+    style VB fill:#1e293b,color:#f8fafc,stroke:#334155
+    style VC fill:#1e293b,color:#f8fafc,stroke:#334155
+    style D fill:#059669,color:#fff,stroke:#047857
+</pre>
 <h3 id="2-2-modeles-d-embeddings">2.2 Modèles d&rsquo;embeddings</h3>
 <table>
 <thead>

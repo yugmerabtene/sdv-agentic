@@ -120,6 +120,35 @@ graph LR
 - Deux textes différents → vecteurs éloignés
 - La dimension typique : 384 à 3072 (selon le modèle)
 
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {
+  'primaryColor': '#0f172a',
+  'primaryTextColor': '#f8fafc',
+  'lineColor': '#64748b'
+}}}%%
+graph LR
+    A["Texte A<br/>Le chat dort sur le canapé"]
+    B["Texte B<br/>Le félin repose sur le sofa"]
+    C["Texte C<br/>Recette de pâte à pizza"]
+
+    A --> VA["Embedding A<br/>[0.12, -0.44, 0.87, ...]"]
+    B --> VB["Embedding B<br/>[0.10, -0.41, 0.85, ...]"]
+    C --> VC["Embedding C<br/>[-0.72, 0.33, -0.15, ...]"]
+
+    VA <-. "similarité cosinus élevée" .-> VB
+    VA <-. "distance sémantique" .-> VC
+
+    D["Dimension typique<br/>384 à 3072"] --> VA
+
+    style A fill:#2563eb,color:#fff,stroke:#1d4ed8
+    style B fill:#2563eb,color:#fff,stroke:#1d4ed8
+    style C fill:#dc2626,color:#fff,stroke:#b91c1c
+    style VA fill:#1e293b,color:#f8fafc,stroke:#334155
+    style VB fill:#1e293b,color:#f8fafc,stroke:#334155
+    style VC fill:#1e293b,color:#f8fafc,stroke:#334155
+    style D fill:#059669,color:#fff,stroke:#047857
+```
+
 ### 2.2 Modèles d'embeddings
 
 | Modèle | Dimensions | Usage |
