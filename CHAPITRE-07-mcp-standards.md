@@ -13,7 +13,7 @@
 
 Avant de commencer ce chapitre, assurez-vous d'avoir :
 
-- Terminé le **[Chapitre 6](CHAPITRE-06-multi-agent.md)** et son TP supervisor
+- Terminé le **[Chapitre 6](CHAPITRE-06-multi-agent.md)** et son TP (Travaux Pratiques) supervisor
 - Python 3.10+ installé
 - opencode fonctionnel
 - Compris la notion d'outil exposé à un agent
@@ -229,11 +229,11 @@ Les agents opencode peuvent alors utiliser `get_weather()` comme un outil natif.
 
 ---
 
-## 4. A2A — Agent-to-Agent Protocol
+## 4. A2A (Agent-to-Agent) — Agent-to-Agent Protocol
 
 ### 4.1 Principe
 
-Si Model Context Protocol connecte un **agent à des outils**, A2A connecte un **agent à d'autres agents**.
+Si Model Context Protocol connecte un **agent à des outils**, A2A (Agent-to-Agent) connecte un **agent à d'autres agents**.
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {
@@ -257,7 +257,7 @@ graph LR
     style T2 fill:#1e293b,color:#f1f5f9,stroke:#334155
 ```
 
-### 4.2 Cycle de vie d'une tâche A2A
+### 4.2 Cycle de vie d'une tâche A2A (Agent-to-Agent)
 
 ```
 1. Agent A envoie une AgentCard à Agent B
@@ -422,7 +422,7 @@ Le serveur doit :
 
 ### 7.2 Corrigé — Étape 1 : Installer le Software Development Kit Model Context Protocol
 
-**Point de départ :** ouvrez un terminal dans votre dossier d'exercices. Ce TP crée un **nouveau dossier indépendant** nommé `serveur-mcp`.
+**Point de départ :** ouvrez un terminal dans votre dossier d'exercices. Ce TP (Travaux Pratiques) crée un **nouveau dossier indépendant** nommé `serveur-mcp`.
 
 ```bash
 mkdir serveur-mcp && cd serveur-mcp
@@ -561,7 +561,7 @@ Lancez opencode et demandez :
 ## Points clés à retenir
 
 1. **Model Context Protocol** est le standard universel pour connecter Large Language Models à des outils et données
-2. **A2A** permet à des agents de collaborer entre eux
+2. **A2A (Agent-to-Agent)** permet à des agents de collaborer entre eux
 3. Le **serveur Model Context Protocol** expose des Resources, Tools et Prompts
 4. **opencode** supporte nativement Model Context Protocol via `opencode.json`
 5. **AGENTS.md** et les **skills** forment la structure agentique du projet

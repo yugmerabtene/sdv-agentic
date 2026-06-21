@@ -13,7 +13,7 @@
 
 Avant de commencer ce chapitre, assurez-vous d'avoir :
 
-- Terminé le **[Chapitre 1](CHAPITRE-01-histoire-ia.md)** et son TP (environnement opencode fonctionnel)
+- Terminé le **[Chapitre 1](CHAPITRE-01-histoire-ia.md)** et son TP (Travaux Pratiques) (environnement opencode fonctionnel)
 - Python 3.10+ installé
 - pip à jour
 
@@ -77,7 +77,7 @@ Un Large Language Model ne lit pas du texte, il lit des **tokens** (unités de t
 | Capacité | Tokens | Mots (français) |
 |---|---|---|
 | Contexte court (Generative Pre-trained Transformer-3) | 4 096 | ~3 000 |
-| Contexte long (GPT-4) | 128 000 | ~96 000 |
+| Contexte long (GPT (Generative Pre-trained Transformer)-4) | 128 000 | ~96 000 |
 | Contexte géant (Claude 4) | 200 000 | ~150 000 |
 | Contexte infini (Gemini) | 1 000 000 | ~750 000 |
 
@@ -179,7 +179,7 @@ graph TD
 5. **LayerNorm** : normalisation qui stabilise l'entraînement
 6. **Résidu** (Add) : ajoute l'entrée à la sortie (*skip connection*)
 
-Ces blocs sont empilés **N fois** (ex: GPT-3 = 96 couches).
+Ces blocs sont empilés **N fois** (ex: GPT (Generative Pre-trained Transformer)-3 = 96 couches).
 
 ---
 
@@ -210,13 +210,13 @@ Au-delà d'un certain seuil (~100 milliards de paramètres), des capacités **é
 
 | Modèle | Année | Paramètres | Contexte |
 |---|---|---|---|
-| GPT-1 | 2018 | 117M | 512 |
-| GPT-2 | 2019 | 1.5B | 1 024 |
-| GPT-3 | 2020 | 175B | 2 048 |
-| GPT-4 | 2023 | ~1.8T | 128K |
+| GPT (Generative Pre-trained Transformer)-1 | 2018 | 117M | 512 |
+| GPT (Generative Pre-trained Transformer)-2 | 2019 | 1.5B | 1 024 |
+| GPT (Generative Pre-trained Transformer)-3 | 2020 | 175B | 2 048 |
+| GPT (Generative Pre-trained Transformer)-4 | 2023 | ~1.8T | 128K |
 | Claude 4 | 2025 | ~2T | 200K |
 | DeepSeek-R1 | 2025 | ~1T | 128K |
-| GPT-5 | 2026 | ~3T | 256K |
+| GPT (Generative Pre-trained Transformer)-5 | 2026 | ~3T | 256K |
 
 ---
 
@@ -257,7 +257,7 @@ Contrôle l'**aléas** dans la sélection du prochain token :
 
 | Modèle | Forces | Faiblesses |
 |---|---|---|
-| GPT-5 | Généraliste, Application Programming Interface stable | Coûteux, pas modifiable |
+| GPT (Generative Pre-trained Transformer)-5 | Généraliste, Application Programming Interface stable | Coûteux, pas modifiable |
 | Claude 4 | Long contexte, safety | Moins performant en code |
 | Gemini 2 | Multimodal natif | Moins flexible |
 
@@ -311,7 +311,7 @@ graph TD
 
 ## 7. Travaux Pratiques — Visualiser la tokenisation
 
-> **Projet reseau social** : dans ce TP, vous allez tokeniser des phrases de l'application reseau social (messages, noms d'utilisateur) pour comprendre comment un Large Language Model les "voit" et estimer le cout en tokens des futures fonctionnalites.
+> **Projet reseau social** : dans ce TP (Travaux Pratiques), vous allez tokeniser des phrases de l'application reseau social (messages, noms d'utilisateur) pour comprendre comment un Large Language Model les "voit" et estimer le cout en tokens des futures fonctionnalites.
 
 **Objectif :** Installer tiktoken, tokeniser du texte, comprendre la difference entre mots et tokens, estimer le cout d'un message.
 
@@ -339,7 +339,7 @@ Vous devez :
 
 #### Étape 1 — Creer le dossier
 
-**Point de départ :** ouvrez un terminal dans votre dossier d'exercices. Ce TP crée un **nouveau dossier indépendant** nommé `tokenisation`.
+**Point de départ :** ouvrez un terminal dans votre dossier d'exercices. Ce TP (Travaux Pratiques) crée un **nouveau dossier indépendant** nommé `tokenisation`.
 
 ```bash
 mkdir -p tokenisation
@@ -522,7 +522,7 @@ python3 -m pytest test_tokenisation.py -v
 
 **Point de départ :** vous êtes normalement dans le dossier `tokenisation/` après les tests.
 
-Pour lancer opencode sur le TP, vous pouvez rester dans `tokenisation/`. Si vous préférez revenir au dossier parent où se trouvent tous vos TPs, utilisez `cd ..`.
+Pour lancer opencode sur le TP (Travaux Pratiques), vous pouvez rester dans `tokenisation/`. Si vous préférez revenir au dossier parent où se trouvent tous vos TPs, utilisez `cd ..`.
 
 ```bash
 # Optionnel : revenir au dossier parent de tokenisation

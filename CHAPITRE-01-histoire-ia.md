@@ -67,7 +67,7 @@ winget install Docker.DockerDesktop
 py -m pip install --user opencode
 ```
 
-### 4. Vérification finale par OS
+### 4. Vérification finale par OS (Operating System)
 
 #### Linux et macOS
 
@@ -140,9 +140,9 @@ Dans la suite du cours, les commandes sont souvent montrées en version Linux/ma
 
 ### Convention de dossiers pour les TPs
 
-Chaque TP du cours doit être fait dans un **dossier de travail séparé**.
+Chaque TP (Travaux Pratiques) du cours doit être fait dans un **dossier de travail séparé**.
 
-Avant de commencer un TP, placez-vous dans le dossier où vous rangez vos exercices. Exemple :
+Avant de commencer un TP (Travaux Pratiques), placez-vous dans le dossier où vous rangez vos exercices. Exemple :
 
 Linux/macOS :
 
@@ -158,7 +158,7 @@ mkdir $HOME\agentic-labs
 cd $HOME\agentic-labs
 ```
 
-Ensuite, quand le cours dit `mkdir nom-du-tp && cd nom-du-tp`, cela crée un nouveau dossier de TP à l'intérieur de ce dossier d'exercices. Tous les fichiers du TP doivent être créés dans ce dossier courant.
+Ensuite, quand le cours dit `mkdir nom-du-tp && cd nom-du-tp`, cela crée un nouveau dossier de TP (Travaux Pratiques) à l'intérieur de ce dossier d'exercices. Tous les fichiers du TP (Travaux Pratiques) doivent être créés dans ce dossier courant.
 
 Pour vérifier où vous êtes :
 
@@ -220,7 +220,7 @@ Alan Turing pose la question : *« Les machines peuvent-elles penser ? »* Il pr
 ### 1.2 Les premiers systèmes (1956-1970)
 
 - **1956** : Conférence de Dartmouth — naissance officielle du terme *Intelligence Artificielle*
-- **1964-1966** : ELIZA (MIT) — premier chatbot, par simulation de thérapeute rogérien. Simple jeu de motifs, mais les utilisateurs lui attribuaient une conscience.
+- **1964-1966** : ELIZA (MIT (Massachusetts Institute of Technology)) — premier chatbot, par simulation de thérapeute rogérien. Simple jeu de motifs, mais les utilisateurs lui attribuaient une conscience.
 - **1969** : Minsky & Papert démontrent les limites du perceptron (réseau à une couche). → Premier hiver de l'Intelligence Artificielle.
 
 **Découverte clé :** Les systèmes à base de règles (*expert systems*) fonctionnent dans des domaines étroits mais ne généralisent pas.
@@ -321,9 +321,9 @@ Contrairement aux Recurrent Neural Networks, le Transformer peut être parallél
 
 ### 3.1 Generative Pre-trained Transformer 3 et l'émergence (2020)
 
-OpenAI publie GPT-3 (175 milliards de paramètres). La découverte n'est pas le modèle lui-même, mais **l'émergence** :
-- GPT-2 (1.5B) était faible sur les tâches complexes
-- GPT-3 (175B) sait faire des choses qui n'étaient pas programmées explicitement : traduction jamais vue, raisonnement simple, code
+OpenAI publie GPT (Generative Pre-trained Transformer)-3 (175 milliards de paramètres). La découverte n'est pas le modèle lui-même, mais **l'émergence** :
+- GPT (Generative Pre-trained Transformer)-2 (1.5B) était faible sur les tâches complexes
+- GPT (Generative Pre-trained Transformer)-3 (175B) sait faire des choses qui n'étaient pas programmées explicitement : traduction jamais vue, raisonnement simple, code
 
 **Découverte :** Quand un modèle dépasse un certain seuil de paramètres, des capacités nouvelles apparaissent spontanément (*emergence*).
 
@@ -342,9 +342,9 @@ Le **Reinforcement Learning from Human Feedback** aligne les Large Language Mode
 - **Instruction Tuning** (2022) : Fine-tuner le modèle sur des paires (instruction, réponse correcte). Le modèle apprend à *suivre des instructions* plutôt qu'à *continuer du texte*.
 - **Chain-of-Thought** (Wei et al., 2022) : Demander au modèle de *raisonner étape par étape* améliore drastiquement les résultats sur les tâches de raisonnement.
 
-### 3.4 L'explosion GPT-4 & concurrents (2023)
+### 3.4 L'explosion GPT (Generative Pre-trained Transformer)-4 & concurrents (2023)
 
-- **GPT-4** (mars 2023) : multimodal, raisonnement avancé, capable de passer des examens (barreau, médecine)
+- **GPT (Generative Pre-trained Transformer)-4** (mars 2023) : multimodal, raisonnement avancé, capable de passer des examens (barreau, médecine)
 - **Claude** (Anthropic) : focus sur la sécurité et la transparence
 - **Llama 2** (Meta) : open-source, poids disponibles
 - **Mistral** : efficient, open-source, performant
@@ -380,7 +380,7 @@ Le Large Language Model peut déclarer quel outil utiliser, et un orchestrateur 
 
 ### 4.3 Le pattern ReAct (Reasoning + Acting) (2023-2024)
 
-**ReAct** (Reasoning + Acting, Yao et al., 2023) alterne pensée, action et observation :
+**ReAct (Reasoning + Acting)** (Yao et al., 2023) alterne pensée, action et observation :
 
 ```
 Thought: L'utilisateur veut connaître la météo à Paris. Je dois utiliser l'Application Programming Interface météo.
@@ -424,7 +424,7 @@ Anthropic introduit le **Model Context Protocol**, un standard ouvert pour conne
 - **Opencode** : plateforme agentic open-source orchestrant des équipes d'agents spécialisés via des fichiers de configuration (`opencode.json`, `AGENTS.md`)
 - Les agents deviennent des membres à part entière de l'équipe de développement
 
-> **Projet reseau social** : tout au long de ce cours, nous utiliserons comme projet le developpement d'une application web sociale simplifiee (inspiree de Twitter/Facebook). Le Cahier des Charges complet est disponible dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md). Chaque TP montrera comment l'agentic permet de construire ce projet concret.
+> **Projet reseau social** : tout au long de ce cours, nous utiliserons comme projet le developpement d'une application web sociale simplifiee (inspiree de Twitter/Facebook). Le Cahier des Charges complet est disponible dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md). Chaque TP (Travaux Pratiques) montrera comment l'agentic permet de construire ce projet concret.
 
 ---
 
@@ -434,7 +434,7 @@ Anthropic introduit le **Model Context Protocol**, un standard ouvert pour conne
 
 | Acteur | Modèle phare | Particularité |
 |---|---|---|
-| OpenAI | GPT-5 | Généraliste, Application Programming Interface la plus utilisée |
+| OpenAI | GPT (Generative Pre-trained Transformer)-5 | Généraliste, Application Programming Interface la plus utilisée |
 | Anthropic | Claude Opus 4.5 | Sécurité, long contexte, agentic |
 | Google | Gemini 2.0 | Multimodal natif |
 | Meta | Llama 4 | Open-source performant |
@@ -469,7 +469,7 @@ Ce cours vous donne les clés pour concevoir, construire et déployer ces systè
 
 ## 6. Travaux Pratiques — Premier agent opencode
 
-> **Projet reseau social** : ce premier TP prepare votre environnement de travail pour l'ensemble du cours. Vous allez installer les outils necessaires (Python, opencode, big-pickle), verifier leur bon fonctionnement, puis interagir avec votre premier agent.
+> **Projet reseau social** : ce premier TP (Travaux Pratiques) prepare votre environnement de travail pour l'ensemble du cours. Vous allez installer les outils necessaires (Python, opencode, big-pickle), verifier leur bon fonctionnement, puis interagir avec votre premier agent.
 
 **Objectif :** Installer et configurer votre environnement de development agentique, executer votre premier agent opencode.
 
@@ -499,7 +499,7 @@ Vous devez :
 
 **Point de départ :** ouvrez un terminal dans votre dossier d'exercices, par exemple `~/agentic-labs` ou `$HOME\agentic-labs`.
 
-Ce TP crée un **nouveau dossier indépendant** nommé `mon-premier-agent`.
+Ce TP (Travaux Pratiques) crée un **nouveau dossier indépendant** nommé `mon-premier-agent`.
 
 ```bash
 mkdir -p mon-premier-agent
@@ -507,7 +507,7 @@ cd mon-premier-agent
 pwd
 ```
 
-**Résultat attendu :** `pwd` doit se terminer par `mon-premier-agent`. Tous les fichiers de ce TP seront créés dans ce dossier.
+**Résultat attendu :** `pwd` doit se terminer par `mon-premier-agent`. Tous les fichiers de ce TP (Travaux Pratiques) seront créés dans ce dossier.
 
 #### Étape 2 — Initialiser Git
 
@@ -551,7 +551,7 @@ Creez un fichier `opencode.json` :
 
 ##### À quoi sert `AGENTS.md` dans ce premier projet ?
 
-`AGENTS.md` explique à l'agent le contexte du projet et la façon dont il doit être utilisé. Dans ce premier TP, il est volontairement simple : il sert à documenter que l'agent est un agent de découverte du cours.
+`AGENTS.md` explique à l'agent le contexte du projet et la façon dont il doit être utilisé. Dans ce premier TP (Travaux Pratiques), il est volontairement simple : il sert à documenter que l'agent est un agent de découverte du cours.
 
 Même si le projet ne contient qu'un seul agent, prendre l'habitude de créer `AGENTS.md` est important. Plus tard, ce fichier décrira une vraie équipe : scrum-master, développeur, testeur, devops.
 
@@ -673,7 +673,7 @@ mon-premier-agent/
 
 - Vaswani et al., *"Attention Is All You Need"* (2017)
 - Wei et al., *"Chain-of-Thought Prompting Elicits Reasoning in Large Language Models"* (2022)
-- Yao et al., *"ReAct: Synergizing Reasoning and Acting in Language Models"* (2023)
+- Yao et al., *"ReAct (Reasoning + Acting): Synergizing Reasoning and Acting in Language Models"* (2023)
 - Anthropic, *"Model Context Protocol"* (2025)
 - GitHub, *"Copilot Coding Agent"* (2026)
 

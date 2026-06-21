@@ -13,7 +13,7 @@
 
 Avant de commencer ce chapitre, assurez-vous d'avoir :
 
-- Terminé le **[Chapitre 4](CHAPITRE-04-architecture-agent.md)** et son TP boucle agent
+- Terminé le **[Chapitre 4](CHAPITRE-04-architecture-agent.md)** et son TP (Travaux Pratiques) boucle agent
 - Python 3.10+ installé
 - Compris la différence entre mémoire court-terme et historique persistant
 
@@ -33,9 +33,9 @@ py --version
 py -c "import sqlite3; print(sqlite3.sqlite_version)"
 ```
 
-> **Aucune dépendance externe obligatoire** pour le TP principal : SQLite est inclus avec Python.
+> **Aucune dépendance externe obligatoire** pour le TP (Travaux Pratiques) principal : SQLite est inclus avec Python.
 
-Pour l'option vectorielle en fin de TP :
+Pour l'option vectorielle en fin de TP (Travaux Pratiques) :
 
 ```bash
 python3 -m pip install chromadb sentence-transformers
@@ -221,7 +221,7 @@ Question utilisateur
 → génération de la réponse par le Large Language Model
 ```
 
-Exemple avec le réseau social : si l'utilisateur demande "quelles fonctionnalités sont exclues du MVP ?", l'agent doit chercher dans `cdc.md`, récupérer la section correspondante, puis répondre à partir de ce contexte.
+Exemple avec le réseau social : si l'utilisateur demande "quelles fonctionnalités sont exclues du MVP (Minimum Viable Product) ?", l'agent doit chercher dans `cdc.md`, récupérer la section correspondante, puis répondre à partir de ce contexte.
 
 #### Pourquoi c'est utile ?
 
@@ -528,7 +528,7 @@ L'agent doit savoir :
 
 ### 7.2 Corrigé — Étape 1 : Structure
 
-**Point de départ :** ouvrez un terminal dans votre dossier d'exercices. Ce TP crée un **nouveau dossier indépendant** nommé `agent-memoire`.
+**Point de départ :** ouvrez un terminal dans votre dossier d'exercices. Ce TP (Travaux Pratiques) crée un **nouveau dossier indépendant** nommé `agent-memoire`.
 
 ```bash
 mkdir agent-memoire && cd agent-memoire

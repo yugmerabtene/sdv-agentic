@@ -13,7 +13,7 @@
 
 Avant de commencer ce chapitre, assurez-vous d'avoir :
 
-- Terminé le **[Chapitre 5](CHAPITRE-05-memoire-rag.md)** et son TP mémoire persistante
+- Terminé le **[Chapitre 5](CHAPITRE-05-memoire-rag.md)** et son TP (Travaux Pratiques) mémoire persistante
 - opencode installé et fonctionnel
 - Git installé
 - Compris les fichiers `opencode.json`, `AGENTS.md` et `.opencode/skills/`
@@ -27,7 +27,7 @@ opencode --version
 git --version
 ```
 
-> **Aucune dépendance Python obligatoire** : ce TP configure une équipe d'agents avec opencode.
+> **Aucune dépendance Python obligatoire** : ce TP (Travaux Pratiques) configure une équipe d'agents avec opencode.
 
 ---
 
@@ -133,7 +133,7 @@ graph TD
 ```
 
 **Quand :** Décisions complexes où plusieurs perspectives sont utiles.
-**Exemple :** "Cette PR est-elle prête à être mergée ?"
+**Exemple :** "Cette PR (Pull Request) est-elle prête à être mergée ?"
 
 ### 2.4 Hiérarchique (Supervisor)
 
@@ -324,7 +324,7 @@ Système → retourne le résultat final
 
 #### Limite importante
 
-L'asynchrone ajoute de la complexité : suivi d'état, erreurs, nettoyage, persistance et concurrence. Pour un petit script CLI, une boucle simple suffit souvent.
+L'asynchrone ajoute de la complexité : suivi d'état, erreurs, nettoyage, persistance et concurrence. Pour un petit script CLI (Command Line Interface), une boucle simple suffit souvent.
 
 ### 4.2 Solution : File d'attente
 
@@ -397,7 +397,7 @@ class AsyncAgentOrchestrator:
     # Attend le résultat d'une tâche (polling)
     async def get_result(self, task_id: str):
         while self.tasks[task_id]["status"] == "pending":  # Boucle tant que la tâche est en cours
-            await asyncio.sleep(0.5)                       # Pause pour éviter de surcharger le CPU
+            await asyncio.sleep(0.5)                       # Pause pour éviter de surcharger le CPU (Central Processing Unit)
         return self.tasks[task_id]["result"]               # Retourne le résultat final
     
     # Traitement interne d'une tâche en arrière-plan
@@ -557,7 +557,7 @@ Tu es le Scrum Master. Tu coordonnes une équipe de 3 développeurs.
 
 ## Sous-agents disponibles
 - @backend-dev : Application Programming Interfaces, logique métier, auth
-- @frontend-dev : HyperText Markup Language, CSS, templates
+- @frontend-dev : HyperText Markup Language, CSS (Cascading Style Sheets), templates
 - @data-dev : Base de données, Retrieval-Augmented Generation, embeddings
 ```
 
@@ -568,7 +568,7 @@ Tu es le Scrum Master. Tu coordonnes une équipe de 3 développeurs.
 
 Stack : FastAPI, SQLAlchemy, Pydantic, Alembic
 
-Tu développes les Application Programming Interfaces REST, la logique métier,
+Tu développes les Application Programming Interfaces REST (Representational State Transfer), la logique métier,
 l'authentification et la validation des données.
 ```
 
@@ -577,7 +577,7 @@ l'authentification et la validation des données.
 ```markdown
 # Rôle : Développeur Frontend
 
-Stack : Jinja2, Tailwind CSS, HTMX
+Stack : Jinja2, Tailwind CSS (Cascading Style Sheets), HTMX
 
 Tu crées les interfaces utilisateur responsives,
 les formulaires et les pages.
@@ -641,8 +641,8 @@ Le fichier rend le fonctionnement de l'équipe lisible. Un utilisateur sait qu'i
 Lancez opencode et essayez :
 
 ```
-"Crée une application FastAPI avec une route /hello qui retourne du JSON"
-"Ajoute une page HTML pour afficher le message"
+"Crée une application FastAPI avec une route /hello qui retourne du JSON (JavaScript Object Notation)"
+"Ajoute une page HTML (HyperText Markup Language) pour afficher le message"
 "Ajoute une base de données SQLite avec une table visites"
 ```
 

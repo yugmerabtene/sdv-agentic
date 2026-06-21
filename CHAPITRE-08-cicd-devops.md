@@ -3,7 +3,7 @@
 ## Objectifs pédagogiques
 
 - Comprendre comment tester et valider des agents automatiquement
-- Mettre en place une CI/CD complète pour un projet agentique
+- Mettre en place une CI/CD (Continuous Integration / Continuous Deployment) complète pour un projet agentique
 - Savoir monitorer les performances et coûts des agents
 - Connaître les bonnes pratiques DevOps pour systèmes agentiques
 
@@ -13,11 +13,11 @@
 
 Avant de commencer ce chapitre, assurez-vous d'avoir :
 
-- Terminé le **[Chapitre 7](CHAPITRE-07-mcp-standards.md)** et son TP serveur MCP
+- Terminé le **[Chapitre 7](CHAPITRE-07-mcp-standards.md)** et son TP (Travaux Pratiques) serveur MCP (Model Context Protocol)
 - Python 3.10+ installé
 - Git installé
 - Un compte GitHub
-- GitHub CLI (`gh`) installé si vous voulez automatiser les issues/projects
+- GitHub CLI (Command Line Interface) (`gh`) installé si vous voulez automatiser les issues/projects
 
 ### Installation des dépendances Python
 
@@ -59,9 +59,9 @@ gh --version  # optionnel, utile pour GitHub Projects
 
 ---
 
-## 1. Pourquoi la CI/CD est Cruciale pour les Agents
+## 1. Pourquoi la CI/CD (Continuous Integration / Continuous Deployment) est Cruciale pour les Agents
 
-Les agents sont **non-déterministes** : deux exécutions du même prompt peuvent donner des résultats différents. La CI/CD permet de :
+Les agents sont **non-déterministes** : deux exécutions du même prompt peuvent donner des résultats différents. La CI/CD (Continuous Integration / Continuous Deployment) permet de :
 
 | Objectif | Méthode |
 |---|---|
@@ -231,7 +231,7 @@ py -m pytest tests/ -v
 
 ---
 
-## 3. Pipeline CI/CD Professionnel (Fichier Unique)
+## 3. Pipeline CI/CD (Continuous Integration / Continuous Deployment) Professionnel (Fichier Unique)
 
 ### 3.1 Architecture
 
@@ -239,7 +239,7 @@ Le pipeline est concu en **9 phases** organisees en dependances paralleles. Chaq
 
 #### Principe expliqué simplement
 
-La CI/CD est une chaîne automatique qui vérifie le projet à chaque modification.
+La CI/CD (Continuous Integration / Continuous Deployment) est une chaîne automatique qui vérifie le projet à chaque modification.
 
 Pour un projet agentique, elle doit répondre à trois questions :
 
@@ -310,19 +310,19 @@ graph TD
     style M fill:#10b981,color:#fff
 ```
 
-### 3.2 Pipeline YAML unique
+### 3.2 Pipeline YAML (YAML Ain't Markup Language) unique
 
-Le fichier complet se trouve dans `.github/workflows/cicd-projet.yml`. Il contient les **9 phases** dans un seul fichier YAML :
+Le fichier complet se trouve dans `.github/workflows/cicd-projet.yml`. Il contient les **9 phases** dans un seul fichier YAML (YAML Ain't Markup Language) :
 
 | Phase | Job | Depend de | Parallelisable | Permissions |
 |---|---|---|---|---|
 | **1 Qualite** | `quality` | — | — | lecture seule |
 | **2 Unitaires** | `unit-tests` | quality | avec phase 3, 5 | lecture seule |
-| **3 Integration** | `integration-tests` | quality | avec phase 2, 5 | lecture seule + service DB |
+| **3 Integration** | `integration-tests` | quality | avec phase 2, 5 | lecture seule + service DB (Database) |
 | **4 Non-regression** | `regression-tests` | unit-tests | — | lecture seule |
 | **5 Securite** | `security` | quality | avec phase 2, 3 | lecture seule |
 | **6 Build** | `build` | unit-tests, integration-tests | — | lecture + packages write |
-| **7 E2E** | `e2e-tests` | build | — | lecture seule |
+| **7 E2E (End-to-End)** | `e2e-tests` | build | — | lecture seule |
 | **8 Deploiement** | `deploy` | toutes sauf 9 | — | environment: production |
 | **9 Scrum board** | `update-board` | deploy | — | projects write |
 
@@ -369,15 +369,15 @@ Regles :
 
 | Branche | Protection | CI declenchee | Deploiement |
 |---|---|---|---|
-| `feature/*` | Aucune | PR vers develop | Non |
-| `fix/*` | Aucune | PR vers develop | Non |
-| `develop` | PR requise, review requise | Push + PR | Non |
-| `release/*` | PR requise | Push + PR | Non |
-| `main` | PR requise, review requise, statuts CI obligatoires | Push + PR | **Oui** (phase 8) |
+| `feature/*` | Aucune | PR (Pull Request) vers develop | Non |
+| `fix/*` | Aucune | PR (Pull Request) vers develop | Non |
+| `develop` | PR (Pull Request) requise, review requise | Push + PR (Pull Request) | Non |
+| `release/*` | PR (Pull Request) requise | Push + PR (Pull Request) | Non |
+| `main` | PR (Pull Request) requise, review requise, statuts CI obligatoires | Push + PR (Pull Request) | **Oui** (phase 8) |
 
 Avantages de cette strategie :
 - **Isolation** : chaque fonctionnalite est developpee dans sa branche
-- **Qualite** : les PR vers develop declenchent toute la CI
+- **Qualite** : les PR (Pull Request) vers develop declenchent toute la CI
 - **Stabilite** : main ne recoit que du code valide par toutes les phases
 - **Traçabilite** : chaque commit est lie a une issue/feature
 
@@ -407,7 +407,7 @@ gitGraph
 
 ### 3.4 Integration avec GitHub Projects
 
-Un pipeline CI/CD ne se limite pas a builder et deployer. Il peut aussi **mettre a jour automatiquement un Scrum board** pour suivre la progression du projet en temps reel, sans cout de token LLM supplementaire.
+Un pipeline CI/CD (Continuous Integration / Continuous Deployment) ne se limite pas a builder et deployer. Il peut aussi **mettre a jour automatiquement un Scrum board** pour suivre la progression du projet en temps reel, sans cout de token LLM (Large Language Model) supplementaire.
 
 #### Principe
 
@@ -430,12 +430,12 @@ graph LR
     style B fill:#1e293b,color:#f1f5f9,stroke:#334155
 ```
 
-#### Workflow de suivi (zero token LLM)
+#### Workflow de suivi (zero token LLM (Large Language Model))
 
-Le fichier `.github/workflows/track-progress.yml` utilise uniquement la CLI `gh` (pas de LLM) pour detecter les fichiers CHAPITRE-*.md modifies et deplacer automatiquement les cartes dans le Scrum board.
+Le fichier `.github/workflows/track-progress.yml` utilise uniquement la CLI (Command Line Interface) `gh` (pas de LLM (Large Language Model)) pour detecter les fichiers CHAPITRE-*.md modifies et deplacer automatiquement les cartes dans le Scrum board.
 
 Caracteristiques :
-- **Cout : zero token** — bash + gh CLI, pas d'appel LLM
+- **Cout : zero token** — bash + gh CLI (Command Line Interface), pas d'appel LLM (Large Language Model)
 - **Temps reel** — execute a chaque push sur main
 - **Automatique** — plus besoin de deplacer les cartes a la main
 - **Filtre par fichier** — seul le chapitre modifie est mis a jour
@@ -528,7 +528,7 @@ Agent démarre
 
 #### Limite importante
 
-Les logs ne doivent jamais contenir de secrets, mots de passe, tokens API ou données personnelles sensibles.
+Les logs ne doivent jamais contenir de secrets, mots de passe, tokens API (Application Programming Interface) ou données personnelles sensibles.
 
 ### 4.1 Que monitorer pour un agent ?
 
@@ -623,9 +623,9 @@ Réponse à : Bonjour agent
 
 #### Principe expliqué simplement
 
-Un LLM payant facture souvent au **nombre de tokens** : tokens envoyés dans le prompt + tokens générés dans la réponse.
+Un LLM (Large Language Model) payant facture souvent au **nombre de tokens** : tokens envoyés dans le prompt + tokens générés dans la réponse.
 
-Même si `big-pickle` est gratuit dans ce cours, il est important d'apprendre à suivre un budget. Un agent en boucle peut consommer beaucoup plus qu'un simple appel LLM.
+Même si `big-pickle` est gratuit dans ce cours, il est important d'apprendre à suivre un budget. Un agent en boucle peut consommer beaucoup plus qu'un simple appel LLM (Large Language Model).
 
 ```text
 prompt_tokens + completion_tokens = tokens facturés
@@ -714,9 +714,9 @@ Avec opencode + big-pickle (modèle gratuit), le coût est **zéro**. Cette sect
 
 ## 6. Travaux Pratiques — CI/CD (Continuous Integration / Continuous Deployment) pour Agents
 
-> **Projet reseau social** : la chaine CI/CD mise en place ici build, teste et deploie automatiquement le reseau social defini dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md).
+> **Projet reseau social** : la chaine CI/CD (Continuous Integration / Continuous Deployment) mise en place ici build, teste et deploie automatiquement le reseau social defini dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md).
 
-**Objectif :** Mettre en place un pipeline CI/CD complet qui teste et valide des agents automatiquement.
+**Objectif :** Mettre en place un pipeline CI/CD (Continuous Integration / Continuous Deployment) complet qui teste et valide des agents automatiquement.
 
 **Durée :** 2h
 
@@ -729,7 +729,7 @@ Vous devez créer un mini-projet agentique avec :
 1. Un assistant Python simple
 2. Des tests comportementaux
 3. Des tests qualité (`ruff`)
-4. Une structure de dossiers compatible CI/CD
+4. Une structure de dossiers compatible CI/CD (Continuous Integration / Continuous Deployment)
 5. Un pipeline GitHub Actions générable par opencode
 6. Une vérification locale avant push
 
@@ -745,7 +745,7 @@ Vous devez créer un mini-projet agentique avec :
 
 Commencez par créer la structure du projet et un assistant CLI (Command Line Interface) minimal :
 
-**Point de départ :** ouvrez un terminal dans votre dossier d'exercices. Ce TP crée un **nouveau dossier indépendant** nommé `cicd-agents`.
+**Point de départ :** ouvrez un terminal dans votre dossier d'exercices. Ce TP (Travaux Pratiques) crée un **nouveau dossier indépendant** nommé `cicd-agents`.
 
 ```bash
 mkdir cicd-agents && cd cicd-agents
@@ -753,7 +753,7 @@ mkdir -p tests/unit tests/integration tests/regression tests/e2e .github/workflo
 pwd
 ```
 
-**Résultat attendu :** `pwd` doit se terminer par `cicd-agents`. Tous les fichiers CI/CD de ce TP seront créés dans ce dossier.
+**Résultat attendu :** `pwd` doit se terminer par `cicd-agents`. Tous les fichiers CI/CD (Continuous Integration / Continuous Deployment) de ce TP (Travaux Pratiques) seront créés dans ce dossier.
 
 Vous êtes toujours dans `cicd-agents/`. Créez `assistant.py` à la racine de ce dossier :
 
@@ -852,7 +852,7 @@ def test_imports():
     assert result.returncode == 0, f"Import échoué:\n{result.stderr}"
 ```
 
-### 6.5 Corrigé — Étape 4 : Pipeline CI/CD unique (agentic)
+### 6.5 Corrigé — Étape 4 : Pipeline CI/CD (Continuous Integration / Continuous Deployment) unique (agentic)
 
 Le pipeline du cours est defini dans `.github/workflows/cicd-projet.yml` (fichier unique, 9 phases). Vous pouvez le **generer** via opencode en demandant au scrum-master :
 
@@ -867,8 +867,8 @@ Le pipeline du cours est defini dans `.github/workflows/cicd-projet.yml` (fichie
 ```
 
 Les agents opencode :
-1. Le **scrum-master** analyse la demande et consulte le CDC
-2. Le **devops** genere le fichier YAML avec toutes les phases
+1. Le **scrum-master** analyse la demande et consulte le CDC (Cahier Des Charges)
+2. Le **devops** genere le fichier YAML (YAML Ain't Markup Language) avec toutes les phases
 3. Le **tester** cree les squelettes de dossiers de tests
 4. Le pipeline est operationnel au prochain push
 
@@ -910,14 +910,14 @@ py -m pytest tests/unit/ -v
 
 ### 6.8 Corrigé — Étape 7 : Créer le Scrum Board
 
-Mettez en place un tableau Scrum pour suivre la progression des CHAPITRES et du pipeline CI/CD :
+Mettez en place un tableau Scrum pour suivre la progression des CHAPITRES et du pipeline CI/CD (Continuous Integration / Continuous Deployment) :
 
 1. **Créez un GitHub Project V2** (onglet Projects > New project)
 2. **Ajoutez les colonnes Scrum** : Backlog | To Do | In Progress | Review | Done
 3. **Créez une Issue pour chaque Chapitre** (P1 a P10) et associez-les au Project
 4. **Ajoutez un workflow de suivi** : creez `.github/workflows/track-progress.yml`
 
-Le workflow `track-progress.yml` detecte automatiquement les pushes sur les fichiers CHAPITRE-*.md et deplace la carte correspondante de "Backlog" vers "In Progress". Zero token LLM necessaire.
+Le workflow `track-progress.yml` detecte automatiquement les pushes sur les fichiers CHAPITRE-*.md et deplace la carte correspondante de "Backlog" vers "In Progress". Zero token LLM (Large Language Model) necessaire.
 
 ```bash
 # Exemple : creer une issue depuis le terminal
@@ -947,7 +947,7 @@ Ou demandez a l'agent opencode :
 ```
 
 L'agent devops :
-1. Lit la phase 8 commentee dans le YAML
+1. Lit la phase 8 commentee dans le YAML (YAML Ain't Markup Language)
 2. Decommente les etapes necessaires
 3. Propose les commandes pour configurer les secrets
 
@@ -973,7 +973,7 @@ L'agent devops :
 ## Points clés à retenir
 
 1. Les **tests agents** sont différents des tests classiques — ils valident des comportements
-2. Un **pipeline CI/CD** pour agents doit inclure des benchmarks comportementaux
+2. Un **pipeline CI/CD (Continuous Integration / Continuous Deployment)** pour agents doit inclure des benchmarks comportementaux
 3. Le **monitoring** (temps, steps, tokens, erreurs) est indispensable en production
 4. Avec opencode + big-pickle, les **coûts sont nuls** — idéal pour l'apprentissage
 5. Les **stratégies d'optimisation** token permettent de passer à l'échelle

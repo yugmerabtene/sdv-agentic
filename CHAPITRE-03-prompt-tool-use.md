@@ -13,7 +13,7 @@
 
 Avant de commencer ce chapitre, assurez-vous d'avoir :
 
-- Terminé les **[Chapitres 1](CHAPITRE-01-histoire-ia.md)** et **[Chapitre 2](CHAPITRE-02-fondations-llm.md)** avec leurs TP
+- Terminé les **[Chapitres 1](CHAPITRE-01-histoire-ia.md)** et **[Chapitre 2](CHAPITRE-02-fondations-llm.md)** avec leurs TP (Travaux Pratiques)
 - Python 3.10+ et opencode installés
 - Compris les bases de la tokenisation (P2)
 
@@ -304,15 +304,15 @@ Réponse Large Language Model : tool_call(id="call_123", name="get_weather", arg
 
 ---
 
-## 4. Le Pattern ReAct
+## 4. Le Pattern ReAct (Reasoning + Acting)
 
 ### 4.1 Principe
 
-**ReAct** (Reasoning + Acting) alterne trois étapes :
+**ReAct (Reasoning + Acting)** alterne trois étapes :
 
 #### Principe expliqué simplement
 
-ReAct signifie **Reasoning + Acting** : l'agent alterne raisonnement et action.
+ReAct (Reasoning + Acting) alterne raisonnement et action.
 
 Au lieu de répondre immédiatement, il avance étape par étape :
 
@@ -335,7 +335,7 @@ Ce pattern est la base des agents modernes : l'agent ne se contente pas de devin
 
 #### Limite importante
 
-Une boucle ReAct doit avoir une limite (`max_steps`). Sans limite, un agent peut tourner indéfiniment : réfléchir, appeler un outil, observer, recommencer.
+Une boucle ReAct (Reasoning + Acting) doit avoir une limite (`max_steps`). Sans limite, un agent peut tourner indéfiniment : réfléchir, appeler un outil, observer, recommencer.
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {
@@ -481,11 +481,11 @@ Si un outil échoue, explique pourquoi à l'utilisateur.
 
 ---
 
-## 6. Travaux Pratiques — Assistant CLI avec Outils
+## 6. Travaux Pratiques — Assistant CLI (Command Line Interface) avec Outils
 
-> **Projet reseau social** : ce TP s'appuie sur le reseau social defini dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md). L'assistant CLI que vous allez construire permettra de manipuler les utilisateurs et publications de cette application.
+> **Projet reseau social** : ce TP (Travaux Pratiques) s'appuie sur le reseau social defini dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md). L'assistant CLI (Command Line Interface) que vous allez construire permettra de manipuler les utilisateurs et publications de cette application.
 
-**Objectif :** Créer un assistant en ligne de commande qui utilise des outils (tool use) avec le pattern ReAct.
+**Objectif :** Créer un assistant en ligne de commande qui utilise des outils (tool use) avec le pattern ReAct (Reasoning + Acting).
 
 **Durée :** 2h
 
@@ -512,14 +512,14 @@ Vous devez creer un assistant interactif en ligne de commande avec :
 
 ### 6.2 Corrigé — Étape 1 : Structure du projet
 
-**Point de départ :** ouvrez un terminal dans votre dossier d'exercices. Ce TP crée un **nouveau dossier indépendant** nommé `assistant-cli`.
+**Point de départ :** ouvrez un terminal dans votre dossier d'exercices. Ce TP (Travaux Pratiques) crée un **nouveau dossier indépendant** nommé `assistant-cli`.
 
 ```bash
 mkdir assistant-cli && cd assistant-cli
 pwd
 ```
 
-**Résultat attendu :** `pwd` doit se terminer par `assistant-cli`. Tous les fichiers de ce TP seront créés dans ce dossier.
+**Résultat attendu :** `pwd` doit se terminer par `assistant-cli`. Tous les fichiers de ce TP (Travaux Pratiques) seront créés dans ce dossier.
 
 Vous êtes toujours dans `assistant-cli/`. Créez `assistant.py` à la racine de ce dossier :
 
@@ -624,7 +624,7 @@ assistant-cli/
 
 #### À quoi sert `AGENTS.md` ici ?
 
-Dans ce TP, `AGENTS.md` explique à opencode que le projet concerne un assistant CLI avec outils. Le fichier donne le contexte métier : quels outils existent, quel est l'objectif du projet, et comment l'agent doit l'améliorer.
+Dans ce TP (Travaux Pratiques), `AGENTS.md` explique à opencode que le projet concerne un assistant CLI (Command Line Interface) avec outils. Le fichier donne le contexte métier : quels outils existent, quel est l'objectif du projet, et comment l'agent doit l'améliorer.
 
 Sans ce fichier, l'agent voit seulement une configuration technique dans `opencode.json`. Avec `AGENTS.md`, il comprend ce qu'il doit préserver : l'assistant doit rester simple, testable, et orienté tool use.
 
@@ -664,7 +664,7 @@ Quand opencode démarre, il charge `AGENTS.md` grâce à la ligne suivante dans 
 "instructions": ["AGENTS.md"]
 ```
 
-L'agent sait alors que son travail doit rester centré sur l'assistant CLI et ses outils.
+L'agent sait alors que son travail doit rester centré sur l'assistant CLI (Command Line Interface) et ses outils.
 
 Créez `.opencode/skills/common.md` :
 
@@ -747,7 +747,7 @@ Lancez opencode et demandez-lui d'améliorer l'assistant :
 
 ### 6.8 Pour aller plus loin
 
-- Implémentez le vrai pattern ReAct avec une boucle Large Language Model
+- Implémentez le vrai pattern ReAct (Reasoning + Acting) avec une boucle Large Language Model
 - Ajoutez un outil de recherche web (fichier local)
 - Utilisez opencode pour ajouter une interface web Flask/FastAPI
 
@@ -758,7 +758,7 @@ Lancez opencode et demandez-lui d'améliorer l'assistant :
 1. Le **prompt engineering** est la première compétence à maîtriser pour interagir avec les Large Language Models
 2. Le **few-shot** et le **chain-of-thought** améliorent significativement la qualité des réponses
 3. Le **function calling** transforme un Large Language Model passif en orchestrateur d'actions
-4. Le **pattern ReAct** (Thought → Action → Observation) est la boucle fondamentale de tout système agentique
+4. Le **pattern ReAct (Reasoning + Acting)** (Thought → Action → Observation) est la boucle fondamentale de tout système agentique
 5. Un **system prompt bien conçu** est crucial pour le comportement d'un agent
 
 ---
@@ -768,4 +768,4 @@ Lancez opencode et demandez-lui d'améliorer l'assistant :
 - [Chapitre 2 — Architecture des Large Language Models](./CHAPITRE-02-fondations-llm.md)
 - [Chapitre 4 — Architecture Agentique](./CHAPITRE-04-architecture-agent.md)
 - [Référence OpenAI Function Calling](https://platform.openai.com/docs/guides/function-calling)
-- [ReAct Paper (Yao et al., 2023)](https://arxiv.org/abs/2210.03629)
+- [ReAct (Reasoning + Acting) Paper (Yao et al., 2023)](https://arxiv.org/abs/2210.03629)

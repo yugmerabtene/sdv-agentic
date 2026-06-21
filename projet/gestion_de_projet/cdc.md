@@ -29,7 +29,7 @@ L'application devra permettre :
 - la suppression des publications autorisées ;
 - l'administration minimale de la plateforme ;
 - le déploiement simplifié grâce à Docker ;
-- l'automatisation complète des contrôles qualité via une chaîne CI/CD.
+- l'automatisation complète des contrôles qualité via une chaîne CI/CD (Continuous Integration / Continuous Deployment).
 
 ---
 
@@ -114,7 +114,7 @@ Les publications devront être affichées de la plus récente à la plus ancienn
 
 # 5. Fonctionnalités explicitement exclues
 
-Afin de limiter la complexité du MVP, les fonctionnalités suivantes ne sont pas prévues :
+Afin de limiter la complexité du MVP (Minimum Viable Product), les fonctionnalités suivantes ne sont pas prévues :
 
 - commentaires ;
 - likes ;
@@ -131,7 +131,7 @@ Afin de limiter la complexité du MVP, les fonctionnalités suivantes ne sont pa
 - fichiers joints ;
 - géolocalisation ;
 - application mobile ;
-- API publique ;
+- API (Application Programming Interface) publique ;
 - WebSocket ;
 - mode temps réel.
 
@@ -180,7 +180,7 @@ L'application devra être développée en Python.
 
 ## Frontend
 
-Le frontend devra utiliser Tailwind CSS afin de fournir :
+Le frontend devra utiliser Tailwind CSS (Cascading Style Sheets) afin de fournir :
 
 - une interface responsive ;
 - une interface simple ;
@@ -250,8 +250,8 @@ Les mesures suivantes sont obligatoires :
 - mots de passe stockés de manière sécurisée ;
 - validation côté serveur ;
 - protection contre les injections ;
-- protection contre les attaques XSS ;
-- protection CSRF ;
+- protection contre les attaques XSS (Cross-Site Scripting) ;
+- protection CSRF (Cross-Site Request Forgery) ;
 - contrôle des autorisations ;
 - gestion sécurisée des sessions ;
 - séparation des rôles ;
@@ -343,7 +343,7 @@ Ils devront vérifier :
 
 - les contrôles d'accès ;
 - les validations serveur ;
-- les protections CSRF ;
+- les protections CSRF (Cross-Site Request Forgery) ;
 - l'absence de comportements dangereux évidents.
 
 ---
@@ -358,7 +358,7 @@ L'objectif est de garantir la qualité des livraisons et d'automatiser les contr
 
 ## Déclencheurs
 
-La chaîne CI/CD devra s'exécuter :
+La chaîne CI/CD (Continuous Integration / Continuous Deployment) devra s'exécuter :
 
 - lors d'un push ;
 - lors d'une Pull Request ou Merge Request ;
@@ -479,7 +479,7 @@ Les branches principales seront :
 - release/* ;
 - hotfix/*.
 
-Les fusions devront respecter les contrôles définis dans la chaîne CI/CD.
+Les fusions devront respecter les contrôles définis dans la chaîne CI/CD (Continuous Integration / Continuous Deployment).
 
 ---
 
@@ -492,7 +492,7 @@ Les livrables devront comprendre :
 - la documentation d'installation ;
 - la documentation d'exploitation ;
 - la documentation de lancement ;
-- le fichier de configuration CI/CD ;
+- le fichier de configuration CI/CD (Continuous Integration / Continuous Deployment) ;
 - les tests automatisés ;
 - le cahier des charges ;
 - les instructions de création d'un administrateur.
@@ -530,7 +530,7 @@ Les livrables devront comprendre :
 ## Sprint 5
 
 - Mise en place complète des tests ;
-- Mise en place de la CI/CD ;
+- Mise en place de la CI/CD (Continuous Integration / Continuous Deployment) ;
 - Stabilisation ;
 - Documentation ;
 - Préparation à la mise en production.
@@ -547,5 +547,5 @@ Une fonctionnalité est considérée comme terminée lorsque :
 - elle ne génère aucune régression connue ;
 - elle fonctionne dans le conteneur Docker ;
 - elle respecte les exigences de sécurité ;
-- elle est validée par la chaîne CI/CD ;
+- elle est validée par la chaîne CI/CD (Continuous Integration / Continuous Deployment) ;
 - elle est documentée lorsque nécessaire.

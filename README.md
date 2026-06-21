@@ -6,12 +6,12 @@ Ce cours 100% open-source vous guide pas à pas à travers les concepts et techn
 
 - **Une section théorique** avec schémas et explications
 - **Des prérequis clairs** : ce qu'il faut installer avant de commencer
-- **Un TP pratique** avec fichiers à créer, commandes à exécuter, et corrigé
+- **Un TP (Travaux Pratiques) pratique** avec fichiers à créer, commandes à exécuter, et corrigé
 - **Une checklist de validation** pour vérifier votre progression
 
-**Particularité :** aucun abonnement API requis. Tout fonctionne avec `opencode` et le modèle gratuit `big-pickle`.
+**Particularité :** aucun abonnement API (Application Programming Interface) requis. Tout fonctionne avec `opencode` et le modèle gratuit `big-pickle`.
 
-**Fil rouge :** un réseau social dont le cahier des charges est dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md). Chaque TP construit ce projet pas à pas.
+**Fil rouge :** un réseau social dont le cahier des charges est dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md). Chaque TP (Travaux Pratiques) construit ce projet pas à pas.
 
 ---
 
@@ -133,10 +133,10 @@ Dans les chapitres, si une commande est écrite avec `python3`, utilisez `py` so
 
 ### Convention de dossiers pour tous les TPs
 
-Quand un TP commence par une commande comme `mkdir mon-projet && cd mon-projet`, cela signifie :
+Quand un TP (Travaux Pratiques) commence par une commande comme `mkdir mon-projet && cd mon-projet`, cela signifie :
 
 1. Ouvrez un terminal dans le dossier où vous rangez vos exercices, par exemple `~/agentic-labs` sur Linux/macOS ou `C:\Users\VotreNom\agentic-labs` sur Windows.
-2. Créez un **nouveau dossier de TP** avec `mkdir`.
+2. Créez un **nouveau dossier de TP (Travaux Pratiques)** avec `mkdir`.
 3. Entrez dans ce dossier avec `cd`.
 4. Tous les fichiers indiqués ensuite doivent être créés dans ce dossier, sauf mention contraire.
 
@@ -159,7 +159,7 @@ cd mon-tp
 pwd
 ```
 
-Le résultat de `pwd` doit afficher le dossier du TP courant. C'est dans ce dossier que vous créez `opencode.json`, `AGENTS.md`, les fichiers Python et les tests.
+Le résultat de `pwd` doit afficher le dossier du TP (Travaux Pratiques) courant. C'est dans ce dossier que vous créez `opencode.json`, `AGENTS.md`, les fichiers Python et les tests.
 
 ---
 
@@ -174,7 +174,7 @@ Le résultat de `pwd` doit afficher le dossier du TP courant. C'est dans ce doss
 | | |
 |---|---|
 | **Théorie** | 1950 à 2026 : Turing, Transformers, ère générative, ère agentique |
-| **TP** | Installer Python, Git, Docker, opencode, big-pickle — premier agent opérationnel |
+| **TP (Travaux Pratiques)** | Installer Python, Git, Docker, opencode, big-pickle — premier agent opérationnel |
 | **⏱ Durée** | 1h30 |
 | **Prérequis** | Linux, macOS ou Windows avec accès terminal |
 
@@ -185,12 +185,12 @@ python3 --version && pip --version
 
 ---
 
-#### [Chapitre 2 — Fondations des LLM](CHAPITRE-02-fondations-llm.md)
+#### [Chapitre 2 — Fondations des LLM (Large Language Model)](CHAPITRE-02-fondations-llm.md)
 
 | | |
 |---|---|
 | **Théorie** | Tokenisation, attention, architecture Transformer, scaling laws |
-| **TP** | Tokenizer un texte avec Python, visualiser les tokens |
+| **TP (Travaux Pratiques)** | Tokenizer un texte avec Python, visualiser les tokens |
 | **⏱ Durée** | 1h30 |
 | **Prérequis** | Python 3.10+, pip |
 
@@ -210,8 +210,8 @@ py -m pip install tiktoken pytest
 
 | | |
 |---|---|
-| **Théorie** | System prompt, few-shot, CoT, ReAct, function calling |
-| **TP** | Assistant CLI avec outils (météo, calcul) |
+| **Théorie** | System prompt, few-shot, CoT (Chain-of-Thought), ReAct (Reasoning + Acting), function calling |
+| **TP (Travaux Pratiques)** | Assistant CLI (Command Line Interface) avec outils (météo, calcul) |
 | **⏱ Durée** | 2h |
 | **Prérequis** | Python 3.10+, pip, opencode |
 
@@ -226,7 +226,7 @@ py -m pip install tiktoken pytest
 | | |
 |---|---|
 | **Théorie** | Boucle agent, contexte, planification, production |
-| **TP** | Implémenter une boucle agent perception→raisonnement→action |
+| **TP (Travaux Pratiques)** | Implémenter une boucle agent perception→raisonnement→action |
 | **⏱ Durée** | 2h |
 | **Prérequis** | Chapitre 3 terminée, Python, opencode |
 
@@ -238,12 +238,12 @@ py -m pip install tiktoken pytest
 
 ### Phase 3 — Mémoire & Collaboration
 
-#### [Chapitre 5 — Mémoire & RAG](CHAPITRE-05-memoire-rag.md)
+#### [Chapitre 5 — Mémoire & RAG (Retrieval-Augmented Generation)](CHAPITRE-05-memoire-rag.md)
 
 | | |
 |---|---|
-| **Théorie** | Embeddings, vector stores, RAG, chunking, mémoire long-terme |
-| **TP** | Agent avec mémoire persistante (SQLite) |
+| **Théorie** | Embeddings, vector stores, RAG (Retrieval-Augmented Generation), chunking, mémoire long-terme |
+| **TP (Travaux Pratiques)** | Agent avec mémoire persistante (SQLite) |
 | **⏱ Durée** | 2h |
 | **Prérequis** | Chapitre 4 terminée, Python, pip, opencode |
 
@@ -262,7 +262,7 @@ py -m pip install chromadb sentence-transformers
 | | |
 |---|---|
 | **Théorie** | Patterns supervisor, fan-out, débat, résilience |
-| **TP** | Configurer une équipe multi-agent avec opencode |
+| **TP (Travaux Pratiques)** | Configurer une équipe multi-agent avec opencode |
 | **⏱ Durée** | 2h |
 | **Prérequis** | Chapitre 5 terminée, Python, opencode, git |
 
@@ -275,12 +275,12 @@ git --version
 
 ### Phase 4 — Production
 
-#### [Chapitre 7 — MCP & Standards](CHAPITRE-07-mcp-standards.md)
+#### [Chapitre 7 — MCP (Model Context Protocol) & Standards](CHAPITRE-07-mcp-standards.md)
 
 | | |
 |---|---|
-| **Théorie** | Model Context Protocol, A2A, interopérabilité |
-| **TP** | Créer un serveur MCP météo, le connecter à opencode |
+| **Théorie** | Model Context Protocol, A2A (Agent-to-Agent), interopérabilité |
+| **TP (Travaux Pratiques)** | Créer un serveur MCP (Model Context Protocol) météo, le connecter à opencode |
 | **⏱ Durée** | 2h |
 | **Prérequis** | Chapitre 6 terminée, Python, pip, opencode |
 
@@ -294,12 +294,12 @@ py -m pip install mcp
 
 ---
 
-#### [Chapitre 8 — CI/CD & DevOps pour Agents](CHAPITRE-08-cicd-devops.md)
+#### [Chapitre 8 — CI/CD (Continuous Integration / Continuous Deployment) & DevOps pour Agents](CHAPITRE-08-cicd-devops.md)
 
 | | |
 |---|---|
-| **Théorie** | Tests d'agents, pipeline CI/CD, monitoring, coûts tokens |
-| **TP** | Pipeline CI/CD complet + Scrum Board GitHub |
+| **Théorie** | Tests d'agents, pipeline CI/CD (Continuous Integration / Continuous Deployment), monitoring, coûts tokens |
+| **TP (Travaux Pratiques)** | Pipeline CI/CD (Continuous Integration / Continuous Deployment) complet + Scrum Board GitHub |
 | **⏱ Durée** | 3h |
 | **Prérequis** | Chapitre 7 terminée, Python, pip, opencode, git, compte GitHub |
 
@@ -322,8 +322,8 @@ gh --version
 
 | | |
 |---|---|
-| **Théorie** | Prompt injection, jailbreak, OWASP Top 10 LLM, permissions |
-| **TP** | Configurer les permissions opencode, tester des injections |
+| **Théorie** | Prompt injection, jailbreak, OWASP (Open Worldwide Application Security Project) Top 10 LLM (Large Language Model), permissions |
+| **TP (Travaux Pratiques)** | Configurer les permissions opencode, tester des injections |
 | **⏱ Durée** | 1h30 |
 | **Prérequis** | Chapitre 8 terminée, Python, opencode, git |
 
@@ -339,7 +339,7 @@ gh --version
 |---|---|
 | **Théorie** | Configuration opencode, équipe d'agents, skills |
 | **Lab 1** | Premier projet opencode avec 2 agents |
-| **Lab 2** | Équipe complète avec CI/CD et Project Board |
+| **Lab 2** | Équipe complète avec CI/CD (Continuous Integration / Continuous Deployment) et Project Board |
 | **Lab 3** | Développement complet du réseau social |
 | **⏱ Durée** | 4h |
 | **Prérequis** | Tous les chapitres 1-9 terminés, Python, opencode, git, GitHub |
@@ -356,11 +356,11 @@ python --version && opencode --version && git --version && gh --version
 | Outil | Rôle | Coût |
 |---|---|---|
 | [opencode](https://opencode.ai) | Plateforme agentic | Gratuit |
-| `opencode/big-pickle` | Modèle LLM gratuit | Gratuit |
+| `opencode/big-pickle` | Modèle LLM (Large Language Model) gratuit | Gratuit |
 | Python 3.10+ | Langage de développement | Gratuit |
 | SQLite | Base de données embarquée | Gratuit |
 | Docker | Conteneurisation | Gratuit |
-| GitHub Actions | CI/CD | Gratuit |
+| GitHub Actions | CI/CD (Continuous Integration / Continuous Deployment) | Gratuit |
 
 ---
 
@@ -369,26 +369,26 @@ python --version && opencode --version && git --version && gh --version
 1. **Suivez l'ordre** — chaque chapitre suppose les connaissances de la précédente
 2. **Lisez la théorie** — les concepts sont illustrés de schémas et d'exemples
 3. **Faites les prérequis** — les commandes d'installation sont en tête de chaque chapitre
-4. **Réalisez le TP** — fichiers à créer, commandes à exécuter, résultat attendu
+4. **Réalisez le TP (Travaux Pratiques)** — fichiers à créer, commandes à exécuter, résultat attendu
 5. **Validez avec la checklist** — tout est vert ? Passez à la suite
 
 ---
 
 ## Projet fil rouge — Réseau social
 
-Chaque TP construit une pièce du projet final défini dans le
+Chaque TP (Travaux Pratiques) construit une pièce du projet final défini dans le
 [**Cahier des Charges**](projet/gestion_de_projet/cdc.md).
 
 | Chapitre | Contribution au projet |
 |--------|----------------------|
 | P1 | Environnement opencode configuré |
 | P2 | Compréhension des tokens et du contexte |
-| P3 | Assistant CLI avec outils |
+| P3 | Assistant CLI (Command Line Interface) avec outils |
 | P4 | Boucle agent pour interagir avec la base de données |
 | P5 | Mémoire persistante pour le fil d'actualité |
 | P6 | Équipe d'agents backend/frontend/data |
-| P7 | Serveur MCP pour exposer les APIs du réseau social |
-| P8 | Pipeline CI/CD qui teste et déploie l'application |
+| P7 | Serveur MCP (Model Context Protocol) pour exposer les APIs du réseau social |
+| P8 | Pipeline CI/CD (Continuous Integration / Continuous Deployment) qui teste et déploie l'application |
 | P9 | Permissions et sécurité des agents |
 | P10 | **Projet complet développé par l'équipe d'agents** |
 

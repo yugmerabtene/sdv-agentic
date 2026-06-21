@@ -17,7 +17,7 @@ Avant de commencer ce chapitre, assurez-vous d'avoir :
 - Terminé les **Chapitres 1 à 9** et leurs TPs
 - opencode installé et fonctionnel
 - Git installé
-- GitHub CLI (`gh`) installé si vous voulez automatiser issues/projects
+- GitHub CLI (Command Line Interface) (`gh`) installé si vous voulez automatiser issues/projects
 - Les bases de Python, SQLite, tests, Continuous Integration / Continuous Deployment et permissions opencode
 
 ### Vérification finale
@@ -371,7 +371,7 @@ Vous devez créer un premier projet opencode minimal avec :
 
 **Point de départ :** ouvrez un terminal dans votre dossier d'exercices, par exemple `~/agentic-labs` sur Linux/macOS ou `$HOME\agentic-labs` sur Windows PowerShell.
 
-Ce lab crée un **nouveau dossier indépendant** nommé `mon-premier-agent`. Il ne doit pas être créé à l'intérieur d'un autre TP précédent.
+Ce lab crée un **nouveau dossier indépendant** nommé `mon-premier-agent`. Il ne doit pas être créé à l'intérieur d'un autre TP (Travaux Pratiques) précédent.
 
 ```bash
 mkdir mon-premier-agent && cd mon-premier-agent
@@ -558,7 +558,7 @@ L'équipe doit contenir :
 
 **Point de départ :** ouvrez un terminal dans votre dossier d'exercices, par exemple `~/agentic-labs` sur Linux/macOS ou `$HOME\agentic-labs` sur Windows PowerShell.
 
-Ce lab crée un **nouveau dossier indépendant** nommé `equipe-agentic`. Ne lancez pas ces commandes depuis `mon-premier-agent` ni depuis un autre TP, sinon vous imbriquerez les projets.
+Ce lab crée un **nouveau dossier indépendant** nommé `equipe-agentic`. Ne lancez pas ces commandes depuis `mon-premier-agent` ni depuis un autre TP (Travaux Pratiques), sinon vous imbriquerez les projets.
 
 ```bash
 mkdir equipe-agentic && cd equipe-agentic
@@ -857,9 +857,9 @@ Les agents opencode :
 
 ---
 
-### 4.3 Lab 3 — Projet Final : Réseau Social MVP
+### 4.3 Lab 3 — Projet Final : Réseau Social MVP (Minimum Viable Product)
 
-> **Projet reseau social** : ce lab lance la réalisation complète du MVP décrit dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md).
+> **Projet reseau social** : ce lab lance la réalisation complète du MVP (Minimum Viable Product) décrit dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md).
 
 **Objectif :** Utiliser l'équipe d'agents pour générer progressivement l'application réseau social : authentification, publications, administration, tests, Docker et Continuous Integration / Continuous Deployment.
 
@@ -869,7 +869,7 @@ Les agents opencode :
 
 #### Énoncé
 
-Vous devez demander à l'équipe opencode de construire le MVP du réseau social en respectant le cahier des charges.
+Vous devez demander à l'équipe opencode de construire le MVP (Minimum Viable Product) du réseau social en respectant le cahier des charges.
 
 Le projet final doit contenir :
 
@@ -1049,7 +1049,7 @@ Ouvrez ensuite l'application dans le navigateur selon le port documenté par l'a
 
 #### Checklist finale
 
-- [ ] Le CDC est présent dans `docs/cdc.md`
+- [ ] Le CDC (Cahier Des Charges) est présent dans `docs/cdc.md`
 - [ ] L'application démarre localement
 - [ ] L'inscription fonctionne
 - [ ] La connexion/déconnexion fonctionne

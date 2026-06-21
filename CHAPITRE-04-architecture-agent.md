@@ -13,7 +13,7 @@
 
 Avant de commencer ce chapitre, assurez-vous d'avoir :
 
-- Terminé le **[Chapitre 3](CHAPITRE-03-prompt-tool-use.md)** et son TP assistant CLI
+- Terminé le **[Chapitre 3](CHAPITRE-03-prompt-tool-use.md)** et son TP (Travaux Pratiques) assistant CLI (Command Line Interface)
 - Python 3.10+ installé
 - opencode fonctionnel
 - Compris les notions de prompt, outil et pattern Reasoning + Acting
@@ -34,7 +34,7 @@ py --version
 opencode --version
 ```
 
-> **Aucune dépendance supplémentaire** : le TP utilise uniquement la bibliothèque standard Python.
+> **Aucune dépendance supplémentaire** : le TP (Travaux Pratiques) utilise uniquement la bibliothèque standard Python.
 
 ---
 
@@ -447,7 +447,7 @@ graph TD
 
 ## 6. Travaux Pratiques — Boucle agent minimale
 
-> **Projet reseau social** : ce TP introduit la boucle agent qui servira ensuite à automatiser les actions du réseau social : lire une demande utilisateur, choisir une action, exécuter un outil, puis répondre.
+> **Projet reseau social** : ce TP (Travaux Pratiques) introduit la boucle agent qui servira ensuite à automatiser les actions du réseau social : lire une demande utilisateur, choisir une action, exécuter un outil, puis répondre.
 
 **Objectif :** Implémenter un agent simple avec une boucle perception → raisonnement → action.
 
@@ -457,7 +457,7 @@ graph TD
 
 ### 6.1 Énoncé
 
-Vous devez créer un agent CLI capable de :
+Vous devez créer un agent CLI (Command Line Interface) capable de :
 
 1. Lire une demande utilisateur
 2. Identifier l'intention : aide, heure, calcul, mémoire court-terme
@@ -473,7 +473,7 @@ Vous devez créer un agent CLI capable de :
 
 ### 6.2 Corrigé — Étape 1 : Créer le projet
 
-**Point de départ :** ouvrez un terminal dans votre dossier d'exercices. Ce TP crée un **nouveau dossier indépendant** nommé `agent-loop`.
+**Point de départ :** ouvrez un terminal dans votre dossier d'exercices. Ce TP (Travaux Pratiques) crée un **nouveau dossier indépendant** nommé `agent-loop`.
 
 ```bash
 mkdir -p agent-loop
