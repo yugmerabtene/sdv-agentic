@@ -164,13 +164,13 @@ Analyse ce Dockerfile et identifie les problèmes de sécurité.
 
 ### 3.1 Principe
 
-Le Large Language Model peut déclarer qu'il souhaite utiliser un outil externe, sans l'exécuter lui-même.
+Le LLM (Large Language Model) peut déclarer qu'il souhaite utiliser un outil externe, sans l'exécuter lui-même.
 
 #### Principe expliqué simplement
 
-Un Large Language Model seul ne fait que produire du texte. Il ne sait pas réellement consulter une météo, lire une base de données ou exécuter un calcul fiable. Le **tool use** ajoute une couche d'orchestration autour du Large Language Model.
+Un LLM seul ne fait que produire du texte. Il ne sait pas réellement consulter une météo, lire une base de données ou exécuter un calcul fiable. Le **tool use** ajoute une couche d'orchestration autour du LLM.
 
-Le Large Language Model dit : "je veux appeler tel outil avec tels paramètres". Ensuite, votre programme exécute réellement l'outil, récupère le résultat, puis le renvoie au Large Language Model.
+Le LLM dit : "je veux appeler tel outil avec tels paramètres". Ensuite, votre programme exécute réellement l'outil, récupère le résultat, puis le renvoie au LLM.
 
 ```text
 Utilisateur → pose une question
@@ -182,7 +182,7 @@ Large Language Model → rédige la réponse finale
 
 #### Pourquoi c'est utile ?
 
-- Le Large Language Model peut utiliser des données fraîches ou externes
+- Le LLM peut utiliser des données fraîches ou externes
 - Les réponses sont moins inventées, car elles s'appuient sur un résultat d'outil
 - Les actions restent contrôlées par le code applicatif
 - Les permissions permettent d'autoriser certains outils et d'en bloquer d'autres
@@ -296,9 +296,9 @@ Réponse Large Language Model : tool_call(id="call_123", name="get_weather", arg
 
 | Pratique | Pourquoi |
 |---|---|
-| Description claire de l'outil | Le Large Language Model comprend quand l'utiliser |
+| Description claire de l'outil | Le LLM comprend quand l'utiliser |
 | Paramètres bien typés | Moins d'erreurs d'appel |
-| Gestion des erreurs | L'outil peut échouer → le Large Language Model doit le savoir |
+| Gestion des erreurs | L'outil peut échouer → le LLM doit le savoir |
 | Timeout | Un outil lent bloque l'agent |
 | Sécurité | Vérifier les arguments avant exécution |
 
@@ -353,9 +353,9 @@ graph LR
     style O fill:#059669,color:#fff,stroke:#047857
 ```
 
-1. **Thought** : Le Large Language Model réfléchit à ce qu'il doit faire
+1. **Thought** : Le LLM réfléchit à ce qu'il doit faire
 2. **Action** : Il appelle un outil ou produit une réponse
-3. **Observation** : Le résultat de l'outil est renvoyé au Large Language Model
+3. **Observation** : Le résultat de l'outil est renvoyé au LLM
 
 ### 4.2 Exemple complet
 
@@ -747,7 +747,7 @@ Lancez opencode et demandez-lui d'améliorer l'assistant :
 
 ### 6.8 Pour aller plus loin
 
-- Implémentez le vrai pattern ReAct (Reasoning + Acting) avec une boucle Large Language Model
+- Implémentez le vrai pattern ReAct (Reasoning + Acting) avec une boucle LLM
 - Ajoutez un outil de recherche web (fichier local)
 - Utilisez opencode pour ajouter une interface web Flask/FastAPI
 
@@ -757,7 +757,7 @@ Lancez opencode et demandez-lui d'améliorer l'assistant :
 
 1. Le **prompt engineering** est la première compétence à maîtriser pour interagir avec les Large Language Models
 2. Le **few-shot** et le **chain-of-thought** améliorent significativement la qualité des réponses
-3. Le **function calling** transforme un Large Language Model passif en orchestrateur d'actions
+3. Le **function calling** transforme un LLM passif en orchestrateur d'actions
 4. Le **pattern ReAct (Reasoning + Acting)** (Thought → Action → Observation) est la boucle fondamentale de tout système agentique
 5. Un **system prompt bien conçu** est crucial pour le comportement d'un agent
 

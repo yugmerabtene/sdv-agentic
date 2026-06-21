@@ -2,7 +2,7 @@
 
 ## Objectifs pédagogiques
 
-- Comprendre ce qu'est un agent et en quoi il diffère d'un Large Language Model seul
+- Comprendre ce qu'est un agent et en quoi il diffère d'un LLM (Large Language Model) seul
 - Maîtriser la boucle agent (perception → raisonnement → action)
 - Savoir implémenter un agent simple avec état
 - Comprendre la gestion de contexte et de mémoire court-terme
@@ -44,10 +44,10 @@ opencode --version
 
 Un **agent** est un système qui :
 1. **Perçoit** son environnement (entrée utilisateur, données, événements)
-2. **Raisonne** à partir de ces perceptions (via un Large Language Model)
+2. **Raisonne** à partir de ces perceptions (via un LLM)
 3. **Agit** sur son environnement (réponse, appel d'outil, modification)
 
-### 1.2 Large Language Model seul vs Agent
+### 1.2 LLM seul vs Agent
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {
@@ -81,9 +81,9 @@ graph LR
     style O2 fill:#dc2626,color:#fff,stroke:#b91c1c
 ```
 
-| Caractéristique | Large Language Model seul | Agent |
+| Caractéristique | LLM seul | Agent |
 |---|---|---|
-| Appels Application Programming Interface | 1 | Multiples (boucle) |
+| Appels API (Application Programming Interface) | 1 | Multiples (boucle) |
 | Mémoire | Fenêtre de contexte | Contexte + mémoire persistante |
 | Outils | Aucun | Function calling |
 | Planification | Aucune | Reasoning + Acting, plan multi-étapes |
@@ -139,7 +139,7 @@ Un agent peut être dans plusieurs états :
 | État | Description | Action |
 |---|---|---|
 | **Idle** | En attente d'entrée | Écouter |
-| **Thinking** | Le Large Language Model raisonne | Appel Large Language Model |
+| **Thinking** | Le LLM raisonne | Appel LLM |
 | **Acting** | Exécution d'un outil | Appel externe |
 | **Observing** | Traitement du résultat | Mise à jour mémoire |
 | **Error** | Échec d'un outil | Log + re-planification |
@@ -235,7 +235,7 @@ Ce résultat prouve que :
 
 - Le fichier est au bon endroit
 - La boucle `run()` ajoute l'entrée utilisateur en mémoire
-- Le faux Large Language Model produit une réponse
+- Le faux LLM produit une réponse
 - L'agent retourne la réponse finale
 
 ---
@@ -244,7 +244,7 @@ Ce résultat prouve que :
 
 ### 3.1 Le problème de la mémoire
 
-La fenêtre de contexte d'un Large Language Model est limitée. Plus la conversation est longue, plus on risque d'atteindre cette limite.
+La fenêtre de contexte d'un LLM est limitée. Plus la conversation est longue, plus on risque d'atteindre cette limite.
 
 ### 3.2 Stratégies de gestion
 
@@ -261,7 +261,7 @@ La fenêtre de contexte d'un Large Language Model est limitée. Plus la conversa
 
 La **Sliding Window** signifie littéralement "fenêtre glissante".
 
-Un Large Language Model ne peut pas lire une conversation infinie. Il reçoit seulement une fenêtre de contexte limitée : les messages que l'on met dans le prompt au moment de l'appel. Quand la conversation devient trop longue, on garde les messages les plus importants et on retire les plus anciens.
+Un LLM ne peut pas lire une conversation infinie. Il reçoit seulement une fenêtre de contexte limitée : les messages que l'on met dans le prompt au moment de l'appel. Quand la conversation devient trop longue, on garde les messages les plus importants et on retire les plus anciens.
 
 Imaginez une fenêtre qui se déplace sur une longue conversation :
 
@@ -365,11 +365,11 @@ Messages conservés:
 | Type | Description | Exemple |
 |---|---|---|
 | **Statique** | Séquence d'étapes prédéfinie | "1. Chercher → 2. Analyser → 3. Répondre" |
-| **Dynamique** | Le Large Language Model génère son propre plan | "Je dois d'abord X, puis Y, ensuite Z" |
+| **Dynamique** | Le LLM génère son propre plan | "Je dois d'abord X, puis Y, ensuite Z" |
 
 ### 4.2 Planification dynamique (Plan-and-Solve)
 
-Le Large Language Model génère d'abord un plan, puis l'exécute étape par étape :
+Le LLM génère d'abord un plan, puis l'exécute étape par étape :
 
 ```
 Question : "Compare les prix des billets Paris-Londres
@@ -639,7 +639,7 @@ agent-loop/
 
 ## Points clés à retenir
 
-1. Un **agent** est un Large Language Model enveloppé dans une boucle perception → raisonnement → action
+1. Un **agent** est un LLM enveloppé dans une boucle perception → raisonnement → action
 2. La **boucle agent** est le pattern fondamental : chaque itération peut appeler un outil
 3. La **gestion du contexte** est cruciale : sliding window, summarization ou token budget
 4. La **planification dynamique** (Plan-and-Solve) donne de l'autonomie à l'agent
@@ -650,5 +650,5 @@ agent-loop/
 ## Liens
 
 - [Chapitre 3 — Prompt & Tool Use](./CHAPITRE-03-prompt-tool-use.md)
-- [Chapitre 5 — Mémoire & Retrieval-Augmented Generation](./CHAPITRE-05-memoire-rag.md)
+- [Chapitre 5 — Mémoire & RAG (Retrieval-Augmented Generation)](./CHAPITRE-05-memoire-rag.md)
 - [Chapitre 6 — Multi-Agent Orchestration](./CHAPITRE-06-multi-agent.md)

@@ -1,13 +1,13 @@
 # CAHIER DES CHARGES
-## Application Web Sociale Simplifiée
+## Plateforme de Réseau Social
 
 Version : MVP (Minimum Viable Product)
 
 ---
 
-# 1. Présentation du projet
+## Présentation du projet
 
-Le projet consiste à développer une application web sociale simplifiée inspirée des fonctionnalités essentielles d'un mur public de type Twitter ou Facebook.
+Le projet consiste à développer une plateforme de réseau social inspirée des fonctionnalités essentielles d'un mur public de type Twitter ou Facebook.
 
 L'objectif est de proposer une première version fonctionnelle permettant aux utilisateurs de créer un compte, se connecter et publier des messages visibles par l'ensemble des utilisateurs de la plateforme.
 
@@ -17,7 +17,7 @@ L'application devra être entièrement conteneurisée au sein d'un unique conten
 
 ---
 
-# 2. Objectifs du projet
+## Objectifs du projet
 
 L'application devra permettre :
 
@@ -33,7 +33,7 @@ L'application devra permettre :
 
 ---
 
-# 3. Public cible
+## Public cible
 
 L'application s'adresse à :
 
@@ -43,7 +43,7 @@ L'application s'adresse à :
 
 ---
 
-# 4. Périmètre fonctionnel
+## Périmètre fonctionnel
 
 ## 4.1 Authentification
 
@@ -112,7 +112,7 @@ Les publications devront être affichées de la plus récente à la plus ancienn
 
 ---
 
-# 5. Fonctionnalités explicitement exclues
+## Fonctionnalités explicitement exclues
 
 Afin de limiter la complexité du MVP (Minimum Viable Product), les fonctionnalités suivantes ne sont pas prévues :
 
@@ -137,7 +137,7 @@ Afin de limiter la complexité du MVP (Minimum Viable Product), les fonctionnali
 
 ---
 
-# 6. Rôles utilisateurs
+## Rôles utilisateurs
 
 ## Utilisateur standard
 
@@ -170,7 +170,7 @@ Peut également :
 
 ---
 
-# 7. Spécifications techniques
+## Spécifications techniques
 
 ## Langage
 
@@ -228,7 +228,7 @@ Aucun autre service ne devra être nécessaire au démarrage.
 
 ---
 
-# 8. Architecture générale attendue
+## Architecture générale attendue
 
 L'architecture devra respecter les principes suivants :
 
@@ -243,7 +243,7 @@ L'architecture devra faciliter l'ajout ultérieur de nouvelles fonctionnalités.
 
 ---
 
-# 9. Sécurité minimale
+## Sécurité minimale
 
 Les mesures suivantes sont obligatoires :
 
@@ -260,7 +260,7 @@ Les mesures suivantes sont obligatoires :
 
 ---
 
-# 10. Exigences d'interface
+## Exigences d'interface
 
 L'interface devra être :
 
@@ -275,7 +275,7 @@ Les formulaires devront afficher des messages d'erreur explicites.
 
 ---
 
-# 11. Exigences qualité
+## Exigences qualité
 
 Le projet devra respecter les principes suivants :
 
@@ -288,7 +288,7 @@ Le projet devra respecter les principes suivants :
 
 ---
 
-# 12. Tests attendus
+## Tests attendus
 
 ## Tests unitaires
 
@@ -348,7 +348,7 @@ Ils devront vérifier :
 
 ---
 
-# 13. Chaîne CI/CD
+## Chaîne CI/CD
 
 Une chaîne d'intégration et de déploiement continus devra être mise en place.
 
@@ -361,7 +361,7 @@ L'objectif est de garantir la qualité des livraisons et d'automatiser les contr
 La chaîne CI/CD (Continuous Integration / Continuous Deployment) devra s'exécuter :
 
 - lors d'un push ;
-- lors d'une Pull Request ou Merge Request ;
+- lors d'une PR (Pull Request) ou Merge Request ;
 - avant toute fusion vers les branches importantes ;
 - avant tout déploiement.
 
@@ -466,7 +466,7 @@ Une procédure de retour arrière devra pouvoir être envisagée en cas d'échec
 
 ---
 
-# 14. Politique Git
+## Politique Git
 
 Le projet devra respecter une stratégie Git formalisée.
 
@@ -483,7 +483,7 @@ Les fusions devront respecter les contrôles définis dans la chaîne CI/CD (Con
 
 ---
 
-# 15. Livrables attendus
+## Livrables attendus
 
 Les livrables devront comprendre :
 
@@ -499,7 +499,7 @@ Les livrables devront comprendre :
 
 ---
 
-# 16. Priorisation MVP
+## Priorisation MVP
 
 ## Sprint 1
 
@@ -537,7 +537,7 @@ Les livrables devront comprendre :
 
 ---
 
-# 17. Définition de terminé
+## Définition de terminé
 
 Une fonctionnalité est considérée comme terminée lorsque :
 

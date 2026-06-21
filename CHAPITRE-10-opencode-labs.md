@@ -18,7 +18,7 @@ Avant de commencer ce chapitre, assurez-vous d'avoir :
 - opencode installé et fonctionnel
 - Git installé
 - GitHub CLI (Command Line Interface) (`gh`) installé si vous voulez automatiser issues/projects
-- Les bases de Python, SQLite, tests, Continuous Integration / Continuous Deployment et permissions opencode
+- Les bases de Python, SQLite, tests, CI/CD (Continuous Integration / Continuous Deployment) et permissions opencode
 
 ### Vérification finale
 
@@ -48,7 +48,7 @@ gh --version
 
 ## 1. Qu'est-ce qu'opencode ?
 
-[**opencode**](https://opencode.ai) est une plateforme agentic open-source qui transforme un Large Language Model en équipe de développement collaborative.
+[**opencode**](https://opencode.ai) est une plateforme agentic open-source qui transforme un LLM (Large Language Model) en équipe de développement collaborative.
 
 ### 1.1 Principe
 
@@ -91,7 +91,7 @@ graph TD
 | **Open-source** | Code visible, modifiable, auto-hébergeable |
 | **Équipe intégrée** | Scrum Master, Dev, DevOps, Tester prêts à l'emploi |
 | **Skills modulaires** | Prompts spécialisés chargés selon le contexte |
-| **Model Context Protocol natif** | Support du Model Context Protocol |
+| **MCP (Model Context Protocol) natif** | Support du MCP (Model Context Protocol) |
 | **Fichier de config unique** | Tout est dans `opencode.json` |
 
 ---
@@ -523,11 +523,11 @@ Essayez ces instructions :
 
 ---
 
-### 4.2 Lab 2 — Equipe d'Agents avec Continuous Integration / Continuous Deployment et Project Board
+### 4.2 Lab 2 — Equipe d'Agents avec CI/CD (Continuous Integration / Continuous Deployment) et Project Board
 
-> **Projet reseau social** : ce lab integre la chaine Continuous Integration / Continuous Deployment (Chapitre 8) a l'equipe d'agents opencode. Les agents produisent du code, le pipeline le valide, et le Project board suit la progression automatiquement.
+> **Projet reseau social** : ce lab integre la chaine CI/CD (Continuous Integration / Continuous Deployment) (Chapitre 8) a l'equipe d'agents opencode. Les agents produisent du code, le pipeline le valide, et le Project board suit la progression automatiquement.
 
-**Objectif :** Configurer une equipe d'agents opencode avec pipeline Continuous Integration / Continuous Deployment et tableau de bord GitHub Projects.
+**Objectif :** Configurer une equipe d'agents opencode avec pipeline CI/CD (Continuous Integration / Continuous Deployment) et tableau de bord GitHub Projects.
 
 **Durée :** 2h
 
@@ -541,7 +541,7 @@ L'équipe doit contenir :
 
 1. Un agent `scrum-master` coordinateur
 2. Un agent `developer` pour code et tests
-3. Un agent `devops` pour Continuous Integration / Continuous Deployment et Docker
+3. Un agent `devops` pour CI/CD (Continuous Integration / Continuous Deployment) et Docker
 4. Des permissions explicites pour chaque agent
 5. Un workflow GitHub Actions
 6. Une base pour connecter un Scrum Board GitHub
@@ -666,7 +666,7 @@ La séparation est volontaire :
 | `common.md` | Conventions communes à tous les agents |
 | `scrum_master.md` | Méthode de découpage et délégation |
 | `developer.md` | Règles pour écrire code et tests |
-| `devops.md` | Règles Continuous Integration / Continuous Deployment, Docker et déploiement |
+| `devops.md` | Règles CI/CD (Continuous Integration / Continuous Deployment), Docker et déploiement |
 
 ##### Créer `AGENTS.md`
 
@@ -779,7 +779,7 @@ equipe-agentic/
 
 opencode peut charger `AGENTS.md` et les skills déclarées dans `opencode.json`.
 
-#### Corrigé — Étape 4 : Ajouter le pipeline Continuous Integration / Continuous Deployment
+#### Corrigé — Étape 4 : Ajouter le pipeline CI/CD (Continuous Integration / Continuous Deployment)
 
 Vous êtes toujours dans `equipe-agentic/`. Créez le workflow dans `.github/workflows/`, pas à la racine du projet :
 
@@ -861,7 +861,7 @@ Les agents opencode :
 
 > **Projet reseau social** : ce lab lance la réalisation complète du MVP (Minimum Viable Product) décrit dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md).
 
-**Objectif :** Utiliser l'équipe d'agents pour générer progressivement l'application réseau social : authentification, publications, administration, tests, Docker et Continuous Integration / Continuous Deployment.
+**Objectif :** Utiliser l'équipe d'agents pour générer progressivement l'application réseau social : authentification, publications, administration, tests, Docker et CI/CD (Continuous Integration / Continuous Deployment).
 
 **Durée :** 4h+
 
@@ -880,7 +880,7 @@ Le projet final doit contenir :
 5. Des droits utilisateur/admin
 6. Des tests automatisés
 7. Un Dockerfile
-8. Une Continuous Integration / Continuous Deployment GitHub Actions
+8. Une CI/CD (Continuous Integration / Continuous Deployment) GitHub Actions
 9. Une documentation de lancement
 
 **Fichiers attendus :**
@@ -1059,7 +1059,7 @@ Ouvrez ensuite l'application dans le navigateur selon le port documenté par l'a
 - [ ] `python3 -m pytest tests/ -v` passe
 - [ ] `ruff check .` passe
 - [ ] L'image Docker se construit
-- [ ] Le pipeline Continuous Integration / Continuous Deployment existe
+- [ ] Le pipeline CI/CD (Continuous Integration / Continuous Deployment) existe
 
 ---
 
@@ -1088,13 +1088,13 @@ opencode -t "Vérifie que le Dockerfile est valide"
 
 ## Points clés à retenir
 
-1. **opencode** transforme un Large Language Model en équipe de développement collaborative
+1. **opencode** transforme un LLM en équipe de développement collaborative
 2. La configuration se fait via `opencode.json`, `AGENTS.md` et des **skills**
 3. Les agents communiquent par **délégation** (`@agent`, `task()`)
 4. Les **labs** sont des exercices progressifs pour maîtriser l'agentic
 5. Tout est **gratuit et open-source** avec opencode + big-pickle
-6. Le **pipeline Continuous Integration / Continuous Deployment** valide le code des agents automatiquement (zero token)
-7. Le **GitHub Project** suit la progression en temps reel sans cout Large Language Model
+6. Le **pipeline CI/CD (Continuous Integration / Continuous Deployment)** valide le code des agents automatiquement (zero token)
+7. Le **GitHub Project** suit la progression en temps reel sans cout LLM
 
 ---
 
@@ -1102,5 +1102,5 @@ opencode -t "Vérifie que le Dockerfile est valide"
 
 - [Chapitre 1 — Histoire de l'Intelligence Artificielle](./CHAPITRE-01-histoire-ia.md)
 - [Chapitre 4 — Architecture Agentique](./CHAPITRE-04-architecture-agent.md)
-- [Chapitre 7 — Model Context Protocol & Standards](./CHAPITRE-07-mcp-standards.md)
+- [Chapitre 7 — MCP (Model Context Protocol) & Standards](./CHAPITRE-07-mcp-standards.md)
 - [Documentation opencode](https://opencode.ai)

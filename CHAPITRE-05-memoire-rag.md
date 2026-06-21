@@ -1,10 +1,10 @@
-# Chapitre 5 — Mémoire & Retrieval-Augmented Generation
+# Chapitre 5 — Mémoire & RAG (Retrieval-Augmented Generation)
 
 ## Objectifs pédagogiques
 
 - Comprendre les différents types de mémoire pour un agent
 - Maîtriser les embeddings et vector stores
-- Savoir implémenter un Retrieval-Augmented Generation
+- Savoir implémenter un RAG (Retrieval-Augmented Generation)
 - Connaître les stratégies de mémoire long-terme
 
 ---
@@ -79,8 +79,8 @@ graph TD
 
 | Type | Description | Stockage | Persistance |
 |---|---|---|---|
-| **Court-terme** | Messages récents de la conversation | Fenêtre de contexte Large Language Model | Volatile |
-| **Sémantique** | Faits, connaissances générales | Vector store / Base Structured Query Language | Persistante |
+| **Court-terme** | Messages récents de la conversation | Fenêtre de contexte LLM (Large Language Model) | Volatile |
+| **Sémantique** | Faits, connaissances générales | Vector store / Base SQL (Structured Query Language) | Persistante |
 | **Épisodique** | Historique des actions et décisions | Logs structurés | Persistante |
 | **Procédurale** | Règles, routines, compétences | Code + Prompts | Permanente |
 
@@ -103,8 +103,8 @@ graph LR
     T2["Félin"] --> V2["[0.3, 0.7, -0.2, ...]"]
     T3["Voiture"] --> V3["[-0.5, 0.1, 0.9, ...]"]
     
-    V1 -. "proches ." V2
-    V2 -. "proches ." V1
+    V1 -. "proches" .- V2
+    V2 -. "proches" .- V1
     V1 -. "éloignés" .- V3
     
     style T1 fill:#7c3aed,color:#fff,stroke:#5b21b6
@@ -176,7 +176,7 @@ graph TD
 
 ---
 
-## 4. Retrieval-Augmented Generation
+## 4. RAG (Retrieval-Augmented Generation)
 
 ### 4.1 Architecture
 
@@ -204,13 +204,13 @@ graph TD
     style A fill:#2563eb,color:#fff,stroke:#1d4ed8
 ```
 
-### 4.2 Pipeline Retrieval-Augmented Generation
+### 4.2 Pipeline RAG (Retrieval-Augmented Generation)
 
 #### Principe expliqué simplement
 
-Le **Retrieval-Augmented Generation** signifie **Retrieval-Augmented Generation** : génération augmentée par recherche.
+Le **RAG (Retrieval-Augmented Generation)** signifie **RAG (Retrieval-Augmented Generation)** : génération augmentée par recherche.
 
-Un Large Language Model seul répond avec ce qu'il a appris pendant son entraînement. Il ne connaît pas forcément vos fichiers, votre base de données ou le cahier des charges du projet. Le Retrieval-Augmented Generation ajoute une étape de recherche avant la génération.
+Un LLM seul répond avec ce qu'il a appris pendant son entraînement. Il ne connaît pas forcément vos fichiers, votre base de données ou le cahier des charges du projet. Le RAG (Retrieval-Augmented Generation) ajoute une étape de recherche avant la génération.
 
 Le principe est :
 
@@ -232,7 +232,7 @@ Exemple avec le réseau social : si l'utilisateur demande "quelles fonctionnalit
 
 #### Limite importante
 
-Le Retrieval-Augmented Generation dépend de la qualité de la recherche. Si les mauvais passages sont retrouvés, le Large Language Model répondra avec un mauvais contexte. C'est pourquoi le découpage en chunks, les embeddings et le top-K sont critiques.
+Le RAG (Retrieval-Augmented Generation) dépend de la qualité de la recherche. Si les mauvais passages sont retrouvés, le LLM répondra avec un mauvais contexte. C'est pourquoi le découpage en chunks, les embeddings et le top-K sont critiques.
 
 ```
 1. INDEXATION (une fois)
@@ -370,7 +370,7 @@ Document complet
 #### Pourquoi c'est utile ?
 
 - Un petit morceau est plus précis qu'un document entier
-- Le Large Language Model reçoit seulement les passages utiles
+- Le LLM reçoit seulement les passages utiles
 - Le coût en tokens diminue
 - Les réponses sont mieux ancrées dans le bon contexte
 
@@ -384,7 +384,7 @@ Si les chunks sont trop petits, ils perdent le contexte. S'ils sont trop grands,
 | **Semantic** | Découpage par paragraphe/section | Documents structurés |
 | **Sentence** | Découpage par phrase | Textes narratifs |
 | **Recursive** | Découpage récursif avec overlap | Documents longs |
-| **Agentic** | Découpage intelligent par Large Language Model | Qualité maximale |
+| **Agentic** | Découpage intelligent par LLM | Qualité maximale |
 
 ---
 
@@ -817,7 +817,7 @@ Et remplacez SQLite par Chroma pour la recherche par similarité.
 
 - Ajoutez une date d'expiration aux souvenirs
 - Implémentez un "résumé automatique" des longues conversations
-- Utilisez opencode avec l'agent développeur pour ajouter une Application Programming Interface Representational State Transfer
+- Utilisez opencode avec l'agent développeur pour ajouter une API REST (Representational State Transfer)
 
 ---
 
@@ -825,8 +825,8 @@ Et remplacez SQLite par Chroma pour la recherche par similarité.
 
 1. Un agent a besoin de **quatre types de mémoire** : court-terme, sémantique, épisodique, procédurale
 2. Les **embeddings** transforment le texte en vecteurs numériques comparables
-3. Le **Retrieval-Augmented Generation** combine recherche vectorielle et génération Large Language Model pour répondre à partir de documents
-4. Le **chunking** (découpage des documents) est une étape critique de la qualité du Retrieval-Augmented Generation
+3. Le **RAG (Retrieval-Augmented Generation)** combine recherche vectorielle et génération LLM pour répondre à partir de documents
+4. Le **chunking** (découpage des documents) est une étape critique de la qualité du RAG (Retrieval-Augmented Generation)
 5. La **mémoire long-terme** permet à un agent de retenir des informations entre les sessions
 
 ---
@@ -836,4 +836,4 @@ Et remplacez SQLite par Chroma pour la recherche par similarité.
 - [Chapitre 4 — Architecture Agentique](./CHAPITRE-04-architecture-agent.md)
 - [Chapitre 6 — Multi-Agent Orchestration](./CHAPITRE-06-multi-agent.md)
 - [Chroma Documentation](https://docs.trychroma.com/)
-- [LangChain Retrieval-Augmented Generation Guide](https://python.langchain.com/docs/use_cases/question_answering/)
+- [LangChain RAG (Retrieval-Augmented Generation) Guide](https://python.langchain.com/docs/use_cases/question_answering/)

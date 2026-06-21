@@ -1,8 +1,8 @@
-# Chapitre 2 — Architecture des Large Language Models
+# Chapitre 2 — Architecture des LLMs (Large Language Models)
 
 ## Objectifs pédagogiques
 
-- Comprendre le fonctionnement interne d'un Large Language Model (tokenisation → prédiction)
+- Comprendre le fonctionnement interne d'un LLM (Large Language Model) (tokenisation → prédiction)
 - Maîtriser la notion de fenêtre de contexte et ses implications
 - Connaître les différents types de modèles et leurs usages
 - Comprendre les scaling laws et l'émergence
@@ -59,7 +59,7 @@ py -c "import tiktoken; print(tiktoken.__version__)"
 
 ### 1.1 Principe
 
-Un Large Language Model ne lit pas du texte, il lit des **tokens** (unités de texte, mots ou sous-mots) — des morceaux de mots ou caractères.
+Un LLM (Large Language Model) ne lit pas du texte, il lit des **tokens** (unités de texte, mots ou sous-mots) — des morceaux de mots ou caractères.
 
 ```
 "Les agents Intelligence Artificielle sont fascinants"
@@ -76,7 +76,7 @@ Un Large Language Model ne lit pas du texte, il lit des **tokens** (unités de t
 
 | Capacité | Tokens | Mots (français) |
 |---|---|---|
-| Contexte court (Generative Pre-trained Transformer-3) | 4 096 | ~3 000 |
+| Contexte court (GPT (Generative Pre-trained Transformer)-3) | 4 096 | ~3 000 |
 | Contexte long (GPT (Generative Pre-trained Transformer)-4) | 128 000 | ~96 000 |
 | Contexte géant (Claude 4) | 200 000 | ~150 000 |
 | Contexte infini (Gemini) | 1 000 000 | ~750 000 |
@@ -151,11 +151,11 @@ graph TD
     I --> T[Tokenisation + Embedding]
     T --> P[Positional Encoding]
     
-    subgraph Transformer Block × N
+    subgraph "Transformer Block × N"
         P --> MHA[Multi-Head Attention]
-        MHA --> A1[Add & LayerNorm]
+        MHA --> A1["Add & LayerNorm"]
         A1 --> FF[Feed Forward]
-        FF --> A2[Add & LayerNorm]
+        FF --> A2["Add & LayerNorm"]
     end
     
     A2 --> O[Sortie]
@@ -187,7 +187,7 @@ Ces blocs sont empilés **N fois** (ex: GPT (Generative Pre-trained Transformer)
 
 ### 4.1 La découverte (Kaplan et al., 2020)
 
-Les performances d'un Large Language Model suivent une **loi de puissance** prévisible :
+Les performances d'un LLM (Large Language Model) suivent une **loi de puissance** prévisible :
 
 ```
 Performance ∝ (Paramètres) × (Données) × (Calcul)
@@ -224,7 +224,7 @@ Au-delà d'un certain seuil (~100 milliards de paramètres), des capacités **é
 
 ### 5.1 Autoregression
 
-Un Large Language Model génère du texte **token par token**, en prédisant le token suivant à chaque étape :
+Un LLM (Large Language Model) génère du texte **token par token**, en prédisant le token suivant à chaque étape :
 
 ```
 "Les agents" → ["Intelligence Artificielle"] (probabilité 0.45)
@@ -257,7 +257,7 @@ Contrôle l'**aléas** dans la sélection du prochain token :
 
 | Modèle | Forces | Faiblesses |
 |---|---|---|
-| GPT (Generative Pre-trained Transformer)-5 | Généraliste, Application Programming Interface stable | Coûteux, pas modifiable |
+| GPT (Generative Pre-trained Transformer)-5 | Généraliste, API (Application Programming Interface) stable | Coûteux, pas modifiable |
 | Claude 4 | Long contexte, safety | Moins performant en code |
 | Gemini 2 | Multimodal natif | Moins flexible |
 
@@ -305,13 +305,13 @@ graph TD
 
 ---
 
-> **Projet reseau social** : le projet social defini dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md) utilisera les Large Language Models via opencode pour automatiser le developpement de ses fonctionnalites (authentification, mur public, gestion utilisateurs).
+> **Projet reseau social** : le projet social defini dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md) utilisera les LLMs (Large Language Models) via opencode pour automatiser le developpement de ses fonctionnalites (authentification, mur public, gestion utilisateurs).
 
 ---
 
 ## 7. Travaux Pratiques — Visualiser la tokenisation
 
-> **Projet reseau social** : dans ce TP, vous allez tokeniser des phrases de l'application reseau social (messages, noms d'utilisateur) pour comprendre comment un Large Language Model les "voit" et estimer le cout en tokens des futures fonctionnalites.
+> **Projet reseau social** : dans ce TP, vous allez tokeniser des phrases de l'application reseau social (messages, noms d'utilisateur) pour comprendre comment un LLM (Large Language Model) les "voit" et estimer le cout en tokens des futures fonctionnalites.
 
 **Objectif :** Installer tiktoken, tokeniser du texte, comprendre la difference entre mots et tokens, estimer le cout d'un message.
 
@@ -335,7 +335,7 @@ Vous devez :
 
 ---
 
-### Corrigé pas à pas
+### Corrigé
 
 #### Étape 1 — Creer le dossier
 
@@ -539,7 +539,7 @@ Explique moi comment fonctionne la tokenisation avec tiktoken
 ```
 
 ```
-Quel est l'impact du nombre de tokens sur le cout d'un appel Large Language Model ?
+Quel est l'impact du nombre de tokens sur le cout d'un appel LLM (Large Language Model) ?
 ```
 
 ---
@@ -581,7 +581,7 @@ tokenisation/
 
 ## Points clés à retenir
 
-1. Un Large Language Model est un **prédicteur de tokens** entraîné sur des masses de texte
+1. Un LLM (Large Language Model) est un **prédicteur de tokens** entraîné sur des masses de texte
 2. Le **Transformer** est l'architecture universelle depuis 2017
 3. L'**attention** permet au modèle de se concentrer sur les relations pertinentes
 4. Le **scaling** (plus de paramètres + données + calcul) améliore les performances de façon prévisible

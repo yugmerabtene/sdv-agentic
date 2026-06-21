@@ -38,7 +38,7 @@ git --version
 | Problème | Exemple | Solution multi-agent |
 |---|---|---|
 | **Spécialisation** | Un agent ne peut pas être bon en tout | Agents spécialisés par domaine |
-| **Contexte** | Un seul Large Language Model a une fenêtre limitée | Chaque agent a son propre contexte |
+| **Contexte** | Un seul LLM (Large Language Model) a une fenêtre limitée | Chaque agent a son propre contexte |
 | **Parallélisme** | Tâches séquentielles lentes | Agents qui travaillent en parallèle |
 | **Résilience** | Un agent qui échoue bloque tout | Agents redondants, fallback |
 | **Modularité** | Tout le code dans une boucle | Agents indépendants et remplaçables |
@@ -194,7 +194,7 @@ Un mauvais Supervisor peut mal déléguer, oublier une étape ou fusionner des r
 
 ### 3.1 Principe
 
-Le **Supervisor Agent** est un Large Language Model qui :
+Le **Supervisor Agent** est un LLM qui :
 1. Reçoit la demande de l'utilisateur
 2. Décide quel(s) sous-agent(s) invoquer
 3. Consolide les résultats
@@ -520,7 +520,7 @@ supervisor-agent/
     },
     "backend-dev": {
       "mode": "subagent",
-      "description": "Développe la logique métier et les Application Programming Interfaces",
+      "description": "Développe la logique métier et les APIs (Application Programming Interfaces)",
       "skills": ["common", "backend"]
     },
     "frontend-dev": {
@@ -530,7 +530,7 @@ supervisor-agent/
     },
     "data-dev": {
       "mode": "subagent",
-      "description": "Gère la base de données et le Retrieval-Augmented Generation",
+      "description": "Gère la base de données et le RAG (Retrieval-Augmented Generation)",
       "skills": ["common", "data"]
     }
   }
@@ -556,9 +556,9 @@ Tu es le Scrum Master. Tu coordonnes une équipe de 3 développeurs.
 5. Présente une synthèse
 
 ## Sous-agents disponibles
-- @backend-dev : Application Programming Interfaces, logique métier, auth
-- @frontend-dev : HyperText Markup Language, CSS (Cascading Style Sheets), templates
-- @data-dev : Base de données, Retrieval-Augmented Generation, embeddings
+- @backend-dev : APIs (Application Programming Interfaces), logique métier, auth
+- @frontend-dev : HTML (HyperText Markup Language), CSS (Cascading Style Sheets), templates
+- @data-dev : Base de données, RAG (Retrieval-Augmented Generation), embeddings
 ```
 
 **`.opencode/skills/backend.md`**
@@ -568,7 +568,7 @@ Tu es le Scrum Master. Tu coordonnes une équipe de 3 développeurs.
 
 Stack : FastAPI, SQLAlchemy, Pydantic, Alembic
 
-Tu développes les Application Programming Interfaces REST (Representational State Transfer), la logique métier,
+Tu développes les APIs (Application Programming Interfaces) REST (Representational State Transfer), la logique métier,
 l'authentification et la validation des données.
 ```
 
@@ -591,7 +591,7 @@ les formulaires et les pages.
 Stack : SQLite, Chroma, embeddings
 
 Tu gères le schéma de base de données, les migrations,
-les index vectoriels pour le Retrieval-Augmented Generation.
+les index vectoriels pour le RAG (Retrieval-Augmented Generation).
 ```
 
 ### 6.5 Corrigé — Étape 4 : AGENTS.md
@@ -622,9 +622,9 @@ Créez un fichier `AGENTS.md` :
 | Agent                  | Rôle                               |
 |------------------------|------------------------------------|
 | scrum-master           | Supervisor — coordonne l'équipe     |
-| backend-dev            | Application Programming Interfaces et logique métier             |
+| backend-dev            | APIs (Application Programming Interfaces) et logique métier             |
 | frontend-dev           | Interfaces utilisateur             |
-| data-dev               | Base de données et Retrieval-Augmented Generation             |
+| data-dev               | Base de données et RAG (Retrieval-Augmented Generation)             |
 
 ## Utilisation
 

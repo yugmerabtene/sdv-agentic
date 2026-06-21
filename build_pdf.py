@@ -14,6 +14,7 @@ from pathlib import Path
 
 import markdown
 from weasyprint import HTML, CSS
+from build_site import build_prerequisites_html
 
 # ─── Configuration ───────────────────────────────────────────────────────────
 
@@ -432,6 +433,21 @@ body {{
     line-height: 1.5;
 }}
 
+/* ─── Prerequis section ────────────────────────────────────────────── */
+
+.prerequis-section {{
+    padding-top: 0.6cm;
+}}
+.prerequis-section h2 {{
+    font-family: 'DejaVu Sans', 'Liberation Sans', sans-serif;
+    font-size: 14pt;
+    font-weight: 700;
+    color: #1e3a5f;
+    border-bottom: 2px solid #bfdbfe;
+    padding-bottom: 4pt;
+    margin: 0 0 0.3cm 0;
+}}
+
 /* ─── Chapter Styles ───────────────────────────────────────────────── */
 
 .chapter-container {{
@@ -789,6 +805,7 @@ def build_html():
     # ── 3. Chapters ──────────────────────────────────────────────────
     current_phase = None
     phase_num = 0
+    chapter_count = 0
 
     for fname, label, phase in CHAPTERS:
         filepath = COURSE_DIR / fname
@@ -801,9 +818,41 @@ def build_html():
 
         md_content = re.sub(r'^#\s+.*$', '', md_content, count=1, flags=re.MULTILINE)
 
-        md_content = render_mermaid_blocks(md_content, temp_dir, image_dir, mermaid_counter)
+        # Ch1 : split théorie / TP, insérer prerequis README entre les deux
+        if chapter_count == 0:
+            tp_marker = "## 6. Travaux Pratiques"
+            tp_pos = md_content.find(tp_marker)
+            if tp_pos != -1:
+                ch1_theory = md_content[:tp_pos]
+                ch1_tp = md_content[tp_pos:]
 
-        chapter_html = md_to_html(md_content)
+                ch1_theory = re.sub(
+                    r'^## Prérequis\n.*?(?=\n## |\Z)',
+                    '',
+                    ch1_theory,
+                    count=1,
+                    flags=re.DOTALL | re.MULTILINE
+                )
+
+                ch1_theory = render_mermaid_blocks(ch1_theory, temp_dir, image_dir, mermaid_counter)
+                ch1_tp = render_mermaid_blocks(ch1_tp, temp_dir, image_dir, mermaid_counter)
+
+                prerequis_html = build_prerequisites_html()
+
+                theory_html = md_to_html(ch1_theory)
+                tp_html = md_to_html(ch1_tp)
+
+                combined = theory_html
+                if prerequis_html:
+                    combined += f'<div class="prerequis-section" style="page-break-before: always;"><h2>Mise en place des prérequis</h2>{prerequis_html}</div>'
+                combined += tp_html
+                chapter_html = combined
+            else:
+                md_content = render_mermaid_blocks(md_content, temp_dir, image_dir, mermaid_counter)
+                chapter_html = md_to_html(md_content)
+        else:
+            md_content = render_mermaid_blocks(md_content, temp_dir, image_dir, mermaid_counter)
+            chapter_html = md_to_html(md_content)
 
         # Phase divider
         if phase and phase != current_phase:
@@ -836,6 +885,8 @@ def build_html():
     {chapter_html}
 </div>
 ''')
+
+        chapter_count += 1
 
     # ── 4. Appendices ────────────────────────────────────────────────
     for fname, label in APPENDICES:

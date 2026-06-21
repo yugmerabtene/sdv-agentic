@@ -2,7 +2,7 @@
 
 **Construisez des systèmes agentiques professionnels — de l'histoire de l'Intelligence Artificielle au déploiement en production.**
 
-Ce cours 100% open-source vous guide pas à pas à travers les concepts et techniques du développement d'agents autonomes. Chaque chapitre contient :
+Ce cours 100% open-source vous guide à travers les concepts et techniques du développement d'agents autonomes. Chaque chapitre contient :
 
 - **Une section théorique** avec schémas et explications
 - **Des prérequis clairs** : ce qu'il faut installer avant de commencer
@@ -11,7 +11,7 @@ Ce cours 100% open-source vous guide pas à pas à travers les concepts et techn
 
 **Particularité :** aucun abonnement API (Application Programming Interface) requis. Tout fonctionne avec `opencode` et le modèle gratuit `big-pickle`.
 
-**Fil rouge :** un réseau social dont le cahier des charges est dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md). Chaque TP construit ce projet pas à pas.
+**Fil rouge :** un réseau social dont le cahier des charges est dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md). Chaque TP construit ce projet progressivement.
 
 ---
 
@@ -279,7 +279,7 @@ git --version
 
 | | |
 |---|---|
-| **Théorie** | Model Context Protocol, A2A (Agent-to-Agent), interopérabilité |
+| **Théorie** | MCP (Model Context Protocol), A2A (Agent-to-Agent), interopérabilité |
 | **TP** | Créer un serveur MCP (Model Context Protocol) météo, le connecter à opencode |
 | **⏱ Durée** | 2h |
 | **Prérequis** | Chapitre 6 terminée, Python, pip, opencode |

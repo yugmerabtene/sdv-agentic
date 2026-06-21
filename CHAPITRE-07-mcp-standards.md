@@ -1,9 +1,9 @@
-# Chapitre 7 — Model Context Protocol & Standards d'Interopérabilité
+# Chapitre 7 — MCP (Model Context Protocol) & Standards d'Interopérabilité
 
 ## Objectifs pédagogiques
 
-- Comprendre le Model Context Protocol et son rôle
-- Savoir exposer un service via Model Context Protocol
+- Comprendre le MCP (Model Context Protocol) et son rôle
+- Savoir exposer un service via MCP (Model Context Protocol)
 - Connaître A2A (Agent-to-Agent) et les standards émergents
 - Pouvoir connecter un agent opencode à des services externes
 
@@ -58,19 +58,19 @@ Chaque plateforme agentique a sa propre façon de :
 - Définir des outils
 - Gérer la mémoire
 - Communiquer avec d'autres agents
-- Exposer des Application Programming Interface
+- Exposer des API (Application Programming Interface)
 
 **Résultat :** Les agents sont difficiles à porter, interconnecter et maintenir.
 
-### 1.2 La solution : Model Context Protocol
+### 1.2 La solution : MCP (Model Context Protocol)
 
-Le **Model Context Protocol** (Anthropic, 2025) est un standard ouvert qui définit comment un Large Language Model/agent se connecte à des sources de données et des outils.
+Le **MCP (Model Context Protocol)** (Anthropic, 2025) est un standard ouvert qui définit comment un LLM (Large Language Model)/agent se connecte à des sources de données et des outils.
 
-> Model Context Protocol est à l'Intelligence Artificielle ce que USB-C est à l'électronique : **un connecteur universel**.
+> MCP (Model Context Protocol) est à l'Intelligence Artificielle ce que USB-C est à l'électronique : **un connecteur universel**.
 
 ---
 
-## 2. Architecture Model Context Protocol
+## 2. Architecture MCP (Model Context Protocol)
 
 ### 2.1 Composants
 
@@ -112,25 +112,25 @@ graph TD
 
 | Composant | Rôle | Exemple |
 |---|---|---|
-| **Hôte** | Application qui utilise un Large Language Model | opencode, Claude Desktop, Integrated Development Environment |
-| **Client** | Connecte l'hôte aux serveurs Model Context Protocol | Software Development Kit Model Context Protocol (Python, TypeScript) |
-| **Serveur** | Expose des ressources, outils et prompts | Serveur fichier, serveur Base de Donnees, serveur Application Programming Interface |
+| **Hôte** | Application qui utilise un LLM | opencode, Claude Desktop, IDE (Integrated Development Environment) |
+| **Client** | Connecte l'hôte aux serveurs MCP (Model Context Protocol) | SDK (Software Development Kit) MCP (Model Context Protocol) (Python, TypeScript) |
+| **Serveur** | Expose des ressources, outils et prompts | Serveur fichier, serveur Base de Donnees, serveur API (Application Programming Interface) |
 
-### 2.2 Primitives Model Context Protocol
+### 2.2 Primitives MCP (Model Context Protocol)
 
 | Primitive | Description | Exemple |
 |---|---|---|
 | **Resources** | Données exposées en lecture | Contenu de fichiers, résultats de requêtes |
-| **Tools** | Fonctions exécutables par le Large Language Model | `get_weather()`, `send_email()` |
+| **Tools** | Fonctions exécutables par le LLM | `get_weather()`, `send_email()` |
 | **Prompts** | Templates de prompts réutilisables | "Résume ce document" |
 
 ---
 
-## 3. Créer un Serveur Model Context Protocol avec Python
+## 3. Créer un Serveur MCP (Model Context Protocol) avec Python
 
 ### Principe expliqué simplement
 
-Un **serveur Model Context Protocol** expose des capacités à un agent : outils, ressources ou prompts. L'agent n'a pas besoin de connaître votre code interne. Il voit seulement une interface standardisée.
+Un **serveur MCP (Model Context Protocol)** expose des capacités à un agent : outils, ressources ou prompts. L'agent n'a pas besoin de connaître votre code interne. Il voit seulement une interface standardisée.
 
 Dans ce chapitre, le serveur expose un outil météo :
 
@@ -146,12 +146,12 @@ Agent opencode
 
 - Séparer le code métier de l'agent
 - Réutiliser les mêmes outils avec plusieurs clients Intelligence Artificielle
-- Standardiser la connexion aux fichiers, bases de données et Application Programming Interfaces
+- Standardiser la connexion aux fichiers, bases de données et APIs (Application Programming Interfaces)
 - Limiter les permissions à ce que le serveur expose
 
 #### Limite importante
 
-Model Context Protocol ne rend pas automatiquement un outil sécurisé. Si le serveur expose un outil dangereux, l'agent pourra demander à l'utiliser. Il faut donc valider les paramètres et limiter les actions côté serveur.
+MCP (Model Context Protocol) ne rend pas automatiquement un outil sécurisé. Si le serveur expose un outil dangereux, l'agent pourra demander à l'utiliser. Il faut donc valider les paramètres et limiter les actions côté serveur.
 
 ### 3.1 Exemple minimal
 
@@ -196,7 +196,7 @@ if __name__ == "__main__":
     mcp.run()
 ```
 
-#### Vérifier la logique métier sans lancer Model Context Protocol
+#### Vérifier la logique métier sans lancer MCP (Model Context Protocol)
 
 ```bash
 python3 -c "from server import get_weather; print(get_weather('Paris'))"
@@ -210,7 +210,7 @@ python3 -c "from server import get_weather; print(get_weather('Paris'))"
 
 ### 3.2 Connecter à opencode
 
-Dans `opencode.json`, déclarer le serveur Model Context Protocol :
+Dans `opencode.json`, déclarer le serveur MCP (Model Context Protocol) :
 
 ```json
 {
@@ -233,7 +233,7 @@ Les agents opencode peuvent alors utiliser `get_weather()` comme un outil natif.
 
 ### 4.1 Principe
 
-Si Model Context Protocol connecte un **agent à des outils**, A2A (Agent-to-Agent) connecte un **agent à d'autres agents**.
+Si MCP (Model Context Protocol) connecte un **agent à des outils**, A2A (Agent-to-Agent) connecte un **agent à d'autres agents**.
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {
@@ -312,7 +312,7 @@ Dans un projet opencode, `opencode.json` indique **la configuration technique** 
 
 #### Pourquoi c'est utile ici ?
 
-Dans un projet avec Model Context Protocol, les agents peuvent utiliser des outils externes. Il faut donc clarifier qui a le droit d'orchestrer, qui code, qui teste et comment les résultats sont consolidés. Sans cette documentation, un agent peut utiliser les outils Model Context Protocol sans comprendre l'organisation globale du projet.
+Dans un projet avec MCP (Model Context Protocol), les agents peuvent utiliser des outils externes. Il faut donc clarifier qui a le droit d'orchestrer, qui code, qui teste et comment les résultats sont consolidés. Sans cette documentation, un agent peut utiliser les outils MCP (Model Context Protocol) sans comprendre l'organisation globale du projet.
 
 #### Où créer le fichier ?
 
@@ -351,7 +351,7 @@ Lorsque `opencode.json` contient :
 "instructions": ["AGENTS.md"]
 ```
 
-opencode charge ce document au démarrage. Les agents comprennent alors le workflow attendu avant d'utiliser les outils Model Context Protocol.
+opencode charge ce document au démarrage. Les agents comprennent alors le workflow attendu avant d'utiliser les outils MCP (Model Context Protocol).
 
 ### 5.3 Skills
 
@@ -369,11 +369,11 @@ Les **skills** sont des prompts spécialisés chargés selon le contexte :
 
 ## 6. Interopérabilité avec opencode
 
-### 6.1 opencode comme hôte Model Context Protocol
+### 6.1 opencode comme hôte MCP (Model Context Protocol)
 
-opencode peut se connecter à n'importe quel serveur Model Context Protocol, ce qui permet à vos agents d'utiliser des outils externes sans code spécifique.
+opencode peut se connecter à n'importe quel serveur MCP (Model Context Protocol), ce qui permet à vos agents d'utiliser des outils externes sans code spécifique.
 
-### 6.2 Exemple : Agent opencode avec outils Model Context Protocol
+### 6.2 Exemple : Agent opencode avec outils MCP (Model Context Protocol)
 
 ```
 # Demande à l'agent
@@ -385,17 +385,17 @@ opencode peut se connecter à n'importe quel serveur Model Context Protocol, ce 
 → L'agent synthétise la réponse
 ```
 
-### 6.3 opencode comme serveur Model Context Protocol
+### 6.3 opencode comme serveur MCP (Model Context Protocol)
 
-Inversement, vous pouvez exposer les capacités de votre projet opencode via Model Context Protocol pour que d'autres applications Large Language Model puissent y accéder.
+Inversement, vous pouvez exposer les capacités de votre projet opencode via MCP (Model Context Protocol) pour que d'autres applications LLM puissent y accéder.
 
 ---
 
-## 7. Travaux Pratiques — Serveur Model Context Protocol
+## 7. Travaux Pratiques — Serveur MCP (Model Context Protocol)
 
-> **Projet reseau social** : les serveurs Model Context Protocol exposes ici permettent aux agents d'interagir avec la base de donnees et les services du projet social defini dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md).
+> **Projet reseau social** : les serveurs MCP (Model Context Protocol) exposes ici permettent aux agents d'interagir avec la base de donnees et les services du projet social defini dans [`projet/gestion_de_projet/cdc.md`](projet/gestion_de_projet/cdc.md).
 
-**Objectif :** Créer un serveur Model Context Protocol et le connecter à opencode.
+**Objectif :** Créer un serveur MCP (Model Context Protocol) et le connecter à opencode.
 
 **Durée :** 2h
 
@@ -403,7 +403,7 @@ Inversement, vous pouvez exposer les capacités de votre projet opencode via Mod
 
 ### 7.1 Énoncé
 
-Vous devez créer un serveur Model Context Protocol météo utilisable par un agent opencode.
+Vous devez créer un serveur MCP (Model Context Protocol) météo utilisable par un agent opencode.
 
 Le serveur doit :
 
@@ -414,13 +414,13 @@ Le serveur doit :
 5. Être connectable depuis `opencode.json`
 
 **Fichiers à créer :**
-- `serveur-mcp/serveur_meteo.py` — serveur Model Context Protocol
+- `serveur-mcp/serveur_meteo.py` — serveur MCP (Model Context Protocol)
 - `serveur-mcp/client_test.py` — client de test
 - `serveur-mcp/opencode.json` — connexion opencode au serveur
 
 ---
 
-### 7.2 Corrigé — Étape 1 : Installer le Software Development Kit Model Context Protocol
+### 7.2 Corrigé — Étape 1 : Installer le SDK (Software Development Kit) MCP (Model Context Protocol)
 
 **Point de départ :** ouvrez un terminal dans votre dossier d'exercices. Ce TP crée un **nouveau dossier indépendant** nommé `serveur-mcp`.
 
@@ -441,7 +441,7 @@ pwd
 
 **Résultat attendu :** `pwd` doit se terminer par `serveur-mcp`. Les fichiers `serveur_meteo.py`, `client_test.py` et `opencode.json` seront créés dans ce dossier.
 
-### 7.3 Corrigé — Étape 2 : Serveur Model Context Protocol minimal
+### 7.3 Corrigé — Étape 2 : Serveur MCP (Model Context Protocol) minimal
 
 Vous êtes toujours dans `serveur-mcp/`. Créez un fichier `serveur_meteo.py` à la racine de ce dossier :
 
@@ -477,9 +477,9 @@ if __name__ == "__main__":
 python3 serveur_meteo.py
 ```
 
-Le serveur écoute sur stdio (utilisable par un client Model Context Protocol).
+Le serveur écoute sur stdio (utilisable par un client MCP (Model Context Protocol)).
 
-### 7.5 Corrigé — Étape 4 : Client Model Context Protocol
+### 7.5 Corrigé — Étape 4 : Client MCP (Model Context Protocol)
 
 Créez un fichier `client_test.py` :
 
@@ -545,25 +545,25 @@ Lancez opencode et demandez :
 
 ### 7.8 Validation
 
-- [ ] Le serveur Model Context Protocol répond aux requêtes
-- [ ] Le client Model Context Protocol se connecte et appelle les outils
-- [ ] opencode utilise le serveur Model Context Protocol pour répondre aux questions météo
-- [ ] L'agent opencode combine les appels Model Context Protocol (ex: comparer deux villes)
+- [ ] Le serveur MCP (Model Context Protocol) répond aux requêtes
+- [ ] Le client MCP (Model Context Protocol) se connecte et appelle les outils
+- [ ] opencode utilise le serveur MCP (Model Context Protocol) pour répondre aux questions météo
+- [ ] L'agent opencode combine les appels MCP (Model Context Protocol) (ex: comparer deux villes)
 
 ### Pour aller plus loin
 
 - Ajoutez un outil `get_time(city)` qui retourne l'heure locale
-- Créez un serveur Model Context Protocol pour votre base de données (ex: SQLite)
-- Hébergez le serveur Model Context Protocol via Hypertext Transfer Protocol au lieu de stdio
+- Créez un serveur MCP (Model Context Protocol) pour votre base de données (ex: SQLite)
+- Hébergez le serveur MCP (Model Context Protocol) via HTTP (Hypertext Transfer Protocol) au lieu de stdio
 
 ---
 
 ## Points clés à retenir
 
-1. **Model Context Protocol** est le standard universel pour connecter Large Language Models à des outils et données
+1. **MCP (Model Context Protocol)** est le standard universel pour connecter Large Language Models à des outils et données
 2. **A2A (Agent-to-Agent)** permet à des agents de collaborer entre eux
-3. Le **serveur Model Context Protocol** expose des Resources, Tools et Prompts
-4. **opencode** supporte nativement Model Context Protocol via `opencode.json`
+3. Le **serveur MCP (Model Context Protocol)** expose des Resources, Tools et Prompts
+4. **opencode** supporte nativement MCP (Model Context Protocol) via `opencode.json`
 5. **AGENTS.md** et les **skills** forment la structure agentique du projet
 
 ---
@@ -572,5 +572,5 @@ Lancez opencode et demandez :
 
 - [Chapitre 6 — Multi-Agent Orchestration](./CHAPITRE-06-multi-agent.md)
 - [Chapitre 10 — Opencode & Labs](./CHAPITRE-10-opencode-labs.md)
-- [Documentation Model Context Protocol](https://modelcontextprotocol.io)
+- [Documentation MCP (Model Context Protocol)](https://modelcontextprotocol.io)
 - [opencode Documentation](https://opencode.ai)
