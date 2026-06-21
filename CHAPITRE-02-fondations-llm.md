@@ -145,7 +145,7 @@ Le tout est concaténé et re-projeté.
   'lineColor': '#34d399'
 }}}%%
 graph TD
-    subgraph Entrée
+    subgraph "Entrée"
         I[Texte d'entrée]
     end
     I --> T[Tokenisation + Embedding]
@@ -202,7 +202,7 @@ Au-delà d'un certain seuil (~100 milliards de paramètres), des capacités **é
 | Taille | Capacités |
 |---|---|
 | < 1B | Génération basique, complétion |
-| 1-10B | Traduction,问答 simple |
+| 1-10B | Traduction, Q&A simple |
 | 10-100B | Raisonnement, code, planification |
 | > 100B | Émergence : tool use, instruction following avancé |
 

@@ -208,7 +208,7 @@ graph TD
 
 #### Principe expliqué simplement
 
-Le **RAG (Retrieval-Augmented Generation)** signifie **RAG (Retrieval-Augmented Generation)** : génération augmentée par recherche.
+Le **RAG (Retrieval-Augmented Generation)** — génération augmentée par recherche — permet à un agent de consulter des documents externes avant de répondre.
 
 Un LLM seul répond avec ce qu'il a appris pendant son entraînement. Il ne connaît pas forcément vos fichiers, votre base de données ou le cahier des charges du projet. Le RAG (Retrieval-Augmented Generation) ajoute une étape de recherche avant la génération.
 

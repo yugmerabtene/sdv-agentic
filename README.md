@@ -228,7 +228,7 @@ py -m pip install tiktoken pytest
 | **Théorie** | Boucle agent, contexte, planification, production |
 | **TP** | Implémenter une boucle agent perception→raisonnement→action |
 | **⏱ Durée** | 2h |
-| **Prérequis** | Chapitre 3 terminée, Python, opencode |
+| **Prérequis** | Chapitre 3 terminé, Python, opencode |
 
 ```bash
 # Aucune dépendance supplémentaire
@@ -245,7 +245,7 @@ py -m pip install tiktoken pytest
 | **Théorie** | Embeddings, vector stores, RAG (Retrieval-Augmented Generation), chunking, mémoire long-terme |
 | **TP** | Agent avec mémoire persistante (SQLite) |
 | **⏱ Durée** | 2h |
-| **Prérequis** | Chapitre 4 terminée, Python, pip, opencode |
+| **Prérequis** | Chapitre 4 terminé, Python, pip, opencode |
 
 ```bash
 # Linux/macOS
@@ -264,7 +264,7 @@ py -m pip install chromadb sentence-transformers
 | **Théorie** | Patterns supervisor, fan-out, débat, résilience |
 | **TP** | Configurer une équipe multi-agent avec opencode |
 | **⏱ Durée** | 2h |
-| **Prérequis** | Chapitre 5 terminée, Python, opencode, git |
+| **Prérequis** | Chapitre 5 terminé, Python, opencode, git |
 
 ```bash
 # Vérifier git
@@ -282,7 +282,7 @@ git --version
 | **Théorie** | MCP (Model Context Protocol), A2A (Agent-to-Agent), interopérabilité |
 | **TP** | Créer un serveur MCP (Model Context Protocol) météo, le connecter à opencode |
 | **⏱ Durée** | 2h |
-| **Prérequis** | Chapitre 6 terminée, Python, pip, opencode |
+| **Prérequis** | Chapitre 6 terminé, Python, pip, opencode |
 
 ```bash
 # Linux/macOS
@@ -301,7 +301,7 @@ py -m pip install mcp
 | **Théorie** | Tests d'agents, pipeline CI/CD (Continuous Integration / Continuous Deployment), monitoring, coûts tokens |
 | **TP** | Pipeline CI/CD (Continuous Integration / Continuous Deployment) complet + Scrum Board GitHub |
 | **⏱ Durée** | 3h |
-| **Prérequis** | Chapitre 7 terminée, Python, pip, opencode, git, compte GitHub |
+| **Prérequis** | Chapitre 7 terminé, Python, pip, opencode, git, compte GitHub |
 
 ```bash
 # Linux/macOS
@@ -325,7 +325,7 @@ gh --version
 | **Théorie** | Prompt injection, jailbreak, OWASP (Open Worldwide Application Security Project) Top 10 LLM (Large Language Model), permissions |
 | **TP** | Configurer les permissions opencode, tester des injections |
 | **⏱ Durée** | 1h30 |
-| **Prérequis** | Chapitre 8 terminée, Python, opencode, git |
+| **Prérequis** | Chapitre 8 terminé, Python, opencode, git |
 
 ```bash
 # Aucune dépendance supplémentaire
@@ -384,10 +384,10 @@ Chaque TP construit une pièce du projet final défini dans le
 | P1 | Environnement opencode configuré |
 | P2 | Compréhension des tokens et du contexte |
 | P3 | Assistant CLI (Command Line Interface) avec outils |
-| P4 | Boucle agent pour interagir avec la base de données |
-| P5 | Mémoire persistante pour le fil d'actualité |
-| P6 | Équipe d'agents backend/frontend/data |
-| P7 | Serveur MCP (Model Context Protocol) pour exposer les APIs du réseau social |
+| P4 | Boucle agent avec mémoire de conversation |
+| P5 | Mémoire persistante (SQLite) pour stocker des faits |
+| P6 | Équipe multi-agent avec superviseur et agents spécialisés |
+| P7 | Serveur MCP (Model Context Protocol) pour exposer des outils |
 | P8 | Pipeline CI/CD (Continuous Integration / Continuous Deployment) qui teste et déploie l'application |
 | P9 | Permissions et sécurité des agents |
 | P10 | **Projet complet développé par l'équipe d'agents** |

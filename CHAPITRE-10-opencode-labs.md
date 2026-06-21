@@ -943,12 +943,16 @@ agentic-labs/
 └── reseau-social-agentic/
 ```
 
+**Option A — `reseau-social-agentic/` est un sibling du dépôt cours**
+
 Depuis `reseau-social-agentic/`, exécutez :
 
 ```bash
 mkdir -p docs
 cp ../Agentic-Developer-Craftsmanship/projet/gestion_de_projet/cdc.md docs/cdc.md
 ```
+
+> **Note :** Si votre dossier `reseau-social-agentic/` n'est pas au même niveau que le dépôt `Agentic-Developer-Craftsmanship/`, utilisez l'Option B ci-dessous.
 
 **Option B — Vous avez créé `reseau-social-agentic/` ailleurs**
 

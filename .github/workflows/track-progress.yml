@@ -93,7 +93,6 @@ jobs:
               
               # Convertir le numero en numero d'issue
               # Les issues sont numerotees 2..11 (1 = test supprime)
-              ISSUE_NUM=$(( num + 1 ))
               ISSUE_NUM=$(( 10#$num + 1 ))
               
               # Recuperer l'ID d'item dans le project via l'issue correspondante

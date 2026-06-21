@@ -3,7 +3,10 @@
 import sys
 import base64
 from datetime import datetime
-sys.path.insert(0, '/home/yug/Documents/Agentic-Developer-Craftsmanship')
+from pathlib import Path
+
+COURSE_DIR = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(COURSE_DIR))
 
 from build_site import build_toc_html, VERSION
 from weasyprint import HTML as WeasyHTML
@@ -12,8 +15,8 @@ FR_MONTHS = {1:"janvier",2:"février",3:"mars",4:"avril",5:"mai",6:"juin",7:"jui
 TODAY = datetime.now()
 TODAY_STR = f"{TODAY.day} {FR_MONTHS[TODAY.month]} {TODAY.year}"
 
-OUTPUT_PDF = '/home/yug/Documents/Agentic-Developer-Craftsmanship/export/pdf/syllabus.pdf'
-LOGO_PATH = '/home/yug/Documents/Agentic-Developer-Craftsmanship/export/site/img/logo.jpeg'
+OUTPUT_PDF = str(COURSE_DIR / "export/pdf/syllabus.pdf")
+LOGO_PATH = str(COURSE_DIR / "export/site/img/logo.jpeg")
 
 # Embed logo as base64 for reliable PDF rendering
 with open(LOGO_PATH, 'rb') as f:

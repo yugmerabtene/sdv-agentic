@@ -312,7 +312,7 @@ graph TD
 
 ### 3.2 Pipeline YAML (YAML Ain't Markup Language) unique
 
-Le fichier complet se trouve dans `.github/workflows/cicd-projet.yml`. Il contient les **9 phases** dans un seul fichier YAML (YAML Ain't Markup Language) :
+Le fichier complet doit être créé dans `.github/workflows/cicd-projet.yml`. Il contient les **9 phases** dans un seul fichier YAML (YAML Ain't Markup Language) :
 
 | Phase | Job | Depend de | Parallelisable | Permissions |
 |---|---|---|---|---|
@@ -432,7 +432,7 @@ graph LR
 
 #### Workflow de suivi (zero token LLM (Large Language Model))
 
-Le fichier `.github/workflows/track-progress.yml` utilise uniquement la CLI (Command Line Interface) `gh` (pas de LLM (Large Language Model)) pour detecter les fichiers CHAPITRE-*.md modifies et deplacer automatiquement les cartes dans le Scrum board.
+Le fichier `.github/workflows/track-progress.yml` doit être créé et utilise uniquement la CLI (Command Line Interface) `gh` (pas de LLM (Large Language Model)) pour detecter les fichiers CHAPITRE-*.md modifies et deplacer automatiquement les cartes dans le Scrum board.
 
 Caracteristiques :
 - **Cout : zero token** — bash + gh CLI (Command Line Interface), pas d'appel LLM (Large Language Model)

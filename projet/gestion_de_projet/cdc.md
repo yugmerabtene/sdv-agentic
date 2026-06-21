@@ -45,7 +45,7 @@ L'application s'adresse à :
 
 ## Périmètre fonctionnel
 
-## 4.1 Authentification
+### Authentification
 
 L'application devra permettre :
 
@@ -73,7 +73,7 @@ Un utilisateur connecté doit pouvoir mettre fin à sa session.
 
 ---
 
-## 4.2 Gestion des utilisateurs
+### Gestion des utilisateurs
 
 Un utilisateur connecté doit pouvoir :
 
@@ -91,7 +91,7 @@ Un administrateur doit pouvoir :
 
 ---
 
-## 4.3 Mur public
+### Mur public
 
 L'application devra proposer un mur public affichant les publications.
 
@@ -139,7 +139,7 @@ Afin de limiter la complexité du MVP (Minimum Viable Product), les fonctionnali
 
 ## Rôles utilisateurs
 
-## Utilisateur standard
+### Utilisateur standard
 
 Peut :
 
@@ -157,7 +157,7 @@ Ne peut pas :
 
 ---
 
-## Administrateur
+### Administrateur
 
 Dispose des mêmes droits qu'un utilisateur standard.
 
@@ -172,13 +172,13 @@ Peut également :
 
 ## Spécifications techniques
 
-## Langage
+### Langage
 
 L'application devra être développée en Python.
 
 ---
 
-## Frontend
+### Frontend
 
 Le frontend devra utiliser Tailwind CSS (Cascading Style Sheets) afin de fournir :
 
@@ -189,7 +189,7 @@ Le frontend devra utiliser Tailwind CSS (Cascading Style Sheets) afin de fournir
 
 ---
 
-## Backend
+### Backend
 
 Le backend devra assurer :
 
@@ -202,7 +202,7 @@ Le backend devra assurer :
 
 ---
 
-## Base de données
+### Base de données
 
 Une base relationnelle légère devra être utilisée.
 
@@ -213,7 +213,7 @@ Pour cette première version :
 
 ---
 
-## Conteneurisation
+### Conteneurisation
 
 L'ensemble de l'application devra fonctionner dans un unique conteneur Docker.
 
@@ -228,7 +228,7 @@ Aucun autre service ne devra être nécessaire au démarrage.
 
 ---
 
-## Architecture générale attendue
+### Architecture générale attendue
 
 L'architecture devra respecter les principes suivants :
 
@@ -243,7 +243,7 @@ L'architecture devra faciliter l'ajout ultérieur de nouvelles fonctionnalités.
 
 ---
 
-## Sécurité minimale
+### Sécurité minimale
 
 Les mesures suivantes sont obligatoires :
 
@@ -260,7 +260,7 @@ Les mesures suivantes sont obligatoires :
 
 ---
 
-## Exigences d'interface
+### Exigences d'interface
 
 L'interface devra être :
 
@@ -275,7 +275,7 @@ Les formulaires devront afficher des messages d'erreur explicites.
 
 ---
 
-## Exigences qualité
+### Exigences qualité
 
 Le projet devra respecter les principes suivants :
 
@@ -290,7 +290,7 @@ Le projet devra respecter les principes suivants :
 
 ## Tests attendus
 
-## Tests unitaires
+### Tests unitaires
 
 Ils devront vérifier notamment :
 
@@ -303,7 +303,7 @@ Ils devront vérifier notamment :
 
 ---
 
-## Tests d'intégration
+### Tests d'intégration
 
 Ils devront vérifier :
 
@@ -316,7 +316,7 @@ Ils devront vérifier :
 
 ---
 
-## Tests fonctionnels
+### Tests fonctionnels
 
 Ils devront couvrir :
 
@@ -326,7 +326,7 @@ Ils devront couvrir :
 
 ---
 
-## Tests de non-régression
+### Tests de non-régression
 
 Ils devront garantir que :
 
@@ -337,7 +337,7 @@ Chaque correction de bug devra être accompagnée d'un test empêchant sa réapp
 
 ---
 
-## Tests de sécurité
+### Tests de sécurité
 
 Ils devront vérifier :
 
@@ -356,7 +356,7 @@ L'objectif est de garantir la qualité des livraisons et d'automatiser les contr
 
 ---
 
-## Déclencheurs
+### Déclencheurs
 
 La chaîne CI/CD (Continuous Integration / Continuous Deployment) devra s'exécuter :
 
@@ -367,7 +367,7 @@ La chaîne CI/CD (Continuous Integration / Continuous Deployment) devra s'exécu
 
 ---
 
-## Phase 1 : Vérifications préliminaires
+### Phase 1 : Vérifications préliminaires
 
 Avant toute construction :
 
@@ -379,7 +379,7 @@ Avant toute construction :
 
 ---
 
-## Phase 2 : Contrôles qualité
+### Phase 2 : Contrôles qualité
 
 La chaîne devra exécuter :
 
@@ -391,7 +391,7 @@ Toute anomalie critique devra interrompre le pipeline.
 
 ---
 
-## Phase 3 : Tests avant construction
+### Phase 3 : Tests avant construction
 
 Les tests suivants devront être exécutés :
 
@@ -404,7 +404,7 @@ L'échec d'un test devra bloquer la suite du pipeline.
 
 ---
 
-## Phase 4 : Construction
+### Phase 4 : Construction
 
 Le pipeline devra :
 
@@ -415,7 +415,7 @@ Le pipeline devra :
 
 ---
 
-## Phase 5 : Tests sur l'artefact construit
+### Phase 5 : Tests sur l'artefact construit
 
 Une fois l'image construite :
 
@@ -429,7 +429,7 @@ Tout échec devra interrompre le pipeline.
 
 ---
 
-## Phase 6 : Vérifications de sécurité
+### Phase 6 : Vérifications de sécurité
 
 Le pipeline devra effectuer :
 
@@ -441,7 +441,7 @@ Les vulnérabilités critiques devront empêcher la livraison.
 
 ---
 
-## Phase 7 : Déploiement
+### Phase 7 : Déploiement
 
 Le déploiement devra être conditionné :
 
@@ -453,7 +453,7 @@ Le déploiement devra être reproductible.
 
 ---
 
-## Phase 8 : Vérifications post-déploiement
+### Phase 8 : Vérifications post-déploiement
 
 Après déploiement :
 
@@ -501,33 +501,33 @@ Les livrables devront comprendre :
 
 ## Priorisation MVP
 
-## Sprint 1
+### Sprint 1
 
 - Initialisation du projet ;
 - Dockerisation ;
 - Structure applicative.
 
-## Sprint 2
+### Sprint 2
 
 - Inscription ;
 - Connexion ;
 - Déconnexion ;
 - Sessions.
 
-## Sprint 3
+### Sprint 3
 
 - Mur public ;
 - Création des publications ;
 - Affichage des publications ;
 - Suppression des publications.
 
-## Sprint 4
+### Sprint 4
 
 - Gestion du profil ;
 - Administration des utilisateurs ;
 - Gestion des rôles.
 
-## Sprint 5
+### Sprint 5
 
 - Mise en place complète des tests ;
 - Mise en place de la CI/CD (Continuous Integration / Continuous Deployment) ;

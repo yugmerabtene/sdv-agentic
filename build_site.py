@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Agentic Developer Craftsmanship — Générateur de site statique
-Lit les 12 fichiers .md et génère export/site/index.html
+Lit les 10 fichiers .md et génère export/site/index.html
 """
 
 import os
@@ -13,7 +13,7 @@ from pathlib import Path
 
 import markdown
 
-COURSE_DIR = Path("/home/yug/Documents/Agentic-Developer-Craftsmanship")
+COURSE_DIR = Path(__file__).parent
 EXPORT_DIR = COURSE_DIR / "export"
 SITE_DIR = EXPORT_DIR / "site"
 CSS_DIR = SITE_DIR / "css"
@@ -110,8 +110,9 @@ def add_heading_ids(html):
         used_ids.add(hid)
         if 'id="' not in tag:
             tag = tag.replace('<h2', f'<h2 id="{hid}"')
+            tag = tag.replace('<h3', f'<h3 id="{hid}"')
         return tag
-    return re.sub(r'<h2[^>]*>.*?</h2>', _add_id, html)
+    return re.sub(r'<h[23][^>]*>.*?</h[23]>', _add_id, html)
 
 
 def build_prerequisites_html():
@@ -159,9 +160,7 @@ def extract_subheadings(md_content):
             title_lower = title.lower()
             if any(p in title_lower for p in skip_patterns):
                 continue
-            if title.startswith('1.') or title.startswith('2.') or title.startswith('3.') or \
-               title.startswith('4.') or title.startswith('5.') or title.startswith('6.') or \
-               title.startswith('7.') or title.startswith('8.') or title.startswith('9.'):
+            if re.match(r'^\d+\.', title):
                 headings.append(title)
     return headings
 
@@ -210,7 +209,7 @@ def build_toc_html(include_prerequis=False):
     return '\n'.join(parts)
 
 
-def build_content_html(temp_dir=None):
+def build_content_html():
     parts = []
 
     phase_colors = {
@@ -282,7 +281,7 @@ def build_content_html(temp_dir=None):
             html = fix_mermaid_html(html)
             html = add_heading_ids(html)
 
-        title = extract_title(open(filepath, encoding='utf-8').read())
+        title = extract_title(md_content)
         if not title:
             title = label
 
@@ -393,13 +392,13 @@ def build_site():
     EXPORT_DIR.joinpath("pdf").mkdir(parents=True, exist_ok=True)
 
     # Copy assets
-    shutil.copy(COURSE_DIR / "logo.jpeg", IMG_DIR / "logo.jpeg")
+    logo_src = COURSE_DIR / "logo.jpeg"
+    if logo_src.exists():
+        shutil.copy(logo_src, IMG_DIR / "logo.jpeg")
 
     # Copy CSS files (they already exist at their target location)
-    css_src = SITE_DIR / "css"
-    js_src = SITE_DIR / "js"
-    if not (css_src / "style.css").exists():
-        print("  WARNING: style.css not found at", css_src)
+    if not (CSS_DIR / "style.css").exists():
+        print("  WARNING: style.css not found at", CSS_DIR)
 
     # Build content
     print("\n[1/2] Conversion des chapitres...")

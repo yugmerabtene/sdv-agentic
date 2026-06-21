@@ -357,7 +357,7 @@ jobs:
       - name: Executer les tests E2E (httpx)
         run: |
           pip install pytest httpx
-          if [ -f projet/app/tests/e2e/ ]; then
+          if [ -d projet/app/tests/e2e/ ]; then
             pytest projet/app/tests/e2e/ -v --tb=long \
               --base-url=http://localhost:8000
           else

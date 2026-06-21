@@ -365,7 +365,6 @@ pwd
 ```
 
 **Résultat attendu :** `pwd` doit se terminer par `chapitre-06-multi-agent`, au même endroit que `supervisor_agent.py`.
-```
 
 Créez `async_orchestrator.py` :
 

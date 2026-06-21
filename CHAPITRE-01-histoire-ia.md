@@ -59,7 +59,7 @@ En juin 2017, Vaswani et al. publient **"Attention Is All You Need"** (Google Re
 
 ### 2.2 Le problème que ça résout
 
-Avant le Transformer, les modèles de séquence (Recurrent Neural Network, Long Short-Term Memory)) traitaient les mots un par un, séquentiellement :
+Avant le Transformer, les modèles de séquence (Recurrent Neural Network, Long Short-Term Memory) traitaient les mots un par un, séquentiellement :
 - Impossible de paralléliser → lent
 - Difficulté à capturer les dépendances longues (au-delà de ~50 mots)
 - Gradient qui disparaît (*vanishing gradient*) dans les longues séquences
@@ -463,7 +463,7 @@ Votre ordinateur/
     ├── serveur-mcp/              ← TP Chapitre 7
     ├── cicd-agents/              ← TP Chapitre 8
     ├── securite-agent/           ← TP Chapitre 9
-    ├── mon-premier-agent/        ← Lab 1 (Chapitre 10)
+    ├── lab1-premier-projet/      ← Lab 1 (Chapitre 10)
     ├── equipe-agentic/           ← Lab 2 (Chapitre 10)
     └── reseau-social-agentic/    ← Lab 3 (Chapitre 10)
 ```
