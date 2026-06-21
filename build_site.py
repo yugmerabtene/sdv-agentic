@@ -23,8 +23,8 @@ IMG_DIR = SITE_DIR / "img"
 VERSION = "1.3"
 
 CHAPTERS = [
-    ("CHAPITRE-01-histoire-ia.md",    "Chapitre 1",    "Phase 1 — Fondamentaux"),
-    ("CHAPITRE-02-fondations-llm.md", "Chapitre 2",    "Phase 1 — Fondamentaux"),
+    ("CHAPITRE-01-histoire-ia.md",    "Chapitre 1",    "Mettre à jour les paquets"),
+    ("CHAPITRE-02-fondations-llm.md", "Chapitre 2",    "Mettre à jour les paquets"),
     ("CHAPITRE-03-prompt-tool-use.md", "Chapitre 3",   "Phase 2 — Interaction avec les LLMs"),
     ("CHAPITRE-04-architecture-agent.md", "Chapitre 4","Phase 2 — Interaction avec les LLMs"),
     ("CHAPITRE-05-memoire-rag.md",    "Chapitre 5",    "Phase 3 — Mémoire & Collaboration"),
@@ -36,7 +36,7 @@ CHAPTERS = [
 ]
 
 PHASES = [
-    ("Phase 1", "Fondamentaux", "De l'histoire de l'IA aux bases des LLM", "#1e3a5f"),
+    ("Phase 1", "Mettre à jour les paquets", "De l'histoire de l'IA aux bases des LLM", "#1e3a5f"),
     ("Phase 2", "Interaction avec les LLMs", "Prompt engineering, tool use et boucle agent", "#2563eb"),
     ("Phase 3", "Mémoire & Collaboration", "RAG, mémoire persistante et systèmes multi-agents", "#059669"),
     ("Phase 4", "Production", "MCP, CI/CD et déploiement professionnel", "#7c3aed"),
@@ -213,7 +213,7 @@ def build_content_html():
     parts = []
 
     phase_colors = {
-        "Phase 1 — Fondamentaux": "#1e3a5f",
+        "Mettre à jour les paquets": "#1e3a5f",
         "Phase 2 — Interaction avec les LLMs": "#2563eb",
         "Phase 3 — Mémoire & Collaboration": "#059669",
         "Phase 4 — Production": "#7c3aed",
@@ -231,6 +231,8 @@ def build_content_html():
 
         with open(filepath, 'r', encoding='utf-8') as f:
             md_content = f.read()
+
+        title = extract_title(md_content)
 
         # Phase divider
         if phase and phase != current_phase:
@@ -281,7 +283,6 @@ def build_content_html():
             html = fix_mermaid_html(html)
             html = add_heading_ids(html)
 
-        title = extract_title(md_content)
         if not title:
             title = label
 

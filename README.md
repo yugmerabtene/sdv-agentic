@@ -21,7 +21,7 @@ Le cours se découpe en **5 phases** qu'il faut suivre dans l'ordre :
 
 ```
 Phase 1 ──► Phase 2 ──► Phase 3 ──► Phase 4 ──► Phase 5
-Fondamentaux    Interaction    Mémoire &      Production     Mise en
+Mise à jour    Interaction    Mémoire &      Production     Mise en
 (P1-P2)        avec LLMs      Collaboration  (P7-P8)        pratique
                (P3-P4)        (P5-P6)                       (P9-P10)
 ```
@@ -167,7 +167,7 @@ Le résultat de `pwd` doit afficher le dossier du TP courant. C'est dans ce doss
 
 ---
 
-### Phase 1 — Fondamentaux
+### Phase 1 — Mettre à jour les paquets
 
 #### [Chapitre 1 — Introduction](CHAPITRE-01-histoire-ia.md)
 
